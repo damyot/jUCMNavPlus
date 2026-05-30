@@ -12,10 +12,11 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.draw2d.text.FlowPage;
 import org.eclipse.draw2d.text.ParagraphTextLayout;
 import org.eclipse.draw2d.text.TextFlow;
+import org.eclipse.jface.resource.FontRegistry;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.StringConverter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.widgets.Display;
 
@@ -29,6 +30,14 @@ import seg.jUCMNav.views.preferences.GeneralPreferencePage;
  * 
  */
 public abstract class GrlNodeFigure extends Shape implements LabelElementFigure {
+
+    /**
+     * Key for the GRL node label font, registered with JFace's FontRegistry so
+     * disposal is handled by the workbench at shutdown. Replaces a per-figure
+     * `new Font(...)` that modern SWT logs as a leaked resource on every Belief
+     * (and every other GRL node) creation.
+     */
+    private static final String GRL_LABEL_FONT_KEY = "seg.jUCMNav.figures.GrlNodeFigure.labelFont"; //$NON-NLS-1$
 
     // for grl multiline label, space between start of the figure and start of the label
     protected static final int LABEL_PADDING_X = 15;
@@ -85,7 +94,14 @@ public abstract class GrlNodeFigure extends Shape implements LabelElementFigure 
 
         textFlow = new TextFlow();
         // Slightly larger font here used for GRL node labels.
-        textFlow.setFont(new Font(Display.getDefault(), new FontData("Tahoma", 9, SWT.NONE))); //$NON-NLS-1$
+        // Use JFace's FontRegistry so the workbench owns disposal — a plain
+        // `new Font(...)` per figure leaked on every Belief / GRL node creation
+        // and modern SWT logs every undisposed resource at GC time.
+        FontRegistry registry = JFaceResources.getFontRegistry();
+        if (!registry.hasValueFor(GRL_LABEL_FONT_KEY)) {
+            registry.put(GRL_LABEL_FONT_KEY, new FontData[] { new FontData("Tahoma", 9, SWT.NONE) }); //$NON-NLS-1$
+        }
+        textFlow.setFont(registry.get(GRL_LABEL_FONT_KEY));
         textFlow.setVisible(!shouldHideInnerText());
         textFlow.setLayoutManager(new ParagraphTextLayout(textFlow, ParagraphTextLayout.WORD_WRAP_HARD));
 

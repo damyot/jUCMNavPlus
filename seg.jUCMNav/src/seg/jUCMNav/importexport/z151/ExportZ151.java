@@ -10,6 +10,10 @@ import jakarta.xml.bind.JAXBElement;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+
+import seg.jUCMNav.JUCMNavPlugin;
 import seg.jUCMNav.extensionpoints.IURNExport;
 import seg.jUCMNav.importexport.z151.generated.ObjectFactory;
 import seg.jUCMNav.importexport.z151.generated.URNspec;
@@ -58,11 +62,16 @@ public class ExportZ151 implements IURNExport {
 			m.marshal(spec, fos);
 			mh.resetUrnSpec();
 		} catch (JAXBException jbe) {
-			System.err.println(jbe.getMessage());
-			mh.resetUrnSpec();
-		}catch (Exception e) {
-			System.err.println(e.getMessage());
-			mh.resetUrnSpec();
+			JUCMNavPlugin.getDefault().getLog().log(new Status(
+				IStatus.ERROR, JUCMNavPlugin.PLUGIN_ID,
+				"Z.151 export failed during JAXB marshal: " + jbe.getMessage(),
+				jbe.getLinkedException() != null ? jbe.getLinkedException() : jbe));
+			if (mh != null) mh.resetUrnSpec();
+		} catch (Exception e) {
+			JUCMNavPlugin.getDefault().getLog().log(new Status(
+				IStatus.ERROR, JUCMNavPlugin.PLUGIN_ID,
+				"Z.151 export failed: " + e.getClass().getSimpleName() + ": " + e.getMessage(), e));
+			if (mh != null) mh.resetUrnSpec();
 		}
     }
 }

@@ -35,6 +35,11 @@
     <import feature="org.eclipse.emf.sdk" version="0.0.0"/>
     <import feature="org.eclipse.gef" version="0.0.0"/>
     <import feature="org.eclipse.ocl" version="0.0.0"/>
+    <!-- Jakarta XML Binding runtime — Z.151 import/export uses JAXB and the
+         API alone (jakarta.xml.bind-api) isn't enough; ContextFinder needs a
+         registered ContextFactory. com.sun.xml.bind.jaxb-osgi (Eclipse Implementation
+         of JAXB, formerly Glassfish RI) provides org.glassfish.jaxb.runtime.* -->
+    <import plugin="com.sun.xml.bind.jaxb-osgi" version="0.0.0"/>
   </requires>
 
 </feature>

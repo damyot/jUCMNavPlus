@@ -205,14 +205,38 @@ public class ImportWizard extends Wizard implements IImportWizard {
                     FileEditorInput input = new FileEditorInput(element);
                     try {
                         openedEditor = (UCMNavMultiPageEditor) page.findEditor(input);
-                        // if editor isn't opened, open it.
-                        if (openedEditor == null) {
+                        // Only attempt to OPEN the selected file if Eclipse has a
+                        // registered editor for it. Right-clicking a .z151 (or any
+                        // file extension Eclipse doesn't know) returns desc == null;
+                        // also, page.openEditor() returns null when the default editor
+                        // is EXTERNAL (system text editor, browser, ...). The
+                        // (UCMNavMultiPageEditor) null cast succeeds silently, so we
+                        // also guard the post-call deref.
+                        if (openedEditor == null && desc != null) {
                             openedEditor = (UCMNavMultiPageEditor) page.openEditor(input, desc.getId(), false);
                             this.hasBeenOpened = true;
                         }
-                        urn = openedEditor.getModel();
-                        ImportPreferenceHelper.setSavePath(((FileEditorInput) openedEditor.getEditorInput()).getPath().toOSString());
-                        // ImportPreferenceHelper.setImportType(ImportPreferenceHelper.IMPORT_URN);
+                        if (openedEditor != null) {
+                            urn = openedEditor.getModel();
+                            ImportPreferenceHelper.setSavePath(((FileEditorInput) openedEditor.getEditorInput()).getPath().toOSString());
+                            // ImportPreferenceHelper.setImportType(ImportPreferenceHelper.IMPORT_URN);
+                        } else {
+                            // The selected IFile is not a jUCMNav-openable target
+                            // (e.g. right-clicking the .z151 source file). Fall back
+                            // to the currently-active editor as the import target.
+                            IEditorPart active = workbench.getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+                            if (active instanceof UCMNavMultiPageEditor) {
+                                openedEditor = (UCMNavMultiPageEditor) active;
+                                urn = openedEditor.getModel();
+                                ImportPreferenceHelper.setSavePath(((FileEditorInput) openedEditor.getEditorInput()).getPath().toOSString());
+                            } else {
+                                seg.jUCMNav.JUCMNavPlugin.getDefault().getLog().log(new org.eclipse.core.runtime.Status(
+                                    org.eclipse.core.runtime.IStatus.WARNING,
+                                    seg.jUCMNav.JUCMNavPlugin.PLUGIN_ID,
+                                    "Import wizard: '" + element.getName() + "' is not a jUCMNav target document and no jUCMNav editor is active. "
+                                        + "Open a .jucm file first, then re-run Import."));
+                            }
+                        }
                     } catch (ClassCastException e) {
                         // if default editor isn't UCMNavMultiPageEditor
                         e.printStackTrace();

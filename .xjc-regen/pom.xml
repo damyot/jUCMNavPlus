@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Local scratch project: regenerates seg.jUCMNav.importexport.z151.generated
+     from src/seg/jUCMNav/importexport/z151/xml/Z151.xsd using Jakarta XML
+     Binding 4.x (xjc). Run from this directory:
+
+       mvn -B -Drelease=21 generate-sources
+
+     Output appears in target/generated-sources/jaxb/. Hand-copy to the
+     main project's src/seg/jUCMNav/importexport/z151/generated/ after review.
+
+     This directory is gitignored — it is not part of the build. -->
+<project xmlns="http://maven.apache.org/POM/4.0.0">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>local.jucmnav.tools</groupId>
+  <artifactId>xjc-regen</artifactId>
+  <version>1</version>
+  <packaging>pom</packaging>
+
+  <properties>
+    <maven.compiler.release>21</maven.compiler.release>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>jaxb2-maven-plugin</artifactId>
+        <version>3.2.0</version>
+        <executions>
+          <execution>
+            <id>z151-xjc</id>
+            <phase>generate-sources</phase>
+            <goals><goal>xjc</goal></goals>
+            <configuration>
+              <packageName>seg.jUCMNav.importexport.z151.generated</packageName>
+              <sources>
+                <source>../seg.jUCMNav/src/seg/jUCMNav/importexport/z151/xml/Z151.xsd</source>
+              </sources>
+              <sourceType>XmlSchema</sourceType>
+              <outputDirectory>${project.basedir}/target/generated-sources/jaxb</outputDirectory>
+              <clearOutputDir>true</clearOutputDir>
+              <noPackageLevelAnnotations>false</noPackageLevelAnnotations>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

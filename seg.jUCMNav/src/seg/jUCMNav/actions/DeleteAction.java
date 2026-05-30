@@ -1,5 +1,6 @@
 package seg.jUCMNav.actions;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -40,7 +41,20 @@ public class DeleteAction extends org.eclipse.gef.ui.actions.DeleteAction {
     }
 
     protected boolean calculateEnabled() {
-        Command cmd = createDeleteCommand(getSelectedObjects());
+        // GEF 3.x tightened SelectionAction.getSelectedObjects() to List<Object>
+        // while DeleteAction.createDeleteCommand still takes List<EditPart>.
+        // UCMNavMultiPageEditor.ActionRegistrySelectionListener forwards GLOBAL
+        // workbench selection to its action registry — so getSelectedObjects()
+        // may legitimately contain non-EditParts (LogEntry, IFile, etc.) when
+        // the user clicks in another view. Filter to EditPart instances
+        // instead of an unchecked cast that lies about element types.
+        List<EditPart> selected = new ArrayList<EditPart>();
+        for (Object obj : getSelectedObjects()) {
+            if (obj instanceof EditPart) {
+                selected.add((EditPart) obj);
+            }
+        }
+        Command cmd = createDeleteCommand(selected);
 		if (cmd == null)
 			return false;
 		else {

@@ -39,7 +39,6 @@ import seg.jUCMNav.editparts.kpiTreeEditparts.IndicatorTreeEditPart;
 import seg.jUCMNav.editparts.kpiTreeEditparts.KPIRootEditPart;
 import seg.jUCMNav.editparts.kpiTreeEditparts.KPITreeEditPartFactory;
 import seg.jUCMNav.kpi.KPIValueResources;
-import seg.jUCMNav.kpi.ws.KPIValueWSResources;
 import seg.jUCMNav.strategies.EvaluationStrategyManager;
 import seg.jUCMNav.views.JUCMNavRefreshableView;
 import seg.jUCMNav.views.preferences.DisplayPreferences;
@@ -115,8 +114,15 @@ public class KPIListView extends ViewPart implements IPartListener2, ISelectionC
                     }
 
                     if (evalObjects.size() > 0) {
-                        // Using web services to retrieve KPI values
-                        KPIValueResources kpiValueRes = new KPIValueWSResources();
+                        // KPI value retrieval was a SOAP/JAX-RPC web service (seg.jUCMNav.kpi.ws.*,
+                        // backed by Apache Axis 1.x). JAX-RPC was removed from the JDK and has no
+                        // Jakarta successor, so the implementation is gone. Surfaces the same
+                        // "KPIListView.0" error message the original catch block used.
+                        KPIValueResources kpiValueRes = new KPIValueResources() {
+                            public void requestKPIValues(java.util.List evalObjects) {
+                                throw new UnsupportedOperationException("KPI web-service retrieval is not available in this build");
+                            }
+                        };
 
                         try {
                             kpiValueRes.requestKPIValues(evalObjects);

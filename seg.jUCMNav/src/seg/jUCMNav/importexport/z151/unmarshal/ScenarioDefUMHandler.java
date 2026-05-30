@@ -20,7 +20,7 @@ package seg.jUCMNav.importexport.z151.unmarshal;
 //    </xsd:complexContent>
 //  </xsd:complexType>
 
-import javax.xml.bind.JAXBElement;
+import jakarta.xml.bind.JAXBElement;
 
 import seg.jUCMNav.importexport.z151.generated.Condition;
 import seg.jUCMNav.importexport.z151.generated.EndPoint;

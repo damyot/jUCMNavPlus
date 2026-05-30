@@ -2,7 +2,7 @@ package seg.jUCMNav.importexport.z151.marshal;
 
 import java.util.List;
 
-import javax.xml.bind.JAXBElement;
+import jakarta.xml.bind.JAXBElement;
 
 import seg.jUCMNav.importexport.z151.generated.EvaluationStrategy;
 import seg.jUCMNav.importexport.z151.generated.Metadata;

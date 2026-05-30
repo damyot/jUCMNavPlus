@@ -74,4 +74,17 @@ public class UrnTableContentProvider implements IStructuredContentProvider, IFil
         }
     }
 
+    public int getLeafCount(Object input) {
+        if (!(input instanceof AbstractTextSearchResult)) {
+            return 0;
+        }
+        AbstractTextSearchResult result = (AbstractTextSearchResult) input;
+        int elementLimit = getElementLimit();
+        int count = result.getElements().length;
+        if (elementLimit != -1 && count > elementLimit) {
+            return elementLimit;
+        }
+        return count;
+    }
+
 }

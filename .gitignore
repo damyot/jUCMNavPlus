@@ -1,3 +1,18 @@
 ﻿target/
 bin/
 *.class
+
+# Tycho-built nested classpath jar (the bundle's own compiled code, embedded
+# via Bundle-ClassPath: jUCMNav.jar). Produced fresh on each build.
+seg.jUCMNav/jUCMNav.jar
+
+# Local-only Maven JVM args (per-developer trust-store / proxy overrides).
+# Cross-platform CI must not inherit Windows-specific options like Windows-ROOT.
+.mvn/jvm.config
+
+# Scratch xjc regenerator (Jakarta XML Binding) — not part of the main build.
+.xjc-regen/target/
+
+# Build log produced by mvn invocations during migration.
+build-output.log
+build-debug.log

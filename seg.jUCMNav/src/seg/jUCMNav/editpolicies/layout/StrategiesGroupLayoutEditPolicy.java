@@ -6,10 +6,10 @@ import grl.EvaluationStrategy;
 import grl.StrategiesGroup;
 
 import org.eclipse.gef.EditPart;
-import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
+import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.gef.editpolicies.LayoutEditPolicy;
+import org.eclipse.gef.editpolicies.AbstractEditPolicy;
 import org.eclipse.gef.requests.CreateRequest;
 
 import seg.jUCMNav.model.commands.transformations.MoveContributionContextCommand;
@@ -25,78 +25,78 @@ import urn.dyncontext.Timepoint;
 import urn.dyncontext.TimepointGroup;
 
 /**
- * 
- * XYLayoutEditPolicy for the MapAndPathGraphEditPart. Handles creation of new elements and moving/resizing of existing ones.
- * 
+ * Routes palette create-requests for scenarios / strategies / contribution
+ * contexts / dynamic contexts / timepoints onto their respective tree groups.
+ *
+ * Originally extended LayoutEditPolicy, but that base class is graphical-only:
+ * every getHost() call casts to GraphicalEditPart, and several internal hooks
+ * (activate/deactivate/setListener/getTargetEditPart) call getHost(). Tree
+ * edit parts crash on every one of them under modern GEF (3.25.x). The fix is
+ * to extend AbstractEditPolicy and reimplement just the two routing methods
+ * we need; AbstractEditPolicy.getHost() returns EditPart without a cast.
+ *
  * @author etremblay, jkealey
- * 
  */
-public class StrategiesGroupLayoutEditPolicy extends LayoutEditPolicy {
+public class StrategiesGroupLayoutEditPolicy extends AbstractEditPolicy {
 
-    /**
-     * Returns a command to be executed when the palette tries to create something on the MapAndPathGraphEditPart.
-     * 
-     * Extends path for PathTool and creates ComponentRefs. PathNodes are created on NodeConnections so are not handled here.
-     * 
-     * @see org.eclipse.gef.editpolicies.LayoutEditPolicy#getCreateCommand(org.eclipse.gef.requests.CreateRequest)
-     */
+    @Override
+    public EditPart getTargetEditPart(Request request) {
+        Object type = request.getType();
+        if (RequestConstants.REQ_CREATE.equals(type)
+                || RequestConstants.REQ_ADD.equals(type)
+                || RequestConstants.REQ_MOVE.equals(type)
+                || RequestConstants.REQ_CLONE.equals(type)) {
+            return getHost();
+        }
+        return null;
+    }
+
+    @Override
+    public Command getCommand(Request request) {
+        if (RequestConstants.REQ_CREATE.equals(request.getType())) {
+            return getCreateCommand((CreateRequest) request);
+        }
+        return null;
+    }
+
     protected Command getCreateCommand(CreateRequest request) {
         Object newObjectType = null;
         if (request.getNewObject() != null)
             newObjectType = request.getNewObjectType();
 
-        if (newObjectType == ScenarioDef.class && getHost()!=null && getHost().getTargetEditPart(request)!=null && getHost().getTargetEditPart(request).getModel() instanceof ScenarioGroup){
-            ScenarioGroup group = (ScenarioGroup) getHost().getTargetEditPart(request).getModel();
+        EditPart host = getHost();
+        if (host == null) return null;
+        EditPart target = host.getTargetEditPart(request);
+        if (target == null) return null;
+        Object targetModel = target.getModel();
+
+        if (newObjectType == ScenarioDef.class && targetModel instanceof ScenarioGroup) {
             Object obj = request.getNewObject();
             if (obj instanceof ScenarioDef) {
-                ScenarioDef def = (ScenarioDef)obj;
-                return new MoveScenarioCommand(group, def);
+                return new MoveScenarioCommand((ScenarioGroup) targetModel, (ScenarioDef) obj);
             }
-        }
-        else  if (newObjectType == EvaluationStrategy.class && getHost()!=null && getHost().getTargetEditPart(request)!=null && getHost().getTargetEditPart(request).getModel() instanceof StrategiesGroup){
-            StrategiesGroup group = (StrategiesGroup) getHost().getTargetEditPart(request).getModel();
+        } else if (newObjectType == EvaluationStrategy.class && targetModel instanceof StrategiesGroup) {
             Object obj = request.getNewObject();
             if (obj instanceof EvaluationStrategy) {
-                EvaluationStrategy def = (EvaluationStrategy)obj;
-                return new MoveStrategyCommand(group, def);
+                return new MoveStrategyCommand((StrategiesGroup) targetModel, (EvaluationStrategy) obj);
             }
-        }  else  if (newObjectType == ContributionContext.class && getHost()!=null && getHost().getTargetEditPart(request)!=null && getHost().getTargetEditPart(request).getModel() instanceof ContributionContextGroup){
-            ContributionContextGroup group = (ContributionContextGroup) getHost().getTargetEditPart(request).getModel();
+        } else if (newObjectType == ContributionContext.class && targetModel instanceof ContributionContextGroup) {
             Object obj = request.getNewObject();
             if (obj instanceof ContributionContext) {
-                ContributionContext def = (ContributionContext)obj;
-                return new MoveContributionContextCommand(group, def);
+                return new MoveContributionContextCommand((ContributionContextGroup) targetModel, (ContributionContext) obj);
             }
-        }	else  if (newObjectType == DynamicContext.class && getHost()!=null && getHost().getTargetEditPart(request)!=null && getHost().getTargetEditPart(request).getModel() instanceof DynamicContextGroup){
-            DynamicContextGroup group = (DynamicContextGroup) getHost().getTargetEditPart(request).getModel();
+        } else if (newObjectType == DynamicContext.class && targetModel instanceof DynamicContextGroup) {
             Object obj = request.getNewObject();
             if (obj instanceof DynamicContext) {
-                DynamicContext dyn = (DynamicContext)obj;
-                return new MoveDynamicContextCommand(group, dyn);
+                return new MoveDynamicContextCommand((DynamicContextGroup) targetModel, (DynamicContext) obj);
             }
-        }	else  if (newObjectType == Timepoint.class && getHost()!=null && getHost().getTargetEditPart(request)!=null && getHost().getTargetEditPart(request).getModel() instanceof TimepointGroup){
-            TimepointGroup group = (TimepointGroup) getHost().getTargetEditPart(request).getModel();
+        } else if (newObjectType == Timepoint.class && targetModel instanceof TimepointGroup) {
             Object obj = request.getNewObject();
             if (obj instanceof Timepoint) {
-                Timepoint tp = (Timepoint)obj;
-                return new MoveTimepointCommand(group, tp);
+                return new MoveTimepointCommand((TimepointGroup) targetModel, (Timepoint) obj);
             }
         }
 
         return null;
     }
-
-   
-    @Override
-    protected EditPolicy createChildEditPolicy(EditPart child) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    protected Command getMoveChildrenCommand(Request request) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
 }

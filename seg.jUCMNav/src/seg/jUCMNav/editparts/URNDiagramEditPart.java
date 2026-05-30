@@ -105,10 +105,10 @@ public abstract class URNDiagramEditPart extends ModelElementEditPart {
      * @return All the components editparts children of this editpart.
      */
     protected List<EditPart> getComponentEditParts() {
-        List<EditPart> children = getChildren();
+        List<? extends EditPart> children = getChildren();
         List<EditPart> comps = new ArrayList<EditPart>();
 
-        for (Iterator<EditPart> j = children.iterator(); j.hasNext();) {
+        for (Iterator<? extends EditPart> j = children.iterator(); j.hasNext();) {
             EditPart edit = j.next();
             if (edit.getModel() instanceof IURNContainerRef)
                 comps.add(edit);
@@ -162,10 +162,10 @@ public abstract class URNDiagramEditPart extends ModelElementEditPart {
      * @return Return all the specificationnode editparts children of this editpart.
      */
     protected List<EditPart> getSpecificationNodeEditParts() {
-        List<EditPart> children = getChildren();
+        List<? extends EditPart> children = getChildren();
         List<EditPart> nodes = new ArrayList<EditPart>();
 
-        for (Iterator<EditPart> j = children.iterator(); j.hasNext();) {
+        for (Iterator<? extends EditPart> j = children.iterator(); j.hasNext();) {
             EditPart edit = j.next();
             if (edit.getModel() instanceof IURNNode)
                 nodes.add(edit);
@@ -192,7 +192,7 @@ public abstract class URNDiagramEditPart extends ModelElementEditPart {
         
 
         HashMap<Object, EditPart> modelToEditPart = new HashMap<Object, EditPart>();
-        List<EditPart> children = getChildren();
+        List<? extends EditPart> children = getChildren();
         List<EditPart> comps = getComponentEditParts(); // All the components of the model
         List<EditPart> nodes = getSpecificationNodeEditParts(); // All the path nodes.
 
@@ -253,7 +253,7 @@ public abstract class URNDiagramEditPart extends ModelElementEditPart {
         List<EditPart> trash = new ArrayList<EditPart>();
 
         // Pass through all the editpart children and trash the ones that are not in the model list anymore
-        for (Iterator<EditPart> iter = children.iterator(); iter.hasNext();) {
+        for (Iterator<? extends EditPart> iter = children.iterator(); iter.hasNext();) {
             EditPart edit = iter.next();
             if (!modelObjects.contains(edit.getModel()))
                 trash.add(edit);
@@ -285,7 +285,7 @@ public abstract class URNDiagramEditPart extends ModelElementEditPart {
      * @see seg.jUCMNav.editparts.ModelElementEditPart#refreshVisuals()
      */
     protected void refreshVisuals() {
-        for (Iterator<EditPart> iter = getChildren().iterator(); iter.hasNext();) {
+        for (Iterator<? extends EditPart> iter = getChildren().iterator(); iter.hasNext();) {
             AbstractGraphicalEditPart element = (AbstractGraphicalEditPart) iter.next();
             element.refresh();
         }
@@ -329,7 +329,13 @@ public abstract class URNDiagramEditPart extends ModelElementEditPart {
             constraint = layout.getConstraint(childFigure);
 
         removeChildVisual(child);
-        List<EditPart> children = getChildren();
+        // GEF 3.x tightened EditPart.getChildren() to List<? extends EditPart>.
+        // This override deliberately mutates the parent's internal child list
+        // at a model index that differs from the visual index (see method
+        // javadoc). The underlying list is the same mutable instance; cast
+        // through a raw type to perform the typed-as-readonly mutation.
+        @SuppressWarnings({ "rawtypes", "unchecked" })
+        List<EditPart> children = (List) getChildren();
         children.remove(child);
         children.add(i, child);
         addChildVisual(child, index);

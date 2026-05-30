@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.eclipse.emf.ecore.EClassifier;
-import org.eclipse.ocl.OCL;
 import org.eclipse.ocl.OCLInput;
+import org.eclipse.ocl.ecore.OCL;
 import org.eclipse.ocl.ParserException;
 import org.eclipse.ocl.Query;
 import org.eclipse.ocl.ecore.Constraint;

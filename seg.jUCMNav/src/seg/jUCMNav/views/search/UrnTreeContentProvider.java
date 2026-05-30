@@ -228,4 +228,20 @@ public class UrnTreeContentProvider implements ITreeContentProvider, IFileSearch
         }
         return null;
     }
+
+    public int getLeafCount(Object parent) {
+        Object[] children = getChildren(parent);
+        if (children.length == 0) {
+            return 0;
+        }
+        int count = 0;
+        for (Object child : children) {
+            if (!hasChildren(child)) {
+                count++;
+            } else {
+                count += getLeafCount(child);
+            }
+        }
+        return count;
+    }
 }

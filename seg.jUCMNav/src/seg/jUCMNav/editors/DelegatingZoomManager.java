@@ -24,7 +24,7 @@ import org.eclipse.draw2d.ScalableFigure;
 import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.gef.editparts.ZoomListener;
+import org.eclipse.draw2d.zoom.ZoomListener;
 import org.eclipse.gef.editparts.ZoomManager;
 
 import seg.jUCMNav.editparts.URNRootEditPart;

@@ -1,6 +1,6 @@
 package seg.jUCMNav.importexport.z151.marshal;
 
-import javax.xml.bind.JAXBElement;
+import jakarta.xml.bind.JAXBElement;
 
 import seg.jUCMNav.importexport.z151.generated.Concern;
 import seg.jUCMNav.importexport.z151.generated.GRLGraph;

@@ -46,6 +46,20 @@
 
   <build>
     <plugins>
+      <!-- Tycho 5.0.x split: tycho-build (loaded via .mvn/extensions.xml)
+           handles the pomless polyglot mappings, but the LifecycleMapping
+           components for eclipse-plugin / eclipse-feature / eclipse-repository
+           live in tycho-maven-plugin. It must be declared here as a build
+           plugin with <extensions>true</extensions>, NOT in .mvn/extensions.xml
+           — loaded as a core extension its class realm cannot see
+           org.apache.maven.plugin.LegacySupport and Guice DI fails. -->
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-maven-plugin</artifactId>
+        <version>${tycho.version}</version>
+        <extensions>true</extensions>
+      </plugin>
+
       <plugin>
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>target-platform-configuration</artifactId>
@@ -82,6 +96,11 @@
         <configuration>
           <timestampProvider>jgit</timestampProvider>
           <jgit.ignore>pom.xml</jgit.ignore>
+          <!-- During migration the working tree is dirty after almost every
+               edit. Fall back to the default (build-time) timestamp provider
+               instead of failing the build. CI on a clean checkout still gets
+               the strict git-based qualifier. -->
+          <jgit.dirtyWorkingTree>warning</jgit.dirtyWorkingTree>
         </configuration>
         <dependencies>
           <dependency>

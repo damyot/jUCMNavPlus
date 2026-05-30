@@ -5,8 +5,8 @@ import java.util.Vector;
 
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.ocl.OCL;
 import org.eclipse.ocl.OCLInput;
+import org.eclipse.ocl.ecore.OCL;
 import org.eclipse.ocl.ParserException;
 import org.eclipse.ocl.Query;
 import org.eclipse.ocl.ecore.Constraint;

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Enables Tycho "pomless" builds: the plug-in, feature, and repository modules
+     are built directly from MANIFEST.MF / feature.xml / category.xml without a
+     pom.xml in each module. This extension also activates the Tycho build
+     (no need to declare tycho-maven-plugin in the parent pom). -->
+<extensions>
+  <extension>
+    <groupId>org.eclipse.tycho</groupId>
+    <artifactId>tycho-build</artifactId>
+    <version>5.0.3</version>
+  </extension>
+</extensions>

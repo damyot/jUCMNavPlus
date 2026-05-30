@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?pde version="3.8"?>
+<!-- Target platform for the IDE, pinned to Eclipse 2026-03 (4.39).
+     Set this as the active target (Window > Preferences > Plug-in Development >
+     Target Platform, or open this file and click "Set as Active Target Platform").
+
+     NOTE: The installable unit (IU) IDs below are the usual feature group IDs,
+     but exact IDs can vary by release. If resolution fails, open this file in the
+     Target Editor, use Add > Software Site against the same URL, and pick the
+     features interactively — then let Claude Code reconcile this file to match. -->
+<target name="seg.jUCMNav Target (2026-03)" sequenceNumber="1">
+  <locations>
+    <location includeAllPlatforms="false" includeConfigurePhase="true"
+              includeMode="planner" includeSource="true" type="InstallableUnit">
+      <repository location="https://download.eclipse.org/releases/2026-03"/>
+      <!-- Eclipse Platform / RCP / PDE -->
+      <unit id="org.eclipse.platform.feature.group" version="0.0.0"/>
+      <unit id="org.eclipse.rcp.feature.group" version="0.0.0"/>
+      <unit id="org.eclipse.pde.feature.group" version="0.0.0"/>
+      <!-- EMF (model framework jUCMNav is generated against) -->
+      <unit id="org.eclipse.emf.sdk.feature.group" version="0.0.0"/>
+      <!-- GEF Classic (draw2d + GEF editors) -->
+      <unit id="org.eclipse.gef.feature.group" version="0.0.0"/>
+      <!-- MDT/OCL (constraints) -->
+      <unit id="org.eclipse.ocl.all.feature.group" version="0.0.0"/>
+      <!-- JUnit (for plug-in tests) -->
+      <unit id="org.eclipse.jdt.junit.feature.group" version="0.0.0"/>
+    </location>
+  </locations>
+  <targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-21"/>
+</target>

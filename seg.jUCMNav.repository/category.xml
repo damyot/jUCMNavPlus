@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Defines the p2 update site (eclipse-repository). The presence of this file
+     makes this a pomless eclipse-repository module. The build output is a ready
+     update site at target/repository, which CI publishes to GitHub Pages.
+
+     To make the site self-contained (installable without other update sites
+     configured), this module's behavior can be tuned with includeAllDependencies
+     — add that via a small pom if/when needed. -->
+<site>
+  <feature id="seg.jUCMNav.feature" version="0.0.0">
+    <category name="jucmnav"/>
+  </feature>
+  <category-def name="jucmnav" label="jUCMNav">
+    <description>
+      jUCMNav — User Requirements Notation (UCM + GRL) editor and analysis tool.
+    </description>
+  </category-def>
+</site>

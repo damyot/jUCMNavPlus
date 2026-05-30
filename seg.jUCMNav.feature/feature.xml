@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The installable feature users select in "Install New Software".
+     Skeleton: fill in the real version dependencies as needed. The feature
+     "includes" / "requires" the jUCMNav plug-in and pulls in its prerequisites
+     (EMF, GEF, OCL) from the target platform.
+
+     Tycho will replace the qualifier in version "7.0.0.qualifier" with a build
+     timestamp. Keep the plug-in's Bundle-Version in sync. -->
+<feature
+    id="seg.jUCMNav.feature"
+    label="jUCMNav (URN: UCM + GRL)"
+    version="7.0.0.qualifier"
+    provider-name="jUCMNav project">
+
+  <description url="https://github.com/JUCMNAV/projetseg-update">
+    jUCMNav: graphical editor and analysis tool for the User Requirements
+    Notation (URN), combining Use Case Maps (UCM) and the Goal-oriented
+    Requirements Language (GRL).
+  </description>
+
+  <license url="https://www.eclipse.org/legal/epl-2.0/">
+    See the project for license terms.
+  </license>
+
+  <!-- The jUCMNav plug-in itself. version 0.0.0 + unpack=false lets Tycho fill
+       in the built version. Add more <plugin> lines if the project ships
+       multiple bundles. -->
+  <plugin id="seg.jUCMNav" download-size="0" install-size="0"
+          version="0.0.0" unpack="false"/>
+
+  <!-- Pull required frameworks from the target platform so users get a working
+       install. Verify these feature IDs resolve against 2026-03 (see the .target
+       notes); adjust if needed. -->
+  <requires>
+    <import feature="org.eclipse.emf.sdk" version="0.0.0"/>
+    <import feature="org.eclipse.gef" version="0.0.0"/>
+    <import feature="org.eclipse.ocl.all" version="0.0.0"/>
+  </requires>
+
+</feature>

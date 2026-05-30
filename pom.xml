@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <!-- Adjust groupId/version to taste. version is also the qualifier base for
+       all bundles/features built here. -->
+  <groupId>org.jucmnav</groupId>
+  <artifactId>seg.jUCMNav.parent</artifactId>
+  <version>7.0.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <properties>
+    <tycho.version>5.0.3</tycho.version>
+    <java.version>21</java.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <!-- Skip tests with -DskipTests; UI tests need a display (xvfb on CI). -->
+  </properties>
+
+  <!-- The modules are built as POMLESS Tycho projects (see .mvn/extensions.xml):
+       - seg.jUCMNav            -> eclipse-plugin   (derived from MANIFEST.MF)
+       - seg.jUCMNav.feature    -> eclipse-feature  (derived from feature.xml)
+       - seg.jUCMNav.repository -> eclipse-repository (derived from category.xml)
+       Verify these directory names match the real repo layout; rename modules
+       below if the plug-in folder differs. Add a test fragment module here when
+       wiring up JUnit plug-in tests. -->
+  <modules>
+    <module>seg.jUCMNav</module>
+    <module>seg.jUCMNav.feature</module>
+    <module>seg.jUCMNav.repository</module>
+  </modules>
+
+  <!-- Build against the Eclipse 2026-03 simultaneous release. That single p2
+       repo already contains the Platform, EMF, GEF Classic and OCL. A matching
+       .target file is provided in seg.jUCMNav.target/ for IDE use; keep the two
+       in sync (or switch this build to consume the .target via a
+       target-definition module once the basics work). -->
+  <repositories>
+    <repository>
+      <id>eclipse-2026-03</id>
+      <layout>p2</layout>
+      <url>https://download.eclipse.org/releases/2026-03</url>
+    </repository>
+  </repositories>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>target-platform-configuration</artifactId>
+        <version>${tycho.version}</version>
+        <configuration>
+          <executionEnvironment>JavaSE-21</executionEnvironment>
+          <environments>
+            <environment><os>linux</os><ws>gtk</ws><arch>x86_64</arch></environment>
+            <environment><os>linux</os><ws>gtk</ws><arch>aarch64</arch></environment>
+            <environment><os>win32</os><ws>win32</ws><arch>x86_64</arch></environment>
+            <environment><os>macosx</os><ws>cocoa</ws><arch>x86_64</arch></environment>
+            <environment><os>macosx</os><ws>cocoa</ws><arch>aarch64</arch></environment>
+          </environments>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-compiler-plugin</artifactId>
+        <version>${tycho.version}</version>
+        <configuration>
+          <release>${java.version}</release>
+          <!-- Old code is full of raw types etc.; don't fail the build on
+               warnings while migrating. Tighten this later. -->
+          <failOnWarning>false</failOnWarning>
+        </configuration>
+      </plugin>
+
+      <!-- Reproducible version qualifiers from git timestamps. -->
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-packaging-plugin</artifactId>
+        <version>${tycho.version}</version>
+        <configuration>
+          <timestampProvider>jgit</timestampProvider>
+          <jgit.ignore>pom.xml</jgit.ignore>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>org.eclipse.tycho</groupId>
+            <artifactId>tycho-buildtimestamp-jgit</artifactId>
+            <version>${tycho.version}</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+    </plugins>
+  </build>
+</project>

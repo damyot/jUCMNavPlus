@@ -33,7 +33,9 @@ public class IntentionalElementMHandler extends GRLLinkableElementMHandler {
 			elemZ.setDecompositionType(getDecompositionType(elem.getDecompositionType()));
 			elemZ.setImportance(getImportanceType(elem.getImportance()));
 			elemZ.setImportanceQuantitative(new BigInteger(Integer.toString(elem.getImportanceQuantitative())));
-			processList(elem.getRefs(), elemZ.getRefs(), "createIntentionalElementRefs", false); //$NON-NLS-1$
+			// Schema drift (Z.151 2012): IntentionalElement.refs moved up to GRLContainableElement.refs.
+			// ObjectFactory no longer exposes createIntentionalElementRefs; the wrapper is createGRLContainableElementRefs.
+			processList(elem.getRefs(), elemZ.getRefs(), "createGRLContainableElementRefs", false); //$NON-NLS-1$
 
 			// <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 			// <!-- ConcreteStyle -->

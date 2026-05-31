@@ -43,12 +43,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0   # full history so the jgit timestamp provider works
 
       - name: Set up JDK 21
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '21'
@@ -65,7 +65,7 @@ jobs:
       # Always: downloadable artifact from the Actions UI. Lets reviewers of
       # PRs from any branch install the built update site locally for testing.
       - name: Upload update site (downloadable artifact)
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: jucmnav-update-site
           path: seg.jUCMNav.repository/target/repository
@@ -75,7 +75,7 @@ jobs:
       # Only on master / tags: prepare the Pages artifact for deploy.
       - name: Upload update site (Pages artifact)
         if: github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v')
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: seg.jUCMNav.repository/target/repository
 
@@ -89,4 +89,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5

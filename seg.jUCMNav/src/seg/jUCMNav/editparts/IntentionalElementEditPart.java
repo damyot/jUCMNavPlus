@@ -173,16 +173,24 @@ public class IntentionalElementEditPart extends GrlNodeEditPart implements NodeE
      */
     public void deactivate() {
         if (isActive()) {
-            // bug 435: ((GrlConnectionOnBottomRootEditPart) getRoot()).getFigure().remove(evaluationLabel);
-            ((ScalableFigure) ((FreeformLayeredPane) ((FreeformViewport) ((GrlConnectionOnBottomRootEditPart) getRoot()).getFigure()).getChildren().get(0))
-                    .getChildren().get(0)).remove(evaluationLabel);
-            ((ScalableFigure) ((FreeformLayeredPane) ((FreeformViewport) ((GrlConnectionOnBottomRootEditPart) getRoot()).getFigure()).getChildren().get(0))
-                    .getChildren().get(0)).remove(changeLabel);
+            // The createFigure() add path tries a 3-level cast into the ScalableFreeformLayeredPane
+            // and falls back to the root figure on failure. Modern GEF Classic 3.x reshuffles that
+            // inner layer (FreeformLayeredPane is no longer a ScalableFigure subtype on the inner
+            // child), so the same cast chain in deactivate() throws ClassCastException on close.
+            // Removing via the label's actual parent is symmetric to both add branches.
+            removeFromParent(evaluationLabel);
+            removeFromParent(kpiEvaluationValueLabel);
+            removeFromParent(changeLabel);
             if (getNode() instanceof IntentionalElementRef && (getNode()).getDef() != null)
                 (getNode()).getDef().eAdapters().remove(this);
         }
         super.deactivate();
 
+    }
+
+    private static void removeFromParent(IFigure label) {
+        if (label != null && label.getParent() != null)
+            label.getParent().remove(label);
     }
 
     /**

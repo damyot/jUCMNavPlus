@@ -12,6 +12,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.SWTGraphics;
+import org.eclipse.draw2d.ScaledGraphics;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
@@ -103,6 +104,7 @@ public class SelectExportFilePage extends WizardPage implements SelectionListene
         Image img = null;
         GC gc = null;
         Graphics graphics = null;
+        ScaledGraphics scaledGraphics = null;
         try {
             // get root figure
             IFigure f = ((ScalableFreeformRootEditPart)gv.getRootEditPart()).getLayer(LayerConstants.PRINTABLE_LAYERS);
@@ -110,14 +112,14 @@ public class SelectExportFilePage extends WizardPage implements SelectionListene
             // create image from root figure
             img = new Image(null, f.getSize().width, f.getSize().height);
             gc = new GC(img);
-            // See CopyAction.buildScreenshot -- without GDI+ mode, antialiased Polygon/Polyline
-            // fills used by UCM path-node figures silently no-op off-screen.
+            // See CopyAction.buildScreenshot for the GDI+ / ScaledGraphics rationale.
             gc.setAdvanced(true);
             gc.setAntialias(SWT.ON);
             gc.setTextAntialias(SWT.ON);
             graphics = new SWTGraphics(gc);
             graphics.translate(f.getBounds().getLocation());
-            f.paint(graphics);
+            scaledGraphics = new ScaledGraphics(graphics);
+            f.paint(scaledGraphics);
 
             // save image to file
             ImageLoader il = new ImageLoader();
@@ -135,6 +137,7 @@ public class SelectExportFilePage extends WizardPage implements SelectionListene
             messageBox.open();
             return false;
         } finally {
+            if (scaledGraphics != null) scaledGraphics.dispose();
             if (graphics != null) graphics.dispose();
             if (gc != null) gc.dispose();
             if (img != null && !img.isDisposed()) img.dispose();

@@ -3,6 +3,7 @@ package seg.jUCMNav.actions.cutcopypaste;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.LayeredPane;
 import org.eclipse.draw2d.SWTGraphics;
+import org.eclipse.draw2d.ScaledGraphics;
 import org.eclipse.gef.internal.GEFMessages;
 import org.eclipse.gef.ui.actions.SelectionAction;
 import org.eclipse.swt.SWT;
@@ -63,24 +64,30 @@ public class CopyAction extends SelectionAction {
                 Image image = new Image(Display.getDefault(), w, h);
                 GC gc = null;
                 SWTGraphics graphics = null;
+                ScaledGraphics scaledGraphics = null;
                 try {
                     gc = new GC(image);
-                    // Force GDI+ on Windows so antialiased Polygon/Polyline fills (used by every
-                    // UCM PathNode -- stubs, endpoints, forks/joins, direction arrows, the actor
-                    // stickman) actually render off-screen. Without this, SWTGraphics calls
-                    // gc.setAntialias(SWT.ON) on a non-advanced GC and the subsequent
-                    // fillPolygon/drawPolygon silently no-op, so those shapes vanish from the
-                    // bitmap while GrlNodeFigure's plain rectangle/ellipse Shape paths still work.
+                    // Force GDI+ on Windows so antialiased polygon fills survive off-screen.
                     gc.setAdvanced(true);
                     gc.setAntialias(SWT.ON);
                     gc.setTextAntialias(SWT.ON);
                     graphics = new SWTGraphics(gc);
                     graphics.translate(-pane.getBounds().x, -pane.getBounds().y);
-                    figure.paint(graphics);
+                    // Wrap in ScaledGraphics so polygon/polyline draws route through gc.fillPath
+                    // (GDI+ Path-based) instead of gc.fillPolygon (raw GDI). At zoom == 1.0 the
+                    // ScalableFreeformLayeredPane skips its own ScaledGraphics wrapper and paints
+                    // children straight onto the SWTGraphics; raw gc.fillPolygon on an off-screen
+                    // GC drops antialiased fills (UCM stubs, endpoints, forks/joins, direction
+                    // arrows -- everything that uses Polygon/Polyline). At zoom != 1.0 the pane
+                    // already wraps in ScaledGraphics, which is why other zoom levels work.
+                    // Wrapping here forces the GDI+ path regardless of pane scale.
+                    scaledGraphics = new ScaledGraphics(graphics);
+                    figure.paint(scaledGraphics);
 
                     // TODO: Improve crop to make use of current selection.
                     screenshot = ReportUtils.cropImage(image.getImageData());
                 } finally {
+                    if (scaledGraphics != null) scaledGraphics.dispose();
                     if (graphics != null) graphics.dispose();
                     if (gc != null) gc.dispose();
                     image.dispose();

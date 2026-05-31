@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.SWTGraphics;
+import org.eclipse.draw2d.ScaledGraphics;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
@@ -31,15 +32,33 @@ import urncore.IURNDiagram;
 public abstract class ExportImage implements IUseCaseMapExport {
 
     /**
-     * Force GDI+ on Windows for an off-screen GC so antialiased Polygon/Polyline fills used by UCM
-     * path-node figures (stubs, endpoints, forks/joins, direction arrows, actor stickman) render to
-     * the bitmap. Without this, SWTGraphics's setAntialias(SWT.ON) on a non-advanced GC silently
-     * skips the fill and the shapes vanish from exported / copied images.
+     * Force GDI+ on Windows for an off-screen GC. Necessary but not sufficient on its own at zoom
+     * 1.0 -- callers must also wrap the SWTGraphics in a {@link ScaledGraphics} (see
+     * {@link #paintIntoOffscreen}) so polygon/polyline draws route through gc.fillPath (GDI+ path)
+     * instead of gc.fillPolygon (raw GDI), which silently drops antialiased fills off-screen.
      */
     public static void enableAdvancedRendering(GC gc) {
         gc.setAdvanced(true);
         gc.setAntialias(SWT.ON);
         gc.setTextAntialias(SWT.ON);
+    }
+
+    /**
+     * Paint {@code pane} into the given {@link SWTGraphics} via a {@link ScaledGraphics} wrapper so
+     * antialiased Polygon/Polyline fills (UCM stubs, endpoints, forks/joins, direction arrows,
+     * actor stickman) render correctly regardless of zoom. At zoom == 1.0 the
+     * ScalableFreeformLayeredPane skips its own ScaledGraphics wrap and paints children straight
+     * onto the raw graphics, where raw gc.fillPolygon on an off-screen GC drops the fill; pre-
+     * wrapping forces every child draw through GDI+ Path operations.
+     * <p>Caller owns disposal of the supplied graphics; the wrapper is disposed here.
+     */
+    public static void paintIntoOffscreen(IFigure pane, SWTGraphics graphics) {
+        ScaledGraphics scaled = new ScaledGraphics(graphics);
+        try {
+            pane.paint(scaled);
+        } finally {
+            scaled.dispose();
+        }
     }
 
     /**
@@ -55,7 +74,7 @@ public abstract class ExportImage implements IUseCaseMapExport {
         SWTGraphics graphics = new SWTGraphics(gc);
         // if the bounds are in the negative x/y, we don't see them without a translation
         graphics.translate(-pane.getBounds().x, -pane.getBounds().y);
-        pane.paint(graphics);
+        paintIntoOffscreen(pane, graphics);
 
         ImageLoader loader = new ImageLoader();
         loader.data = new ImageData[] { ReportUtils.cropImage(image.getImageData()) };

@@ -100,19 +100,20 @@ public class SelectExportFilePage extends WizardPage implements SelectionListene
             return false;
         }
         
+        Image img = null;
+        GC gc = null;
+        Graphics graphics = null;
         try {
-            // get root figure 
+            // get root figure
             IFigure f = ((ScalableFreeformRootEditPart)gv.getRootEditPart()).getLayer(LayerConstants.PRINTABLE_LAYERS);
-            
+
             // create image from root figure
-            Image img = new Image(null, f.getSize().width, f.getSize().height);
-            GC gc = new GC(img);
-            Graphics graphics = new SWTGraphics(gc);
+            img = new Image(null, f.getSize().width, f.getSize().height);
+            gc = new GC(img);
+            graphics = new SWTGraphics(gc);
             graphics.translate(f.getBounds().getLocation());
             f.paint(graphics);
-            graphics.dispose();
-            gc.dispose();
-            
+
             // save image to file
             ImageLoader il = new ImageLoader();
             il.data = new ImageData[]{img.getImageData()};
@@ -128,8 +129,12 @@ public class SelectExportFilePage extends WizardPage implements SelectionListene
             messageBox.setMessage(e.getMessage());
             messageBox.open();
             return false;
+        } finally {
+            if (graphics != null) graphics.dispose();
+            if (gc != null) gc.dispose();
+            if (img != null && !img.isDisposed()) img.dispose();
         }
-        
+
         return true;
     }
 

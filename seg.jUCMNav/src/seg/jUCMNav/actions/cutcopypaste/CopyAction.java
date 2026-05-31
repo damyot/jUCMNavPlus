@@ -60,17 +60,21 @@ public class CopyAction extends SelectionAction {
                 int w = figure.getSize().width;
                 int h = figure.getSize().height;
                 Image image = new Image(Display.getDefault(), w, h);
+                GC gc = null;
+                SWTGraphics graphics = null;
+                try {
+                    gc = new GC(image);
+                    graphics = new SWTGraphics(gc);
+                    graphics.translate(-pane.getBounds().x, -pane.getBounds().y);
+                    figure.paint(graphics);
 
-                GC gc = new GC(image);
-                SWTGraphics graphics = new SWTGraphics(gc);
-                graphics.translate(-pane.getBounds().x, -pane.getBounds().y);
-                figure.paint(graphics);
-
-                // TODO: Improve crop to make use of current selection.
-                screenshot = ReportUtils.cropImage(image.getImageData());
-                
-                graphics.dispose();
-                gc.dispose();
+                    // TODO: Improve crop to make use of current selection.
+                    screenshot = ReportUtils.cropImage(image.getImageData());
+                } finally {
+                    if (graphics != null) graphics.dispose();
+                    if (gc != null) gc.dispose();
+                    image.dispose();
+                }
             }
         }
         return screenshot;

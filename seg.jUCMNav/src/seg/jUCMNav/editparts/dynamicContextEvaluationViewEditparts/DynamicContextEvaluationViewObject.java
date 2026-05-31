@@ -18,6 +18,8 @@ import org.eclipse.jface.resource.StringConverter;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 
+import seg.jUCMNav.figures.ColorManager;
+
 import grl.Actor;
 import grl.ActorRef;
 import grl.Contribution;
@@ -570,7 +572,7 @@ public class DynamicContextEvaluationViewObject {
 		        color = partial + ",255,96"; //$NON-NLS-1$
 		    }
 		}
-    	actualColor = new Color(Display.getCurrent(), StringConverter.asRGB(color));
+    	actualColor = ColorManager.getColor(StringConverter.asRGB(color));
     	return actualColor;
     }
     

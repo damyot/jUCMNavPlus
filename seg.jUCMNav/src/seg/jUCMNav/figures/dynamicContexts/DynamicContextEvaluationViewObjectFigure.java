@@ -29,7 +29,9 @@ import org.eclipse.jface.resource.StringConverter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -91,10 +93,17 @@ public class DynamicContextEvaluationViewObjectFigure extends Figure {
     private int maxIntEltLength;
     private int granularity;
     
-    private Color[] linkColors = {ColorManager.BLACK, ColorManager.BLUE, ColorManager.YELLOW, ColorManager.PURPLE, ColorManager.RED,
-    		new Color(null, StringConverter.asRGB("0,102,51")), new Color(null, StringConverter.asRGB("255,51,255")),
-    		new Color(null, StringConverter.asRGB("255,128,0")), new Color(null, StringConverter.asRGB("0,255,255")),
-    		new Color(null, StringConverter.asRGB("0,255,128")), new Color(null, StringConverter.asRGB("255,204,255"))};
+    // Disabled/deactivated indicator colour — compared by RGB against entries in colors[][] below.
+    private static final RGB DISABLED_GRAY_RGB = new RGB(169, 169, 169);
+
+    // Static so the cached Colors are allocated once per workbench, not per figure instance.
+    // Custom shades route through ColorManager's RGB cache (shared with all other figures).
+    private static final Color[] linkColors = {ColorManager.BLACK, ColorManager.BLUE, ColorManager.YELLOW, ColorManager.PURPLE, ColorManager.RED,
+    		ColorManager.getColor(StringConverter.asRGB("0,102,51")), ColorManager.getColor(StringConverter.asRGB("255,51,255")),
+    		ColorManager.getColor(StringConverter.asRGB("255,128,0")), ColorManager.getColor(StringConverter.asRGB("0,255,255")),
+    		ColorManager.getColor(StringConverter.asRGB("0,255,128")), ColorManager.getColor(StringConverter.asRGB("255,204,255"))};
+
+    private static final String TIMEPOINT_LABEL_FONT_KEY = "seg.jUCMNav.figures.dynamicContexts.timepointLabelFont"; //$NON-NLS-1$
     
     protected boolean done;
     
@@ -206,8 +215,13 @@ public class DynamicContextEvaluationViewObjectFigure extends Figure {
     	if (!timepointName.equals("")) {
     		
     		//Rotate the timepoint name and create an image
-    		Image image = ImageUtilities.createRotatedImageOfString(timepointName, 
-    				new Font(null, "Consolas", 8, SWT.BOLD), getForegroundColor(), getBackgroundColor());
+    		if (!JFaceResources.getFontRegistry().hasValueFor(TIMEPOINT_LABEL_FONT_KEY)) {
+    			JFaceResources.getFontRegistry().put(TIMEPOINT_LABEL_FONT_KEY,
+    					new FontData[] { new FontData("Consolas", 8, SWT.BOLD) }); //$NON-NLS-1$
+    		}
+    		Font tpFont = JFaceResources.getFontRegistry().get(TIMEPOINT_LABEL_FONT_KEY);
+    		Image image = ImageUtilities.createRotatedImageOfString(timepointName,
+    				tpFont, getForegroundColor(), getBackgroundColor());
 	    	graphics.drawImage(image, x, y);
 	    	
 	    	//dispose the image
@@ -770,14 +784,14 @@ public class DynamicContextEvaluationViewObjectFigure extends Figure {
         		
         		//If deactivated, then Dark Gray else color corresponding to the graph of overall evaluation 
         		//due to decomposition links for the symbols (crosses to indicate timepoints)
-        		if(colors[i][j].equals(new Color(null, StringConverter.asRGB("169,169,169")))) {
+        		if(DISABLED_GRAY_RGB.equals(colors[i][j].getRGB())) {
             		symbolColors.add(ColorManager.DARKGRAY);
             	} else
             		symbolColors.add(linkColors[10]);
         	}
         	
         	//if element is deactivated don't draw the graph, else do.
-        	if(colors[i][j].equals(new Color(null, StringConverter.asRGB("169,169,169")))) {
+        	if(DISABLED_GRAY_RGB.equals(colors[i][j].getRGB())) {
         		
         		//If the values of prior activated portion exist
         		if (xLineSeries.size() != 0) {
@@ -1065,14 +1079,14 @@ public class DynamicContextEvaluationViewObjectFigure extends Figure {
         		updYSeriesImp.add(importValues[i][j]);
         		
         		//If deactivated, then Dark Gray else blue color for the symbols (crosses to indicate timepoints)
-        		if(colors[i][j].equals(new Color(null, StringConverter.asRGB("169,169,169")))) {
+        		if(DISABLED_GRAY_RGB.equals(colors[i][j].getRGB())) {
             		symbolColors.add(ColorManager.DARKGRAY);
             	} else
             		symbolColors.add(ColorManager.BLUE);
         	}
         	
         	//if element is deactivated don't draw the graph, else do.
-        	if(colors[i][j].equals(new Color(null, StringConverter.asRGB("169,169,169")))) {
+        	if(DISABLED_GRAY_RGB.equals(colors[i][j].getRGB())) {
         		
         		//If the values of prior activated portion exist
         		if (xLineSeries.size() != 0) {

@@ -115,13 +115,10 @@ public class ActorRefEditPart extends ModelElementEditPart implements Adapter {
      */
     public void deactivate() {
         if (isActive()) {
-            // if (evaluationImg != null) {
-            // evaluationImg.dispose();
-            // evaluationImg = null;
-            // }
-            // ((GrlConnectionOnBottomRootEditPart) getRoot()).getFigure().remove(evaluationLabel);
-            ((ScalableFigure) ((FreeformLayeredPane) ((FreeformViewport) ((GrlConnectionOnBottomRootEditPart) getRoot()).getFigure()).getChildren().get(0))
-                    .getChildren().get(0)).remove(evaluationLabel);
+            // See IntentionalElementEditPart.deactivate -- the same 3-level cast no longer holds on
+            // modern GEF Classic. Remove via the label's actual parent (matches either createFigure branch).
+            if (evaluationLabel != null && evaluationLabel.getParent() != null)
+                evaluationLabel.getParent().remove(evaluationLabel);
             if (getActorRef().getContDef() != null) {
                 getActorRef().getContDef().eAdapters().remove(this);
             }

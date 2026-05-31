@@ -53,9 +53,11 @@ public class IntentionalElementUMHandler extends GRLLinkableElementUMHandler {
                     elem = (grl.IntentionalElement) super.handle(elemZ, elem, true);
                     elem.setType(getIntentionalElementType(elemZ.getType()));
                 }
-                elem.setLineColor(elemZ.getStyle().getLineColor());
-                elem.setFillColor(elemZ.getStyle().getFillColor());
-                elem.setFilled(elemZ.getStyle().isFilled());
+                if (elemZ.getStyle() != null) {
+                    elem.setLineColor(elemZ.getStyle().getLineColor());
+                    elem.setFillColor(elemZ.getStyle().getFillColor());
+                    elem.setFilled(elemZ.getStyle().isFilled());
+                }
                 // elem.setGrlspec(); //Handled in GRLspecUMHandler
                 elem.setDecompositionType(getDecompositionType(elemZ.getDecompositionType()));
                 elem.setImportance(grl.ImportanceType.get(elemZ.getImportance().ordinal()));

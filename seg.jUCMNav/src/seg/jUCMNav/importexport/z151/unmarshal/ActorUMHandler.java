@@ -49,10 +49,12 @@ public class ActorUMHandler extends GRLLinkableElementUMHandler {
 			metaDataList.removeAll(removeList);
 			
 			elem = (grl.Actor) super.handle(elemZ, elem, true);
-			//style
-			elem.setLineColor(elemZ.getStyle().getLineColor());
-			elem.setFillColor(elemZ.getStyle().getFillColor());
-			elem.setFilled(elemZ.getStyle().isFilled());
+			//style (optional in Z.151 schema)
+			if (elemZ.getStyle() != null) {
+				elem.setLineColor(elemZ.getStyle().getLineColor());
+				elem.setFillColor(elemZ.getStyle().getFillColor());
+				elem.setFilled(elemZ.getStyle().isFilled());
+			}
 			//elem.setGrlspec(); //Handled in GRLspecUMHandler
 			// elem.setId();
 			// elem.setName();

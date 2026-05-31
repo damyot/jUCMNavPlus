@@ -48,10 +48,13 @@ public class ComponentUMHandler extends UCMmodelElementUMHandler {
 			metaDataList.removeAll(removeList);
 			
 			elem = (urncore.Component) super.handle(elemZ, elem, true);
-			elem.setFillColor(elemZ.getStyle().getFillColor());
 			elem.setUrndefinition(urn.getUrndef());
-			elem.setLineColor(elemZ.getStyle().getLineColor());
-			elem.setFilled(elemZ.getStyle().isFilled());
+			//style (optional in Z.151 schema)
+			if (elemZ.getStyle() != null) {
+				elem.setFillColor(elemZ.getStyle().getFillColor());
+				elem.setLineColor(elemZ.getStyle().getLineColor());
+				elem.setFilled(elemZ.getStyle().isFilled());
+			}
 			elem.setKind(getComponentKind(elemZ.getKind()));
 			elem.setProtected(elemZ.isProtected());
 			elem.setContext(elemZ.isContext());

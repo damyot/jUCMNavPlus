@@ -43,7 +43,7 @@ public class ExportImageGIF extends ExportImage {
         // if the bounds are in the negative x/y, we don't see them without a
         // translation
         graphics.translate(-pane.getBounds().x, -pane.getBounds().y);
-        ExportImage.paintIntoOffscreen(pane, graphics);
+        pane.paint(graphics);
 
         ImageLoader loader = new ImageLoader();
         loader.data = new ImageData[] { downSample(image) };

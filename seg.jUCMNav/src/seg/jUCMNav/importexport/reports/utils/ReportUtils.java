@@ -135,7 +135,7 @@ public class ReportUtils {
             GC gc = new GC(image);
             seg.jUCMNav.importexport.ExportImage.enableAdvancedRendering(gc);
             SWTGraphics graphics = new SWTGraphics(gc);
-            seg.jUCMNav.importexport.ExportImage.paintIntoOffscreen(pane, graphics);
+            pane.paint(graphics);
 
             ImageData ideaImageData = ExportImageGIF.downSample(image);
             ImageData croppedImage = ReportUtils.cropImage(ideaImageData);

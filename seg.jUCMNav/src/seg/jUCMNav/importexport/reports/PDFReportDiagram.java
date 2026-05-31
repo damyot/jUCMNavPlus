@@ -194,7 +194,7 @@ public class PDFReportDiagram extends PDFReport {
 
             // if the bounds are in the negative x/y, we don't see them without a translation
             graphics.translate(-pane.getBounds().x, -pane.getBounds().y);
-            seg.jUCMNav.importexport.ExportImage.paintIntoOffscreen(pane, graphics);
+            pane.paint(graphics);
 
             // downSample the image to an 8-bit palette, using the 256 most frequently used color
             ImageData ideaImageData = ExportImageGIF.downSample(image);

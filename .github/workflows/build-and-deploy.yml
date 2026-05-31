@@ -1,12 +1,26 @@
 name: Build and publish update site
 
-# Builds the Tycho update site on every push/PR, and publishes it to GitHub
-# Pages on pushes to the default branch and on version tags (v*).
+# Builds the Tycho update site on every push/PR. On pushes to the default
+# branch (master) and on version tags (v*), also publishes it to GitHub Pages.
+# On every successful build, uploads the update site as a downloadable
+# GitHub Actions artifact so PRs from feature branches can be installed
+# locally for testing without waiting for a release.
 #
 # After the first successful Pages deploy, enable Pages in the repo settings:
 #   Settings > Pages > Build and deployment > Source: "GitHub Actions".
 # Users then install jUCMNav by adding the Pages URL as an update site:
 #   https://<org-or-user>.github.io/<repo>/
+#
+# Note on tests: src/seg/jUCMNav/tests/ contains a JUnit 3 suite
+# (TestAllTestSuite) that is NOT executed by this build — Tycho's surefire
+# only runs tests in eclipse-test-plugin fragments, which jUCMNav does not
+# yet have. The xvfb-run wrapper below is kept so adding a test fragment
+# later "just works" without rewiring CI. To enable test execution:
+#   1. Extract src/seg/jUCMNav/tests/ into a sibling module
+#      seg.jUCMNav.tests/ with eclipse-test-plugin packaging.
+#   2. Modernize the JUnit 3 TestCase/TestSuite to JUnit 4 (@Test) — the
+#      org.junit Require-Bundle is already in place.
+#   3. Add the module to <modules> in pom.xml.
 
 on:
   push:
@@ -40,14 +54,26 @@ jobs:
           java-version: '21'
           cache: maven
 
-      # UI / plug-in tests need a display; provide a virtual one.
+      # UI / plug-in tests need a display; provide a virtual one. Kept
+      # even though no test fragment exists yet — see header comment.
       - name: Install Xvfb
         run: sudo apt-get update && sudo apt-get install -y xvfb
 
       - name: Build (Tycho)
         run: xvfb-run -a mvn -B clean verify
 
-      - name: Upload update site artifact
+      # Always: downloadable artifact from the Actions UI. Lets reviewers of
+      # PRs from any branch install the built update site locally for testing.
+      - name: Upload update site (downloadable artifact)
+        uses: actions/upload-artifact@v4
+        with:
+          name: jucmnav-update-site
+          path: seg.jUCMNav.repository/target/repository
+          if-no-files-found: error
+          retention-days: 30
+
+      # Only on master / tags: prepare the Pages artifact for deploy.
+      - name: Upload update site (Pages artifact)
         if: github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v')
         uses: actions/upload-pages-artifact@v3
         with:

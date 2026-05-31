@@ -2,7 +2,10 @@ package seg.jUCMNav.actions.scenarios;
 
 import grl.EvaluationStrategy;
 
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
 import seg.jUCMNav.JUCMNavPlugin;
@@ -39,7 +42,10 @@ public class StartStrategyDifferenceModeAction extends URNSelectionAction {
         		return false;
         	}
 
-        	if( ((StrategiesView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView( "seg.jUCMNav.views.StrategiesView" )).isStrategyView()) { //$NON-NLS-1$
+        	IWorkbenchWindow win = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+        	IWorkbenchPage page = win != null ? win.getActivePage() : null;
+        	IViewPart view = page != null ? page.findView("seg.jUCMNav.views.StrategiesView") : null; //$NON-NLS-1$
+        	if (view instanceof StrategiesView && ((StrategiesView) view).isStrategyView()) {
         		if( (strategy1 = sel.getStrategy()) != null ) {
         			return true;
         		}

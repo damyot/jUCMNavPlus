@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.eclipse.gef.commands.Command;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPart;
 
 import seg.jUCMNav.JUCMNavPlugin;
@@ -140,8 +141,10 @@ public class RefactorIntoStubAction extends URNSelectionAction {
 
     protected void autoDirectEdit(Command cmd) {
         if (originalMap != null) {
-            UCMNavMultiPageEditor editor = (UCMNavMultiPageEditor) this.getWorkbenchPart().getSite().getPage().getActiveEditor();
-            editor.setActivePage(originalMap);
+            IEditorPart active = this.getWorkbenchPart().getSite().getPage().getActiveEditor();
+            if (active instanceof UCMNavMultiPageEditor) {
+                ((UCMNavMultiPageEditor) active).setActivePage(originalMap);
+            }
             originalMap = null;
         }
 

@@ -24,6 +24,7 @@ import grl.IntentionalElement;
 import grl.IntentionalElementRef;
 import grl.LinkRef;
 import seg.jUCMNav.JUCMNavPlugin;
+import seg.jUCMNav.editors.UCMNavMultiPageEditor;
 import seg.jUCMNav.model.util.EObjectClassNameComparator;
 import seg.jUCMNav.model.util.URNNamingHelper;
 import seg.jUCMNav.views.outline.UrnOutlinePage;
@@ -132,14 +133,21 @@ public class ListDefinitionReferencesAction extends URNSelectionAction {
                                     EObject o = (EObject)references.get(index);
                                     IURNDiagram diagram = getDiagram(o);
 
-                                    UrnOutlinePage outline = (UrnOutlinePage) getEditor().getAdapter(IContentOutlinePage.class);
-                                    
-                                    EditPart part = (EditPart) outline.getViewer().getEditPartRegistry().get(o);
+                                    EditPart part = null;
+                                    UCMNavMultiPageEditor ed = getEditor();
+                                    if (ed != null) {
+                                        Object adapter = ed.getAdapter(IContentOutlinePage.class);
+                                        if (adapter instanceof UrnOutlinePage) {
+                                            Object registryEntry = ((UrnOutlinePage) adapter).getViewer().getEditPartRegistry().get(o);
+                                            if (registryEntry instanceof EditPart)
+                                                part = (EditPart) registryEntry;
+                                        }
+                                    }
 
                                     if (part != null)
                                         getEditor().selectInOutline(part);
-                                    else {
-                                        getEditor().selectInDiagram(o, diagram);
+                                    else if (ed != null) {
+                                        ed.selectInDiagram(o, diagram);
                                     }
                                 }
                             });

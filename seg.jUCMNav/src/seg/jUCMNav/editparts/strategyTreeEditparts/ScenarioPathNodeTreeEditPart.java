@@ -158,7 +158,10 @@ public class ScenarioPathNodeTreeEditPart extends StrategyUrnModelElementTreeEdi
      * @return Is this element inherited from another scenario?
      */
     protected boolean isInheritedEndPoint() {
-        return getModel() instanceof ScenarioEndPoint && !((ScenarioDef) getParent().getParent().getModel()).getEndPoints().contains(getModel());
+        if (!(getModel() instanceof ScenarioEndPoint) || getParent() == null || getParent().getParent() == null)
+            return false;
+        Object grandModel = getParent().getParent().getModel();
+        return grandModel instanceof ScenarioDef && !((ScenarioDef) grandModel).getEndPoints().contains(getModel());
     }
 
     /**
@@ -168,7 +171,10 @@ public class ScenarioPathNodeTreeEditPart extends StrategyUrnModelElementTreeEdi
      * @return Is this element inherited from another scenario?
      */
     protected boolean isInheritedStartPoint() {
-        return getModel() instanceof ScenarioStartPoint && !((ScenarioDef) getParent().getParent().getModel()).getStartPoints().contains(getModel());
+        if (!(getModel() instanceof ScenarioStartPoint) || getParent() == null || getParent().getParent() == null)
+            return false;
+        Object grandModel = getParent().getParent().getModel();
+        return grandModel instanceof ScenarioDef && !((ScenarioDef) grandModel).getStartPoints().contains(getModel());
     }
 
 }

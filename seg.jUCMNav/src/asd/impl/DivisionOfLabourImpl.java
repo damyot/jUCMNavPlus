@@ -210,8 +210,9 @@ public class DivisionOfLabourImpl extends MediatingElementImpl implements Divisi
 				return basicSetAsdSpec((ASDspec)otherEnd, msgs);
 			case AsdPackage.DIVISION_OF_LABOUR__TOOLS:
 				return ((InternalEList)getTools()).basicAdd(otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -231,8 +232,9 @@ public class DivisionOfLabourImpl extends MediatingElementImpl implements Divisi
 				return basicSetAsdSpec(null, msgs);
 			case AsdPackage.DIVISION_OF_LABOUR__TOOLS:
 				return ((InternalEList)getTools()).basicRemove(otherEnd, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -244,8 +246,9 @@ public class DivisionOfLabourImpl extends MediatingElementImpl implements Divisi
 		switch (eContainerFeatureID()) {
 			case AsdPackage.DIVISION_OF_LABOUR__ASD_SPEC:
 				return eInternalContainer().eInverseRemove(this, AsdPackage.AS_DSPEC__DOLS, ASDspec.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
 	/**
@@ -265,8 +268,9 @@ public class DivisionOfLabourImpl extends MediatingElementImpl implements Divisi
 				return getAsdSpec();
 			case AsdPackage.DIVISION_OF_LABOUR__TOOLS:
 				return getTools();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -295,8 +299,10 @@ public class DivisionOfLabourImpl extends MediatingElementImpl implements Divisi
 				getTools().clear();
 				getTools().addAll((Collection)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -321,8 +327,10 @@ public class DivisionOfLabourImpl extends MediatingElementImpl implements Divisi
 			case AsdPackage.DIVISION_OF_LABOUR__TOOLS:
 				getTools().clear();
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -342,8 +350,9 @@ public class DivisionOfLabourImpl extends MediatingElementImpl implements Divisi
 				return getAsdSpec() != null;
 			case AsdPackage.DIVISION_OF_LABOUR__TOOLS:
 				return tools != null && !tools.isEmpty();
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //DivisionOfLabourImpl

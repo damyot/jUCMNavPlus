@@ -324,8 +324,9 @@ public class URNlinkImpl extends MinimalEObjectImpl.Container implements URNlink
 				if (toElem != null)
 					msgs = ((InternalEObject)toElem).eInverseRemove(this, UrncorePackage.UR_NMODEL_ELEMENT__TO_LINKS, URNmodelElement.class, msgs);
 				return basicSetToElem((URNmodelElement)otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -343,8 +344,9 @@ public class URNlinkImpl extends MinimalEObjectImpl.Container implements URNlink
 				return basicSetToElem(null, msgs);
 			case UrnPackage.UR_NLINK__METADATA:
 				return ((InternalEList)getMetadata()).basicRemove(otherEnd, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -356,8 +358,9 @@ public class URNlinkImpl extends MinimalEObjectImpl.Container implements URNlink
 		switch (eContainerFeatureID()) {
 			case UrnPackage.UR_NLINK__URNSPEC:
 				return eInternalContainer().eInverseRemove(this, UrnPackage.UR_NSPEC__URN_LINKS, URNspec.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
     /**
@@ -379,8 +382,9 @@ public class URNlinkImpl extends MinimalEObjectImpl.Container implements URNlink
 				return basicGetToElem();
 			case UrnPackage.UR_NLINK__METADATA:
 				return getMetadata();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -406,8 +410,10 @@ public class URNlinkImpl extends MinimalEObjectImpl.Container implements URNlink
 				getMetadata().clear();
 				getMetadata().addAll((Collection)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -432,8 +438,10 @@ public class URNlinkImpl extends MinimalEObjectImpl.Container implements URNlink
 			case UrnPackage.UR_NLINK__METADATA:
 				getMetadata().clear();
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -453,8 +461,9 @@ public class URNlinkImpl extends MinimalEObjectImpl.Container implements URNlink
 				return toElem != null;
 			case UrnPackage.UR_NLINK__METADATA:
 				return metadata != null && !metadata.isEmpty();
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
     /**

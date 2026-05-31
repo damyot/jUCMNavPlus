@@ -517,8 +517,9 @@ public class GRLspecImpl extends MinimalEObjectImpl.Container implements GRLspec
 				if (featureModel != null)
 					msgs = ((InternalEObject)featureModel).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - GrlPackage.GR_LSPEC__FEATURE_MODEL, null, msgs);
 				return basicSetFeatureModel((FeatureModel)otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -556,8 +557,9 @@ public class GRLspecImpl extends MinimalEObjectImpl.Container implements GRLspec
 				return ((InternalEList)getKPIConversion()).basicRemove(otherEnd, msgs);
 			case GrlPackage.GR_LSPEC__FEATURE_MODEL:
 				return basicSetFeatureModel(null, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -569,8 +571,9 @@ public class GRLspecImpl extends MinimalEObjectImpl.Container implements GRLspec
 		switch (eContainerFeatureID()) {
 			case GrlPackage.GR_LSPEC__URNSPEC:
 				return eInternalContainer().eInverseRemove(this, UrnPackage.UR_NSPEC__GRLSPEC, URNspec.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
 	/**
@@ -608,8 +611,9 @@ public class GRLspecImpl extends MinimalEObjectImpl.Container implements GRLspec
 				return getKPIConversion();
 			case GrlPackage.GR_LSPEC__FEATURE_MODEL:
 				return getFeatureModel();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -672,8 +676,10 @@ public class GRLspecImpl extends MinimalEObjectImpl.Container implements GRLspec
 			case GrlPackage.GR_LSPEC__FEATURE_MODEL:
 				setFeatureModel((FeatureModel)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -725,8 +731,10 @@ public class GRLspecImpl extends MinimalEObjectImpl.Container implements GRLspec
 			case GrlPackage.GR_LSPEC__FEATURE_MODEL:
 				setFeatureModel((FeatureModel)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -764,8 +772,9 @@ public class GRLspecImpl extends MinimalEObjectImpl.Container implements GRLspec
 				return kpiConversion != null && !kpiConversion.isEmpty();
 			case GrlPackage.GR_LSPEC__FEATURE_MODEL:
 				return featureModel != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //GRLspecImpl

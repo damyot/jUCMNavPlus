@@ -365,8 +365,9 @@ public class DynamicContextImpl extends URNmodelElementImpl implements DynamicCo
 				return ((InternalEList)getGroups()).basicAdd(otherEnd, msgs);
 			case DyncontextPackage.DYNAMIC_CONTEXT__CHANGES:
 				return ((InternalEList)getChanges()).basicAdd(otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -386,8 +387,9 @@ public class DynamicContextImpl extends URNmodelElementImpl implements DynamicCo
 				return ((InternalEList)getGroups()).basicRemove(otherEnd, msgs);
 			case DyncontextPackage.DYNAMIC_CONTEXT__CHANGES:
 				return ((InternalEList)getChanges()).basicRemove(otherEnd, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -399,8 +401,9 @@ public class DynamicContextImpl extends URNmodelElementImpl implements DynamicCo
 		switch (eContainerFeatureID()) {
 			case DyncontextPackage.DYNAMIC_CONTEXT__URNSPEC:
 				return eInternalContainer().eInverseRemove(this, UrnPackage.UR_NSPEC__DYNAMIC_CONTEXTS, URNspec.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
 	/**
@@ -429,8 +432,9 @@ public class DynamicContextImpl extends URNmodelElementImpl implements DynamicCo
 				return getGroups();
 			case DyncontextPackage.DYNAMIC_CONTEXT__CHANGES:
 				return getChanges();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -468,8 +472,10 @@ public class DynamicContextImpl extends URNmodelElementImpl implements DynamicCo
 				getChanges().clear();
 				getChanges().addAll((Collection)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -503,8 +509,10 @@ public class DynamicContextImpl extends URNmodelElementImpl implements DynamicCo
 			case DyncontextPackage.DYNAMIC_CONTEXT__CHANGES:
 				getChanges().clear();
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -530,8 +538,9 @@ public class DynamicContextImpl extends URNmodelElementImpl implements DynamicCo
 				return groups != null && !groups.isEmpty();
 			case DyncontextPackage.DYNAMIC_CONTEXT__CHANGES:
 				return changes != null && !changes.isEmpty();
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //DynamicContextImpl

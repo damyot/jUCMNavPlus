@@ -287,8 +287,9 @@ public class KPIModelLinkImpl extends GRLmodelElementImpl implements KPIModelLin
 				if (indDest != null)
 					msgs = ((InternalEObject)indDest).eInverseRemove(this, KpimodelPackage.INDICATOR__KPI_MODEL_LINKS_DEST, Indicator.class, msgs);
 				return basicSetIndDest((Indicator)otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -306,8 +307,9 @@ public class KPIModelLinkImpl extends GRLmodelElementImpl implements KPIModelLin
 				return basicSetGrlspec(null, msgs);
 			case KpimodelPackage.KPI_MODEL_LINK__IND_DEST:
 				return basicSetIndDest(null, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -319,8 +321,9 @@ public class KPIModelLinkImpl extends GRLmodelElementImpl implements KPIModelLin
 		switch (eContainerFeatureID()) {
 			case KpimodelPackage.KPI_MODEL_LINK__GRLSPEC:
 				return eInternalContainer().eInverseRemove(this, GrlPackage.GR_LSPEC__KPI_MODEL_LINKS, GRLspec.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
     /**
@@ -340,8 +343,9 @@ public class KPIModelLinkImpl extends GRLmodelElementImpl implements KPIModelLin
 			case KpimodelPackage.KPI_MODEL_LINK__IND_DEST:
 				if (resolve) return getIndDest();
 				return basicGetIndDest();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -364,8 +368,10 @@ public class KPIModelLinkImpl extends GRLmodelElementImpl implements KPIModelLin
 			case KpimodelPackage.KPI_MODEL_LINK__IND_DEST:
 				setIndDest((Indicator)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -387,8 +393,10 @@ public class KPIModelLinkImpl extends GRLmodelElementImpl implements KPIModelLin
 			case KpimodelPackage.KPI_MODEL_LINK__IND_DEST:
 				setIndDest((Indicator)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -406,8 +414,9 @@ public class KPIModelLinkImpl extends GRLmodelElementImpl implements KPIModelLin
 				return getGrlspec() != null;
 			case KpimodelPackage.KPI_MODEL_LINK__IND_DEST:
 				return indDest != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //KPIModelLinkImpl

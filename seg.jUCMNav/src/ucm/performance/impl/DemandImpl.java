@@ -220,8 +220,9 @@ public class DemandImpl extends MinimalEObjectImpl.Container implements Demand {
 				if (resource != null)
 					msgs = ((InternalEObject)resource).eInverseRemove(this, PerformancePackage.EXTERNAL_OPERATION__DEMANDS, ExternalOperation.class, msgs);
 				return basicSetResource((ExternalOperation)otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -235,8 +236,9 @@ public class DemandImpl extends MinimalEObjectImpl.Container implements Demand {
 				return basicSetResponsibility(null, msgs);
 			case PerformancePackage.DEMAND__RESOURCE:
 				return basicSetResource(null, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -248,8 +250,9 @@ public class DemandImpl extends MinimalEObjectImpl.Container implements Demand {
 		switch (eContainerFeatureID()) {
 			case PerformancePackage.DEMAND__RESPONSIBILITY:
 				return eInternalContainer().eInverseRemove(this, UrncorePackage.RESPONSIBILITY__DEMANDS, Responsibility.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
     /**
@@ -266,8 +269,9 @@ public class DemandImpl extends MinimalEObjectImpl.Container implements Demand {
 			case PerformancePackage.DEMAND__RESOURCE:
 				if (resolve) return getResource();
 				return basicGetResource();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -286,8 +290,10 @@ public class DemandImpl extends MinimalEObjectImpl.Container implements Demand {
 			case PerformancePackage.DEMAND__RESOURCE:
 				setResource((ExternalOperation)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -306,8 +312,10 @@ public class DemandImpl extends MinimalEObjectImpl.Container implements Demand {
 			case PerformancePackage.DEMAND__RESOURCE:
 				setResource((ExternalOperation)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -323,8 +331,9 @@ public class DemandImpl extends MinimalEObjectImpl.Container implements Demand {
 				return getResponsibility() != null;
 			case PerformancePackage.DEMAND__RESOURCE:
 				return resource != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
     /**

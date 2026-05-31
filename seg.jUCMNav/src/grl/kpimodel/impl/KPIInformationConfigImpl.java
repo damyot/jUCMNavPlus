@@ -236,8 +236,9 @@ public class KPIInformationConfigImpl extends MinimalEObjectImpl.Container imple
 				if (eInternalContainer() != null)
 					msgs = eBasicRemoveFromContainer(msgs);
 				return basicSetStrategies((EvaluationStrategy)otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -249,8 +250,9 @@ public class KPIInformationConfigImpl extends MinimalEObjectImpl.Container imple
 		switch (featureID) {
 			case KpimodelPackage.KPI_INFORMATION_CONFIG__STRATEGIES:
 				return basicSetStrategies(null, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -262,8 +264,9 @@ public class KPIInformationConfigImpl extends MinimalEObjectImpl.Container imple
 		switch (eContainerFeatureID()) {
 			case KpimodelPackage.KPI_INFORMATION_CONFIG__STRATEGIES:
 				return eInternalContainer().eInverseRemove(this, GrlPackage.EVALUATION_STRATEGY__KPI_INFO_CONFIG, EvaluationStrategy.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
     /**
@@ -282,8 +285,9 @@ public class KPIInformationConfigImpl extends MinimalEObjectImpl.Container imple
 			case KpimodelPackage.KPI_INFORMATION_CONFIG__KPI_INFO_ELEMENT:
 				if (resolve) return getKpiInfoElement();
 				return basicGetKpiInfoElement();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -305,8 +309,10 @@ public class KPIInformationConfigImpl extends MinimalEObjectImpl.Container imple
 			case KpimodelPackage.KPI_INFORMATION_CONFIG__KPI_INFO_ELEMENT:
 				setKpiInfoElement((KPIInformationElement)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -328,8 +334,10 @@ public class KPIInformationConfigImpl extends MinimalEObjectImpl.Container imple
 			case KpimodelPackage.KPI_INFORMATION_CONFIG__KPI_INFO_ELEMENT:
 				setKpiInfoElement((KPIInformationElement)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -347,8 +355,9 @@ public class KPIInformationConfigImpl extends MinimalEObjectImpl.Container imple
 				return getStrategies() != null;
 			case KpimodelPackage.KPI_INFORMATION_CONFIG__KPI_INFO_ELEMENT:
 				return kpiInfoElement != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
     /**

@@ -93,8 +93,9 @@ public abstract class PropertyChangeImpl extends ChangeImpl implements PropertyC
 		switch (featureID) {
 			case DyncontextPackage.PROPERTY_CHANGE__AFFECTED_PROPERTY:
 				return getAffectedProperty();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -107,8 +108,10 @@ public abstract class PropertyChangeImpl extends ChangeImpl implements PropertyC
 			case DyncontextPackage.PROPERTY_CHANGE__AFFECTED_PROPERTY:
 				setAffectedProperty((String)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -121,8 +124,10 @@ public abstract class PropertyChangeImpl extends ChangeImpl implements PropertyC
 			case DyncontextPackage.PROPERTY_CHANGE__AFFECTED_PROPERTY:
 				setAffectedProperty(AFFECTED_PROPERTY_EDEFAULT);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -134,8 +139,9 @@ public abstract class PropertyChangeImpl extends ChangeImpl implements PropertyC
 		switch (featureID) {
 			case DyncontextPackage.PROPERTY_CHANGE__AFFECTED_PROPERTY:
 				return AFFECTED_PROPERTY_EDEFAULT == null ? affectedProperty != null : !AFFECTED_PROPERTY_EDEFAULT.equals(affectedProperty);
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 	/**

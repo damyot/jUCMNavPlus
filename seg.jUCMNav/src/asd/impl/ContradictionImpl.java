@@ -232,8 +232,9 @@ public class ContradictionImpl extends ASDmodelElementImpl implements Contradict
 				if (diagram != null)
 					msgs = ((InternalEObject)diagram).eInverseRemove(this, AsdPackage.AS_DIAGRAM__CONTRADICTIONS, ASDiagram.class, msgs);
 				return basicSetDiagram((ASDiagram)otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -247,8 +248,9 @@ public class ContradictionImpl extends ASDmodelElementImpl implements Contradict
 				return basicSetConsideredAE(null, msgs);
 			case AsdPackage.CONTRADICTION__DIAGRAM:
 				return basicSetDiagram(null, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -266,8 +268,9 @@ public class ContradictionImpl extends ASDmodelElementImpl implements Contradict
 			case AsdPackage.CONTRADICTION__DIAGRAM:
 				if (resolve) return getDiagram();
 				return basicGetDiagram();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -287,8 +290,10 @@ public class ContradictionImpl extends ASDmodelElementImpl implements Contradict
 			case AsdPackage.CONTRADICTION__DIAGRAM:
 				setDiagram((ASDiagram)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -307,8 +312,10 @@ public class ContradictionImpl extends ASDmodelElementImpl implements Contradict
 			case AsdPackage.CONTRADICTION__DIAGRAM:
 				setDiagram((ASDiagram)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -324,8 +331,9 @@ public class ContradictionImpl extends ASDmodelElementImpl implements Contradict
 				return consideredAE != null;
 			case AsdPackage.CONTRADICTION__DIAGRAM:
 				return diagram != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //ContradictionImpl

@@ -328,8 +328,9 @@ public class OutBindingImpl extends MinimalEObjectImpl.Container implements OutB
 				if (pointcutEntry != null)
 					msgs = ((InternalEObject)pointcutEntry).eInverseRemove(this, MapPackage.NODE_CONNECTION__OUT_BINDINGS_PLUGIN, NodeConnection.class, msgs);
 				return basicSetPointcutEntry((NodeConnection)otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -347,8 +348,9 @@ public class OutBindingImpl extends MinimalEObjectImpl.Container implements OutB
 				return basicSetStubExit(null, msgs);
 			case MapPackage.OUT_BINDING__POINTCUT_ENTRY:
 				return basicSetPointcutEntry(null, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -360,8 +362,9 @@ public class OutBindingImpl extends MinimalEObjectImpl.Container implements OutB
 		switch (eContainerFeatureID()) {
 			case MapPackage.OUT_BINDING__BINDING:
 				return eInternalContainer().eInverseRemove(this, MapPackage.PLUGIN_BINDING__OUT, PluginBinding.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
     /**
@@ -382,8 +385,9 @@ public class OutBindingImpl extends MinimalEObjectImpl.Container implements OutB
 			case MapPackage.OUT_BINDING__POINTCUT_ENTRY:
 				if (resolve) return getPointcutEntry();
 				return basicGetPointcutEntry();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -405,8 +409,10 @@ public class OutBindingImpl extends MinimalEObjectImpl.Container implements OutB
 			case MapPackage.OUT_BINDING__POINTCUT_ENTRY:
 				setPointcutEntry((NodeConnection)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -428,8 +434,10 @@ public class OutBindingImpl extends MinimalEObjectImpl.Container implements OutB
 			case MapPackage.OUT_BINDING__POINTCUT_ENTRY:
 				setPointcutEntry((NodeConnection)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -447,8 +455,9 @@ public class OutBindingImpl extends MinimalEObjectImpl.Container implements OutB
 				return stubExit != null;
 			case MapPackage.OUT_BINDING__POINTCUT_ENTRY:
 				return pointcutEntry != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //OutBindingImpl

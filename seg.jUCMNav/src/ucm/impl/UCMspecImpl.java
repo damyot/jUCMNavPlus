@@ -212,8 +212,9 @@ public class UCMspecImpl extends MinimalEObjectImpl.Container implements UCMspec
 				return ((InternalEList)getVariables()).basicAdd(otherEnd, msgs);
 			case UcmPackage.UC_MSPEC__ENUMERATION_TYPES:
 				return ((InternalEList)getEnumerationTypes()).basicAdd(otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -233,8 +234,9 @@ public class UCMspecImpl extends MinimalEObjectImpl.Container implements UCMspec
 				return ((InternalEList)getVariables()).basicRemove(otherEnd, msgs);
 			case UcmPackage.UC_MSPEC__ENUMERATION_TYPES:
 				return ((InternalEList)getEnumerationTypes()).basicRemove(otherEnd, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -246,8 +248,9 @@ public class UCMspecImpl extends MinimalEObjectImpl.Container implements UCMspec
 		switch (eContainerFeatureID()) {
 			case UcmPackage.UC_MSPEC__URNSPEC:
 				return eInternalContainer().eInverseRemove(this, UrnPackage.UR_NSPEC__UCMSPEC, URNspec.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
     /**
@@ -267,8 +270,9 @@ public class UCMspecImpl extends MinimalEObjectImpl.Container implements UCMspec
 				return getVariables();
 			case UcmPackage.UC_MSPEC__ENUMERATION_TYPES:
 				return getEnumerationTypes();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -297,8 +301,10 @@ public class UCMspecImpl extends MinimalEObjectImpl.Container implements UCMspec
 				getEnumerationTypes().clear();
 				getEnumerationTypes().addAll((Collection)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -323,8 +329,10 @@ public class UCMspecImpl extends MinimalEObjectImpl.Container implements UCMspec
 			case UcmPackage.UC_MSPEC__ENUMERATION_TYPES:
 				getEnumerationTypes().clear();
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -344,8 +352,9 @@ public class UCMspecImpl extends MinimalEObjectImpl.Container implements UCMspec
 				return variables != null && !variables.isEmpty();
 			case UcmPackage.UC_MSPEC__ENUMERATION_TYPES:
 				return enumerationTypes != null && !enumerationTypes.isEmpty();
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //UCMspecImpl

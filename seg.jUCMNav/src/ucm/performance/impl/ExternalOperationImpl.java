@@ -82,8 +82,9 @@ public class ExternalOperationImpl extends ActiveResourceImpl implements Externa
 		switch (featureID) {
 			case PerformancePackage.EXTERNAL_OPERATION__DEMANDS:
 				return ((InternalEList)getDemands()).basicAdd(otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -95,8 +96,9 @@ public class ExternalOperationImpl extends ActiveResourceImpl implements Externa
 		switch (featureID) {
 			case PerformancePackage.EXTERNAL_OPERATION__DEMANDS:
 				return ((InternalEList)getDemands()).basicRemove(otherEnd, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -108,8 +110,9 @@ public class ExternalOperationImpl extends ActiveResourceImpl implements Externa
 		switch (featureID) {
 			case PerformancePackage.EXTERNAL_OPERATION__DEMANDS:
 				return getDemands();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -123,8 +126,10 @@ public class ExternalOperationImpl extends ActiveResourceImpl implements Externa
 				getDemands().clear();
 				getDemands().addAll((Collection)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -137,8 +142,10 @@ public class ExternalOperationImpl extends ActiveResourceImpl implements Externa
 			case PerformancePackage.EXTERNAL_OPERATION__DEMANDS:
 				getDemands().clear();
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -150,8 +157,9 @@ public class ExternalOperationImpl extends ActiveResourceImpl implements Externa
 		switch (featureID) {
 			case PerformancePackage.EXTERNAL_OPERATION__DEMANDS:
 				return demands != null && !demands.isEmpty();
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //ExternalOperationImpl

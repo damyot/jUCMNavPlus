@@ -422,8 +422,9 @@ public class StubImpl extends PathNodeImpl implements Stub {
 		switch (featureID) {
 			case MapPackage.STUB__BINDINGS:
 				return ((InternalEList)getBindings()).basicAdd(otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -435,8 +436,9 @@ public class StubImpl extends PathNodeImpl implements Stub {
 		switch (featureID) {
 			case MapPackage.STUB__BINDINGS:
 				return ((InternalEList)getBindings()).basicRemove(otherEnd, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -464,8 +466,9 @@ public class StubImpl extends PathNodeImpl implements Stub {
 				return getAspect();
 			case MapPackage.STUB__BINDINGS:
 				return getBindings();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -503,8 +506,10 @@ public class StubImpl extends PathNodeImpl implements Stub {
 				getBindings().clear();
 				getBindings().addAll((Collection)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -541,8 +546,10 @@ public class StubImpl extends PathNodeImpl implements Stub {
 			case MapPackage.STUB__BINDINGS:
 				getBindings().clear();
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -570,8 +577,9 @@ public class StubImpl extends PathNodeImpl implements Stub {
 				return aspect != ASPECT_EDEFAULT;
 			case MapPackage.STUB__BINDINGS:
 				return bindings != null && !bindings.isEmpty();
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
     /**

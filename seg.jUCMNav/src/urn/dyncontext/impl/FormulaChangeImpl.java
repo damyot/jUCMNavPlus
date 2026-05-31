@@ -93,8 +93,9 @@ public class FormulaChangeImpl extends NumericChangeImpl implements FormulaChang
 		switch (featureID) {
 			case DyncontextPackage.FORMULA_CHANGE__FORMULA:
 				return getFormula();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -107,8 +108,10 @@ public class FormulaChangeImpl extends NumericChangeImpl implements FormulaChang
 			case DyncontextPackage.FORMULA_CHANGE__FORMULA:
 				setFormula((String)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -121,8 +124,10 @@ public class FormulaChangeImpl extends NumericChangeImpl implements FormulaChang
 			case DyncontextPackage.FORMULA_CHANGE__FORMULA:
 				setFormula(FORMULA_EDEFAULT);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -134,8 +139,9 @@ public class FormulaChangeImpl extends NumericChangeImpl implements FormulaChang
 		switch (featureID) {
 			case DyncontextPackage.FORMULA_CHANGE__FORMULA:
 				return FORMULA_EDEFAULT == null ? formula != null : !FORMULA_EDEFAULT.equals(formula);
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 	/**

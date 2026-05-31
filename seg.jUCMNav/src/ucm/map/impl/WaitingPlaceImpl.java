@@ -96,8 +96,9 @@ public class WaitingPlaceImpl extends PathNodeImpl implements WaitingPlace {
 		switch (featureID) {
 			case MapPackage.WAITING_PLACE__WAIT_TYPE:
 				return getWaitType();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -110,8 +111,10 @@ public class WaitingPlaceImpl extends PathNodeImpl implements WaitingPlace {
 			case MapPackage.WAITING_PLACE__WAIT_TYPE:
 				setWaitType((WaitKind)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -124,8 +127,10 @@ public class WaitingPlaceImpl extends PathNodeImpl implements WaitingPlace {
 			case MapPackage.WAITING_PLACE__WAIT_TYPE:
 				setWaitType(WAIT_TYPE_EDEFAULT);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -137,8 +142,9 @@ public class WaitingPlaceImpl extends PathNodeImpl implements WaitingPlace {
 		switch (featureID) {
 			case MapPackage.WAITING_PLACE__WAIT_TYPE:
 				return waitType != WAIT_TYPE_EDEFAULT;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
     /**

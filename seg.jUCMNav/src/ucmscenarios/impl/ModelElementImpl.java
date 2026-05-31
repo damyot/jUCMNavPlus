@@ -26,13 +26,13 @@ import ucmscenarios.UcmscenariosPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link ucmscenarios.impl.ModelElementImpl#getId <em>Id</em>}</li>
  *   <li>{@link ucmscenarios.impl.ModelElementImpl#getName <em>Name</em>}</li>
  *   <li>{@link ucmscenarios.impl.ModelElementImpl#getDescription <em>Description</em>}</li>
  *   <li>{@link ucmscenarios.impl.ModelElementImpl#getMetadata <em>Metadata</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -209,8 +209,9 @@ public class ModelElementImpl extends EObjectImpl implements ModelElement {
 		switch (featureID) {
 			case UcmscenariosPackage.MODEL_ELEMENT__METADATA:
 				return ((InternalEList)getMetadata()).basicRemove(otherEnd, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -228,8 +229,9 @@ public class ModelElementImpl extends EObjectImpl implements ModelElement {
 				return getDescription();
 			case UcmscenariosPackage.MODEL_ELEMENT__METADATA:
 				return getMetadata();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -252,8 +254,10 @@ public class ModelElementImpl extends EObjectImpl implements ModelElement {
 				getMetadata().clear();
 				getMetadata().addAll((Collection)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -275,8 +279,10 @@ public class ModelElementImpl extends EObjectImpl implements ModelElement {
 			case UcmscenariosPackage.MODEL_ELEMENT__METADATA:
 				getMetadata().clear();
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -294,8 +300,9 @@ public class ModelElementImpl extends EObjectImpl implements ModelElement {
 				return DESCRIPTION_EDEFAULT == null ? description != null : !DESCRIPTION_EDEFAULT.equals(description);
 			case UcmscenariosPackage.MODEL_ELEMENT__METADATA:
 				return metadata != null && !metadata.isEmpty();
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 	/**

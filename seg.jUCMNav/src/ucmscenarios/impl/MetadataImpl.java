@@ -18,11 +18,11 @@ import ucmscenarios.UcmscenariosPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link ucmscenarios.impl.MetadataImpl#getName <em>Name</em>}</li>
  *   <li>{@link ucmscenarios.impl.MetadataImpl#getValue <em>Value</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -138,8 +138,9 @@ public class MetadataImpl extends EObjectImpl implements Metadata {
 				return getName();
 			case UcmscenariosPackage.METADATA__VALUE:
 				return getValue();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -155,8 +156,10 @@ public class MetadataImpl extends EObjectImpl implements Metadata {
 			case UcmscenariosPackage.METADATA__VALUE:
 				setValue((String)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -172,8 +175,10 @@ public class MetadataImpl extends EObjectImpl implements Metadata {
 			case UcmscenariosPackage.METADATA__VALUE:
 				setValue(VALUE_EDEFAULT);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -187,8 +192,9 @@ public class MetadataImpl extends EObjectImpl implements Metadata {
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
 			case UcmscenariosPackage.METADATA__VALUE:
 				return VALUE_EDEFAULT == null ? value != null : !VALUE_EDEFAULT.equals(value);
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 	/**

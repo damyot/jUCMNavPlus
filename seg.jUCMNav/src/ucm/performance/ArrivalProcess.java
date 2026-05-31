@@ -194,8 +194,8 @@ public final class ArrivalProcess extends AbstractEnumerator {
 			case PERIODIC: return PERIODIC_LITERAL;
 			case UNIFORM: return UNIFORM_LITERAL;
 			case PHASE_TYPE: return PHASE_TYPE_LITERAL;
+			default: return null;
 		}
-		return null;
 	}
 
     /**

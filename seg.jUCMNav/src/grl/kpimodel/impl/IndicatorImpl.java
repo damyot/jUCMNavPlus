@@ -109,8 +109,9 @@ public class IndicatorImpl extends IntentionalElementImpl implements Indicator {
 				return ((InternalEList)getKpiModelLinksDest()).basicAdd(otherEnd, msgs);
 			case KpimodelPackage.INDICATOR__GROUPS:
 				return ((InternalEList)getGroups()).basicAdd(otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -124,8 +125,9 @@ public class IndicatorImpl extends IntentionalElementImpl implements Indicator {
 				return ((InternalEList)getKpiModelLinksDest()).basicRemove(otherEnd, msgs);
 			case KpimodelPackage.INDICATOR__GROUPS:
 				return ((InternalEList)getGroups()).basicRemove(otherEnd, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -139,8 +141,9 @@ public class IndicatorImpl extends IntentionalElementImpl implements Indicator {
 				return getKpiModelLinksDest();
 			case KpimodelPackage.INDICATOR__GROUPS:
 				return getGroups();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -158,8 +161,10 @@ public class IndicatorImpl extends IntentionalElementImpl implements Indicator {
 				getGroups().clear();
 				getGroups().addAll((Collection)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -175,8 +180,10 @@ public class IndicatorImpl extends IntentionalElementImpl implements Indicator {
 			case KpimodelPackage.INDICATOR__GROUPS:
 				getGroups().clear();
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -190,8 +197,9 @@ public class IndicatorImpl extends IntentionalElementImpl implements Indicator {
 				return kpiModelLinksDest != null && !kpiModelLinksDest.isEmpty();
 			case KpimodelPackage.INDICATOR__GROUPS:
 				return groups != null && !groups.isEmpty();
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //IndicatorImpl

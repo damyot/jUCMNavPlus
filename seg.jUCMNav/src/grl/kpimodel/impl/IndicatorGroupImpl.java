@@ -177,8 +177,9 @@ public class IndicatorGroupImpl extends GRLmodelElementImpl implements Indicator
 				return basicSetGrlspec((GRLspec)otherEnd, msgs);
 			case KpimodelPackage.INDICATOR_GROUP__INDICATORS:
 				return ((InternalEList)getIndicators()).basicAdd(otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -192,8 +193,9 @@ public class IndicatorGroupImpl extends GRLmodelElementImpl implements Indicator
 				return basicSetGrlspec(null, msgs);
 			case KpimodelPackage.INDICATOR_GROUP__INDICATORS:
 				return ((InternalEList)getIndicators()).basicRemove(otherEnd, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -205,8 +207,9 @@ public class IndicatorGroupImpl extends GRLmodelElementImpl implements Indicator
 		switch (eContainerFeatureID()) {
 			case KpimodelPackage.INDICATOR_GROUP__GRLSPEC:
 				return eInternalContainer().eInverseRemove(this, GrlPackage.GR_LSPEC__INDICATOR_GROUP, GRLspec.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
     /**
@@ -222,8 +225,9 @@ public class IndicatorGroupImpl extends GRLmodelElementImpl implements Indicator
 				return getGrlspec();
 			case KpimodelPackage.INDICATOR_GROUP__INDICATORS:
 				return getIndicators();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -243,8 +247,10 @@ public class IndicatorGroupImpl extends GRLmodelElementImpl implements Indicator
 				getIndicators().clear();
 				getIndicators().addAll((Collection)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -263,8 +269,10 @@ public class IndicatorGroupImpl extends GRLmodelElementImpl implements Indicator
 			case KpimodelPackage.INDICATOR_GROUP__INDICATORS:
 				getIndicators().clear();
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -280,8 +288,9 @@ public class IndicatorGroupImpl extends GRLmodelElementImpl implements Indicator
 				return getGrlspec() != null;
 			case KpimodelPackage.INDICATOR_GROUP__INDICATORS:
 				return indicators != null && !indicators.isEmpty();
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
     /**

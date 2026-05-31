@@ -961,13 +961,6 @@
             genModel="src/seg/jUCMNav/emf/URN.genmodel"/>
    </extension>
 
-   <extension point="org.eclipse.emf.ecore.generated_package">
-      <!-- @generated URN -->
-      <package
-            uri="http://cs.mcgill.ca/sel/core/1.0"
-            class="core.CorePackage"
-            genModel="src/seg/jUCMNav/emf/URN.genmodel"/>
-   </extension>
    <extension
          point="org.eclipse.emf.ecore.generated_package">
       <package

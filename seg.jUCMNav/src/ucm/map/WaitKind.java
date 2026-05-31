@@ -140,8 +140,8 @@ public final class WaitKind extends AbstractEnumerator {
 		switch (value) {
 			case TRANSIENT: return TRANSIENT_LITERAL;
 			case PERSISTENT: return PERSISTENT_LITERAL;
+			default: return null;
 		}
-		return null;
 	}
 
 	/**

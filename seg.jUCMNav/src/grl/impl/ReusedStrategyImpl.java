@@ -135,8 +135,9 @@ public class ReusedStrategyImpl extends EvaluationStrategyImpl implements Reused
 		switch (featureID) {
 			case GrlPackage.REUSED_STRATEGY__REUSING_STRATEGIES:
 				return ((InternalEList)getReusingStrategies()).basicAdd(otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -148,8 +149,9 @@ public class ReusedStrategyImpl extends EvaluationStrategyImpl implements Reused
 		switch (featureID) {
 			case GrlPackage.REUSED_STRATEGY__REUSING_STRATEGIES:
 				return ((InternalEList)getReusingStrategies()).basicRemove(otherEnd, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -164,8 +166,9 @@ public class ReusedStrategyImpl extends EvaluationStrategyImpl implements Reused
 			case GrlPackage.REUSED_STRATEGY__REUSE_LINK_IN_FM:
 				if (resolve) return getReuseLinkInFM();
 				return basicGetReuseLinkInFM();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -182,8 +185,10 @@ public class ReusedStrategyImpl extends EvaluationStrategyImpl implements Reused
 			case GrlPackage.REUSED_STRATEGY__REUSE_LINK_IN_FM:
 				setReuseLinkInFM((ReuseLink)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -199,8 +204,10 @@ public class ReusedStrategyImpl extends EvaluationStrategyImpl implements Reused
 			case GrlPackage.REUSED_STRATEGY__REUSE_LINK_IN_FM:
 				setReuseLinkInFM((ReuseLink)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -214,8 +221,9 @@ public class ReusedStrategyImpl extends EvaluationStrategyImpl implements Reused
 				return reusingStrategies != null && !reusingStrategies.isEmpty();
 			case GrlPackage.REUSED_STRATEGY__REUSE_LINK_IN_FM:
 				return reuseLinkInFM != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //ReusedStrategyImpl

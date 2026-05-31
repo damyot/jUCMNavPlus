@@ -101,8 +101,9 @@ public class ConnectionLabelImpl extends LabelImpl implements ConnectionLabel {
 				if (eInternalContainer() != null)
 					msgs = eBasicRemoveFromContainer(msgs);
 				return basicSetConnection((IURNConnection)otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -114,8 +115,9 @@ public class ConnectionLabelImpl extends LabelImpl implements ConnectionLabel {
 		switch (featureID) {
 			case UrncorePackage.CONNECTION_LABEL__CONNECTION:
 				return basicSetConnection(null, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -127,8 +129,9 @@ public class ConnectionLabelImpl extends LabelImpl implements ConnectionLabel {
 		switch (eContainerFeatureID()) {
 			case UrncorePackage.CONNECTION_LABEL__CONNECTION:
 				return eInternalContainer().eInverseRemove(this, UrncorePackage.IURN_CONNECTION__LABEL, IURNConnection.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
 	/**
@@ -140,8 +143,9 @@ public class ConnectionLabelImpl extends LabelImpl implements ConnectionLabel {
 		switch (featureID) {
 			case UrncorePackage.CONNECTION_LABEL__CONNECTION:
 				return getConnection();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -154,8 +158,10 @@ public class ConnectionLabelImpl extends LabelImpl implements ConnectionLabel {
 			case UrncorePackage.CONNECTION_LABEL__CONNECTION:
 				setConnection((IURNConnection)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -168,8 +174,10 @@ public class ConnectionLabelImpl extends LabelImpl implements ConnectionLabel {
 			case UrncorePackage.CONNECTION_LABEL__CONNECTION:
 				setConnection((IURNConnection)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -181,8 +189,9 @@ public class ConnectionLabelImpl extends LabelImpl implements ConnectionLabel {
 		switch (featureID) {
 			case UrncorePackage.CONNECTION_LABEL__CONNECTION:
 				return getConnection() != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //ConnectionLabelImpl

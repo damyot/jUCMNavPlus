@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Local genmodel for the McGill SEL CORE metamodel.
+
+  Why this file exists:
+    Several genmodels in seg.jUCMNav (fm.genmodel and the inline Core block in
+    URN.genmodel) refer to a CORE.genmodel that was never checked into upstream
+    https://github.com/JUCMNAV/DCtoURN/tree/master/ca.mcgill.sel.core. This
+    file fills that gap so EMF cross-reference resolution works during
+    "Generate Model Code".
+
+  Important constraints:
+    - basePackage="ca.mcgill.sel" + the ecore's nsPrefix="core" yields the Java
+      package ca.mcgill.sel.core, matching the classes already shipped in
+      seg.jUCMNav/lib/core.jar. Changing this would invalidate the existing
+      `import ca.mcgill.sel.core.*` lines in ~30 generated jUCMNav files.
+
+    - Do NOT run "Generate Model Code" on THIS genmodel. The runtime classes
+      live in seg.jUCMNav/lib/core.jar; regenerating from here would produce a
+      parallel src/ tree under ca.mcgill.sel.core/ that competes with the jar.
+      This genmodel exists strictly as a resolution target for jUCMNav's
+      genmodels.
+-->
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel"
+    modelDirectory="/ca.mcgill.sel.core/src"
+    modelPluginID="ca.mcgill.sel.core"
+    modelName="CORE"
+    rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    importerID="org.eclipse.emf.importer.ecore"
+    complianceLevel="8.0"
+    copyrightFields="false"
+    operationReflection="true"
+    importOrganizing="true">
+  <foreignModel>CORE.ecore</foreignModel>
+  <genPackages prefix="Core" basePackage="ca.mcgill.sel" disposableProviderFactory="true"
+      ecorePackage="CORE.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="CORE.ecore#//COREFeatureRelationshipType">
+      <genEnumLiterals ecoreEnumLiteral="CORE.ecore#//COREFeatureRelationshipType/None"/>
+      <genEnumLiterals ecoreEnumLiteral="CORE.ecore#//COREFeatureRelationshipType/Optional"/>
+      <genEnumLiterals ecoreEnumLiteral="CORE.ecore#//COREFeatureRelationshipType/Mandatory"/>
+      <genEnumLiterals ecoreEnumLiteral="CORE.ecore#//COREFeatureRelationshipType/XOR"/>
+      <genEnumLiterals ecoreEnumLiteral="CORE.ecore#//COREFeatureRelationshipType/OR"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="CORE.ecore#//COREVisibilityType">
+      <genEnumLiterals ecoreEnumLiteral="CORE.ecore#//COREVisibilityType/public"/>
+      <genEnumLiterals ecoreEnumLiteral="CORE.ecore#//COREVisibilityType/concern"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="CORE.ecore#//COREPartialityType">
+      <genEnumLiterals ecoreEnumLiteral="CORE.ecore#//COREPartialityType/none"/>
+      <genEnumLiterals ecoreEnumLiteral="CORE.ecore#//COREPartialityType/public"/>
+      <genEnumLiterals ecoreEnumLiteral="CORE.ecore#//COREPartialityType/concern"/>
+    </genEnums>
+    <genClasses image="false" ecoreClass="CORE.ecore#//COREModel"/>
+    <genClasses ecoreClass="CORE.ecore#//COREImpactModel"/>
+    <genClasses ecoreClass="CORE.ecore#//COREConcern"/>
+    <genClasses ecoreClass="CORE.ecore#//COREFeature"/>
+    <genClasses image="false" ecoreClass="CORE.ecore#//COREBinding"/>
+    <genClasses image="false" ecoreClass="CORE.ecore#//COREModelElement"/>
+    <genClasses image="false" ecoreClass="CORE.ecore#//CORECompositionSpecification"/>
+    <genClasses image="false" ecoreClass="CORE.ecore#//COREMapping"/>
+    <genClasses image="false" ecoreClass="CORE.ecore#//CORENamedElement"/>
+    <genClasses ecoreClass="CORE.ecore#//COREInterface"/>
+    <genClasses ecoreClass="CORE.ecore#//COREReuse"/>
+    <genClasses image="false" ecoreClass="CORE.ecore#//COREPattern"/>
+    <genClasses ecoreClass="CORE.ecore#//COREImpactNode"/>
+    <genClasses image="false" ecoreClass="CORE.ecore#//COREConfiguration"/>
+    <genClasses ecoreClass="CORE.ecore#//COREFeatureModel"/>
+    <genClasses ecoreClass="CORE.ecore#//COREModelReuse"/>
+    <genClasses ecoreClass="CORE.ecore#//COREContribution"/>
+    <genClasses ecoreClass="CORE.ecore#//LayoutMap"/>
+    <genClasses ecoreClass="CORE.ecore#//LayoutElement"/>
+    <genClasses ecoreClass="CORE.ecore#//LayoutContainerMap"/>
+    <genClasses ecoreClass="CORE.ecore#//COREFeatureImpactNode"/>
+    <genClasses image="false" ecoreClass="CORE.ecore#//COREModelCompositionSpecification"/>
+    <genClasses ecoreClass="CORE.ecore#//COREWeightedMapping"/>
+    <genClasses ecoreClass="CORE.ecore#//COREImpactModelBinding"/>
+    <genClasses ecoreClass="CORE.ecore#//COREConcernConfiguration"/>
+    <genClasses ecoreClass="CORE.ecore#//COREReuseConfiguration"/>
+    <genClasses ecoreClass="CORE.ecore#//CORERelativity"/>
+    <genClasses ecoreClass="CORE.ecore#//CORERelativity_Opt2"/>
+  </genPackages>
+</genmodel:GenModel>

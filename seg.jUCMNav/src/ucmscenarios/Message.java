@@ -14,11 +14,11 @@ package ucmscenarios;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link ucmscenarios.Message#getSource <em>Source</em>}</li>
  *   <li>{@link ucmscenarios.Message#getTarget <em>Target</em>}</li>
  * </ul>
- * </p>
  *
  * @see ucmscenarios.UcmscenariosPackage#getMessage()
  * @model

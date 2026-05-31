@@ -353,8 +353,9 @@ public class CommentImpl extends MinimalEObjectImpl.Container implements Comment
 				if (eInternalContainer() != null)
 					msgs = eBasicRemoveFromContainer(msgs);
 				return basicSetDiagram((IURNDiagram)otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -366,8 +367,9 @@ public class CommentImpl extends MinimalEObjectImpl.Container implements Comment
 		switch (featureID) {
 			case UrncorePackage.COMMENT__DIAGRAM:
 				return basicSetDiagram(null, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -379,8 +381,9 @@ public class CommentImpl extends MinimalEObjectImpl.Container implements Comment
 		switch (eContainerFeatureID()) {
 			case UrncorePackage.COMMENT__DIAGRAM:
 				return eInternalContainer().eInverseRemove(this, UrncorePackage.IURN_DIAGRAM__COMMENTS, IURNDiagram.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
 	/**
@@ -404,8 +407,9 @@ public class CommentImpl extends MinimalEObjectImpl.Container implements Comment
 				return getFillColor();
 			case UrncorePackage.COMMENT__DIAGRAM:
 				return getDiagram();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -436,8 +440,10 @@ public class CommentImpl extends MinimalEObjectImpl.Container implements Comment
 			case UrncorePackage.COMMENT__DIAGRAM:
 				setDiagram((IURNDiagram)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -468,8 +474,10 @@ public class CommentImpl extends MinimalEObjectImpl.Container implements Comment
 			case UrncorePackage.COMMENT__DIAGRAM:
 				setDiagram((IURNDiagram)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -493,8 +501,9 @@ public class CommentImpl extends MinimalEObjectImpl.Container implements Comment
 				return FILL_COLOR_EDEFAULT == null ? fillColor != null : !FILL_COLOR_EDEFAULT.equals(fillColor);
 			case UrncorePackage.COMMENT__DIAGRAM:
 				return getDiagram() != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 	/**

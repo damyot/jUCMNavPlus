@@ -514,8 +514,9 @@ public class ActorImpl extends GRLLinkableElementImpl implements Actor {
 				return basicSetIncludingActor((Actor)otherEnd, msgs);
 			case GrlPackage.ACTOR__COLLAPSED_REFS:
 				return ((InternalEList)getCollapsedRefs()).basicAdd(otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -535,8 +536,9 @@ public class ActorImpl extends GRLLinkableElementImpl implements Actor {
 				return basicSetIncludingActor(null, msgs);
 			case GrlPackage.ACTOR__COLLAPSED_REFS:
 				return ((InternalEList)getCollapsedRefs()).basicRemove(otherEnd, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -548,8 +550,9 @@ public class ActorImpl extends GRLLinkableElementImpl implements Actor {
 		switch (eContainerFeatureID()) {
 			case GrlPackage.ACTOR__GRLSPEC:
 				return eInternalContainer().eInverseRemove(this, GrlPackage.GR_LSPEC__ACTORS, GRLspec.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
     /**
@@ -582,8 +585,9 @@ public class ActorImpl extends GRLLinkableElementImpl implements Actor {
 				return basicGetIncludingActor();
 			case GrlPackage.ACTOR__COLLAPSED_REFS:
 				return getCollapsedRefs();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -629,8 +633,10 @@ public class ActorImpl extends GRLLinkableElementImpl implements Actor {
 				getCollapsedRefs().clear();
 				getCollapsedRefs().addAll((Collection)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -673,8 +679,10 @@ public class ActorImpl extends GRLLinkableElementImpl implements Actor {
 			case GrlPackage.ACTOR__COLLAPSED_REFS:
 				getCollapsedRefs().clear();
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -706,8 +714,9 @@ public class ActorImpl extends GRLLinkableElementImpl implements Actor {
 				return includingActor != null;
 			case GrlPackage.ACTOR__COLLAPSED_REFS:
 				return collapsedRefs != null && !collapsedRefs.isEmpty();
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
     /**

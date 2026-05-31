@@ -215,8 +215,9 @@ public class IntentionalElementRefImpl extends GRLNodeImpl implements Intentiona
 				if (def != null)
 					msgs = ((InternalEObject)def).eInverseRemove(this, GrlPackage.INTENTIONAL_ELEMENT__REFS, IntentionalElement.class, msgs);
 				return basicSetDef((IntentionalElement)otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -228,8 +229,9 @@ public class IntentionalElementRefImpl extends GRLNodeImpl implements Intentiona
 		switch (featureID) {
 			case GrlPackage.INTENTIONAL_ELEMENT_REF__DEF:
 				return basicSetDef(null, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -246,8 +248,9 @@ public class IntentionalElementRefImpl extends GRLNodeImpl implements Intentiona
 			case GrlPackage.INTENTIONAL_ELEMENT_REF__DEF:
 				if (resolve) return getDef();
 				return basicGetDef();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -266,8 +269,10 @@ public class IntentionalElementRefImpl extends GRLNodeImpl implements Intentiona
 			case GrlPackage.INTENTIONAL_ELEMENT_REF__DEF:
 				setDef((IntentionalElement)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -286,8 +291,10 @@ public class IntentionalElementRefImpl extends GRLNodeImpl implements Intentiona
 			case GrlPackage.INTENTIONAL_ELEMENT_REF__DEF:
 				setDef((IntentionalElement)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -303,8 +310,9 @@ public class IntentionalElementRefImpl extends GRLNodeImpl implements Intentiona
 				return priority != PRIORITY_EDEFAULT;
 			case GrlPackage.INTENTIONAL_ELEMENT_REF__DEF:
 				return def != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
     /**

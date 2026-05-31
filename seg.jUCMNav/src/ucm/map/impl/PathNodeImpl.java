@@ -379,8 +379,9 @@ public abstract class PathNodeImpl extends UCMmodelElementImpl implements PathNo
 				if (label != null)
 					msgs = ((InternalEObject)label).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - MapPackage.PATH_NODE__LABEL, null, msgs);
 				return basicSetLabel((NodeLabel)otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -400,8 +401,9 @@ public abstract class PathNodeImpl extends UCMmodelElementImpl implements PathNo
 				return ((InternalEList)getPred()).basicRemove(otherEnd, msgs);
 			case MapPackage.PATH_NODE__LABEL:
 				return basicSetLabel(null, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -413,8 +415,9 @@ public abstract class PathNodeImpl extends UCMmodelElementImpl implements PathNo
 		switch (eContainerFeatureID()) {
 			case MapPackage.PATH_NODE__DIAGRAM:
 				return eInternalContainer().eInverseRemove(this, UrncorePackage.IURN_DIAGRAM__NODES, IURNDiagram.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
     /**
@@ -439,8 +442,9 @@ public abstract class PathNodeImpl extends UCMmodelElementImpl implements PathNo
 				return getPred();
 			case MapPackage.PATH_NODE__LABEL:
 				return getLabel();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -473,8 +477,10 @@ public abstract class PathNodeImpl extends UCMmodelElementImpl implements PathNo
 			case MapPackage.PATH_NODE__LABEL:
 				setLabel((NodeLabel)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -505,8 +511,10 @@ public abstract class PathNodeImpl extends UCMmodelElementImpl implements PathNo
 			case MapPackage.PATH_NODE__LABEL:
 				setLabel((NodeLabel)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -530,8 +538,9 @@ public abstract class PathNodeImpl extends UCMmodelElementImpl implements PathNo
 				return pred != null && !pred.isEmpty();
 			case MapPackage.PATH_NODE__LABEL:
 				return label != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
     /**

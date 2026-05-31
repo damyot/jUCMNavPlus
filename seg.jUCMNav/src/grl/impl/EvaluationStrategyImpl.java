@@ -399,8 +399,9 @@ public class EvaluationStrategyImpl extends GRLmodelElementImpl implements Evalu
 				return ((InternalEList)getReusedStrategies()).basicAdd(otherEnd, msgs);
 			case GrlPackage.EVALUATION_STRATEGY__KPI_INFO_CONFIG:
 				return ((InternalEList)getKpiInfoConfig()).basicAdd(otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -424,8 +425,9 @@ public class EvaluationStrategyImpl extends GRLmodelElementImpl implements Evalu
 				return ((InternalEList)getReusedStrategies()).basicRemove(otherEnd, msgs);
 			case GrlPackage.EVALUATION_STRATEGY__KPI_INFO_CONFIG:
 				return ((InternalEList)getKpiInfoConfig()).basicRemove(otherEnd, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -437,8 +439,9 @@ public class EvaluationStrategyImpl extends GRLmodelElementImpl implements Evalu
 		switch (eContainerFeatureID()) {
 			case GrlPackage.EVALUATION_STRATEGY__GRLSPEC:
 				return eInternalContainer().eInverseRemove(this, GrlPackage.GR_LSPEC__STRATEGIES, GRLspec.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
     /**
@@ -467,8 +470,9 @@ public class EvaluationStrategyImpl extends GRLmodelElementImpl implements Evalu
 				return getReusedStrategies();
 			case GrlPackage.EVALUATION_STRATEGY__KPI_INFO_CONFIG:
 				return getKpiInfoConfig();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -510,8 +514,10 @@ public class EvaluationStrategyImpl extends GRLmodelElementImpl implements Evalu
 				getKpiInfoConfig().clear();
 				getKpiInfoConfig().addAll((Collection)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -548,8 +554,10 @@ public class EvaluationStrategyImpl extends GRLmodelElementImpl implements Evalu
 			case GrlPackage.EVALUATION_STRATEGY__KPI_INFO_CONFIG:
 				getKpiInfoConfig().clear();
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -577,8 +585,9 @@ public class EvaluationStrategyImpl extends GRLmodelElementImpl implements Evalu
 				return reusedStrategies != null && !reusedStrategies.isEmpty();
 			case GrlPackage.EVALUATION_STRATEGY__KPI_INFO_CONFIG:
 				return kpiInfoConfig != null && !kpiInfoConfig.isEmpty();
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
     /**

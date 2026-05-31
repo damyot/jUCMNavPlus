@@ -194,8 +194,8 @@ public final class DeviceKind extends AbstractEnumerator {
 			case DISK: return DISK_LITERAL;
 			case DSP: return DSP_LITERAL;
 			case OTHER: return OTHER_LITERAL;
+			default: return null;
 		}
-		return null;
 	}
 
     /**

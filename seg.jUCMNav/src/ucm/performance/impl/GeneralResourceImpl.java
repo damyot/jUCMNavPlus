@@ -187,8 +187,9 @@ public abstract class GeneralResourceImpl extends UCMmodelElementImpl implements
 				if (eInternalContainer() != null)
 					msgs = eBasicRemoveFromContainer(msgs);
 				return basicSetUcmspec((UCMspec)otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -200,8 +201,9 @@ public abstract class GeneralResourceImpl extends UCMmodelElementImpl implements
 		switch (featureID) {
 			case PerformancePackage.GENERAL_RESOURCE__UCMSPEC:
 				return basicSetUcmspec(null, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -213,8 +215,9 @@ public abstract class GeneralResourceImpl extends UCMmodelElementImpl implements
 		switch (eContainerFeatureID()) {
 			case PerformancePackage.GENERAL_RESOURCE__UCMSPEC:
 				return eInternalContainer().eInverseRemove(this, UcmPackage.UC_MSPEC__RESOURCES, UCMspec.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
     /**
@@ -230,8 +233,9 @@ public abstract class GeneralResourceImpl extends UCMmodelElementImpl implements
 				return getSchedPolicy();
 			case PerformancePackage.GENERAL_RESOURCE__UCMSPEC:
 				return getUcmspec();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -250,8 +254,10 @@ public abstract class GeneralResourceImpl extends UCMmodelElementImpl implements
 			case PerformancePackage.GENERAL_RESOURCE__UCMSPEC:
 				setUcmspec((UCMspec)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -270,8 +276,10 @@ public abstract class GeneralResourceImpl extends UCMmodelElementImpl implements
 			case PerformancePackage.GENERAL_RESOURCE__UCMSPEC:
 				setUcmspec((UCMspec)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -287,8 +295,9 @@ public abstract class GeneralResourceImpl extends UCMmodelElementImpl implements
 				return SCHED_POLICY_EDEFAULT == null ? schedPolicy != null : !SCHED_POLICY_EDEFAULT.equals(schedPolicy);
 			case PerformancePackage.GENERAL_RESOURCE__UCMSPEC:
 				return getUcmspec() != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
     /**

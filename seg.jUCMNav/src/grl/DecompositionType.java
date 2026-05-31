@@ -167,8 +167,8 @@ public final class DecompositionType extends AbstractEnumerator {
 			case AND: return AND_LITERAL;
 			case OR: return OR_LITERAL;
 			case XOR: return XOR_LITERAL;
+			default: return null;
 		}
-		return null;
 	}
 
     /**

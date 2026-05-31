@@ -237,8 +237,9 @@ public abstract class ChangeImpl extends MinimalEObjectImpl.Container implements
 				if (eInternalContainer() != null)
 					msgs = eBasicRemoveFromContainer(msgs);
 				return basicSetContext((DynamicContext)otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -250,8 +251,9 @@ public abstract class ChangeImpl extends MinimalEObjectImpl.Container implements
 		switch (featureID) {
 			case DyncontextPackage.CHANGE__CONTEXT:
 				return basicSetContext(null, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -263,8 +265,9 @@ public abstract class ChangeImpl extends MinimalEObjectImpl.Container implements
 		switch (eContainerFeatureID()) {
 			case DyncontextPackage.CHANGE__CONTEXT:
 				return eInternalContainer().eInverseRemove(this, DyncontextPackage.DYNAMIC_CONTEXT__CHANGES, DynamicContext.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
 	/**
@@ -283,8 +286,9 @@ public abstract class ChangeImpl extends MinimalEObjectImpl.Container implements
 			case DyncontextPackage.CHANGE__ELEMENT:
 				if (resolve) return getElement();
 				return basicGetElement();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -306,8 +310,10 @@ public abstract class ChangeImpl extends MinimalEObjectImpl.Container implements
 			case DyncontextPackage.CHANGE__ELEMENT:
 				setElement((URNmodelElement)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -329,8 +335,10 @@ public abstract class ChangeImpl extends MinimalEObjectImpl.Container implements
 			case DyncontextPackage.CHANGE__ELEMENT:
 				setElement((URNmodelElement)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -348,8 +356,9 @@ public abstract class ChangeImpl extends MinimalEObjectImpl.Container implements
 				return getContext() != null;
 			case DyncontextPackage.CHANGE__ELEMENT:
 				return element != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 	/**

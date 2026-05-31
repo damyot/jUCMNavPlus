@@ -105,8 +105,9 @@ public class TimerImpl extends WaitingPlaceImpl implements Timer {
 			case MapPackage.TIMER__TIMEOUT_PATH:
 				if (resolve) return getTimeoutPath();
 				return basicGetTimeoutPath();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -119,8 +120,10 @@ public class TimerImpl extends WaitingPlaceImpl implements Timer {
 			case MapPackage.TIMER__TIMEOUT_PATH:
 				setTimeoutPath((NodeConnection)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -133,8 +136,10 @@ public class TimerImpl extends WaitingPlaceImpl implements Timer {
 			case MapPackage.TIMER__TIMEOUT_PATH:
 				setTimeoutPath((NodeConnection)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -146,8 +151,9 @@ public class TimerImpl extends WaitingPlaceImpl implements Timer {
 		switch (featureID) {
 			case MapPackage.TIMER__TIMEOUT_PATH:
 				return timeoutPath != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //TimerImpl

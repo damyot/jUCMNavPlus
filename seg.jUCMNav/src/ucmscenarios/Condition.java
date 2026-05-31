@@ -14,11 +14,11 @@ package ucmscenarios;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link ucmscenarios.Condition#getExpression <em>Expression</em>}</li>
  *   <li>{@link ucmscenarios.Condition#getLabel <em>Label</em>}</li>
  * </ul>
- * </p>
  *
  * @see ucmscenarios.UcmscenariosPackage#getCondition()
  * @model

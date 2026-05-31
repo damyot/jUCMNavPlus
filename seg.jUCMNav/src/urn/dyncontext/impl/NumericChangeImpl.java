@@ -93,8 +93,9 @@ public abstract class NumericChangeImpl extends PropertyChangeImpl implements Nu
 		switch (featureID) {
 			case DyncontextPackage.NUMERIC_CHANGE__SUFFICIENT_ONCE_ACHIEVED:
 				return isSufficientOnceAchieved() ? Boolean.TRUE : Boolean.FALSE;
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -107,8 +108,10 @@ public abstract class NumericChangeImpl extends PropertyChangeImpl implements Nu
 			case DyncontextPackage.NUMERIC_CHANGE__SUFFICIENT_ONCE_ACHIEVED:
 				setSufficientOnceAchieved(((Boolean)newValue).booleanValue());
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -121,8 +124,10 @@ public abstract class NumericChangeImpl extends PropertyChangeImpl implements Nu
 			case DyncontextPackage.NUMERIC_CHANGE__SUFFICIENT_ONCE_ACHIEVED:
 				setSufficientOnceAchieved(SUFFICIENT_ONCE_ACHIEVED_EDEFAULT);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -134,8 +139,9 @@ public abstract class NumericChangeImpl extends PropertyChangeImpl implements Nu
 		switch (featureID) {
 			case DyncontextPackage.NUMERIC_CHANGE__SUFFICIENT_ONCE_ACHIEVED:
 				return sufficientOnceAchieved != SUFFICIENT_ONCE_ACHIEVED_EDEFAULT;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 	/**

@@ -134,8 +134,9 @@ public class ScenarioGroupImpl extends UCMmodelElementImpl implements ScenarioGr
 				return basicSetUcmspec((UCMspec)otherEnd, msgs);
 			case ScenarioPackage.SCENARIO_GROUP__SCENARIOS:
 				return ((InternalEList)getScenarios()).basicAdd(otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -149,8 +150,9 @@ public class ScenarioGroupImpl extends UCMmodelElementImpl implements ScenarioGr
 				return basicSetUcmspec(null, msgs);
 			case ScenarioPackage.SCENARIO_GROUP__SCENARIOS:
 				return ((InternalEList)getScenarios()).basicRemove(otherEnd, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -162,8 +164,9 @@ public class ScenarioGroupImpl extends UCMmodelElementImpl implements ScenarioGr
 		switch (eContainerFeatureID()) {
 			case ScenarioPackage.SCENARIO_GROUP__UCMSPEC:
 				return eInternalContainer().eInverseRemove(this, UcmPackage.UC_MSPEC__SCENARIO_GROUPS, UCMspec.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
     /**
@@ -177,8 +180,9 @@ public class ScenarioGroupImpl extends UCMmodelElementImpl implements ScenarioGr
 				return getUcmspec();
 			case ScenarioPackage.SCENARIO_GROUP__SCENARIOS:
 				return getScenarios();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -195,8 +199,10 @@ public class ScenarioGroupImpl extends UCMmodelElementImpl implements ScenarioGr
 				getScenarios().clear();
 				getScenarios().addAll((Collection)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -212,8 +218,10 @@ public class ScenarioGroupImpl extends UCMmodelElementImpl implements ScenarioGr
 			case ScenarioPackage.SCENARIO_GROUP__SCENARIOS:
 				getScenarios().clear();
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -227,8 +235,9 @@ public class ScenarioGroupImpl extends UCMmodelElementImpl implements ScenarioGr
 				return getUcmspec() != null;
 			case ScenarioPackage.SCENARIO_GROUP__SCENARIOS:
 				return scenarios != null && !scenarios.isEmpty();
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //ScenarioGroupImpl

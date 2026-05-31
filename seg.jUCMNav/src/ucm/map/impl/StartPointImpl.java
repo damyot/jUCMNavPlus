@@ -316,8 +316,9 @@ public class StartPointImpl extends PathNodeImpl implements StartPoint {
 				return basicSetPrecondition((Condition)otherEnd, msgs);
 			case MapPackage.START_POINT__SCENARIO_START_POINTS:
 				return ((InternalEList)getScenarioStartPoints()).basicAdd(otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -335,8 +336,9 @@ public class StartPointImpl extends PathNodeImpl implements StartPoint {
 				return basicSetPrecondition(null, msgs);
 			case MapPackage.START_POINT__SCENARIO_START_POINTS:
 				return ((InternalEList)getScenarioStartPoints()).basicRemove(otherEnd, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -358,8 +360,9 @@ public class StartPointImpl extends PathNodeImpl implements StartPoint {
 				return getPrecondition();
 			case MapPackage.START_POINT__SCENARIO_START_POINTS:
 				return getScenarioStartPoints();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -389,8 +392,10 @@ public class StartPointImpl extends PathNodeImpl implements StartPoint {
 				getScenarioStartPoints().clear();
 				getScenarioStartPoints().addAll((Collection)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -418,8 +423,10 @@ public class StartPointImpl extends PathNodeImpl implements StartPoint {
 			case MapPackage.START_POINT__SCENARIO_START_POINTS:
 				getScenarioStartPoints().clear();
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -441,8 +448,9 @@ public class StartPointImpl extends PathNodeImpl implements StartPoint {
 				return precondition != null;
 			case MapPackage.START_POINT__SCENARIO_START_POINTS:
 				return scenarioStartPoints != null && !scenarioStartPoints.isEmpty();
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
     /**

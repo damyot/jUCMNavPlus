@@ -181,8 +181,9 @@ public class QuadraticChangeImpl extends NumericChangeImpl implements QuadraticC
 				return new Float(getLinearCoefficient());
 			case DyncontextPackage.QUADRATIC_CHANGE__CONSTANT:
 				return new Float(getConstant());
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -201,8 +202,10 @@ public class QuadraticChangeImpl extends NumericChangeImpl implements QuadraticC
 			case DyncontextPackage.QUADRATIC_CHANGE__CONSTANT:
 				setConstant(((Float)newValue).floatValue());
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -221,8 +224,10 @@ public class QuadraticChangeImpl extends NumericChangeImpl implements QuadraticC
 			case DyncontextPackage.QUADRATIC_CHANGE__CONSTANT:
 				setConstant(CONSTANT_EDEFAULT);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -238,8 +243,9 @@ public class QuadraticChangeImpl extends NumericChangeImpl implements QuadraticC
 				return linearCoefficient != LINEAR_COEFFICIENT_EDEFAULT;
 			case DyncontextPackage.QUADRATIC_CHANGE__CONSTANT:
 				return constant != CONSTANT_EDEFAULT;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 	/**

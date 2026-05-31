@@ -132,8 +132,9 @@ public class RuleImpl extends MediatingElementImpl implements Rule {
 				if (eInternalContainer() != null)
 					msgs = eBasicRemoveFromContainer(msgs);
 				return basicSetAsdSpec((ASDspec)otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -147,8 +148,9 @@ public class RuleImpl extends MediatingElementImpl implements Rule {
 				return ((InternalEList)getDols()).basicRemove(otherEnd, msgs);
 			case AsdPackage.RULE__ASD_SPEC:
 				return basicSetAsdSpec(null, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -160,8 +162,9 @@ public class RuleImpl extends MediatingElementImpl implements Rule {
 		switch (eContainerFeatureID()) {
 			case AsdPackage.RULE__ASD_SPEC:
 				return eInternalContainer().eInverseRemove(this, AsdPackage.AS_DSPEC__RULES, ASDspec.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
 	/**
@@ -175,8 +178,9 @@ public class RuleImpl extends MediatingElementImpl implements Rule {
 				return getDols();
 			case AsdPackage.RULE__ASD_SPEC:
 				return getAsdSpec();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -193,8 +197,10 @@ public class RuleImpl extends MediatingElementImpl implements Rule {
 			case AsdPackage.RULE__ASD_SPEC:
 				setAsdSpec((ASDspec)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -210,8 +216,10 @@ public class RuleImpl extends MediatingElementImpl implements Rule {
 			case AsdPackage.RULE__ASD_SPEC:
 				setAsdSpec((ASDspec)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -225,8 +233,9 @@ public class RuleImpl extends MediatingElementImpl implements Rule {
 				return dols != null && !dols.isEmpty();
 			case AsdPackage.RULE__ASD_SPEC:
 				return getAsdSpec() != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //RuleImpl

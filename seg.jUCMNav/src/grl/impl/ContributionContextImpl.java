@@ -211,8 +211,9 @@ public class ContributionContextImpl extends GRLmodelElementImpl implements Cont
 				return ((InternalEList)getParentContexts()).basicAdd(otherEnd, msgs);
 			case GrlPackage.CONTRIBUTION_CONTEXT__INCLUDED_CONTEXTS:
 				return ((InternalEList)getIncludedContexts()).basicAdd(otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -232,8 +233,9 @@ public class ContributionContextImpl extends GRLmodelElementImpl implements Cont
 				return ((InternalEList)getParentContexts()).basicRemove(otherEnd, msgs);
 			case GrlPackage.CONTRIBUTION_CONTEXT__INCLUDED_CONTEXTS:
 				return ((InternalEList)getIncludedContexts()).basicRemove(otherEnd, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -245,8 +247,9 @@ public class ContributionContextImpl extends GRLmodelElementImpl implements Cont
 		switch (eContainerFeatureID()) {
 			case GrlPackage.CONTRIBUTION_CONTEXT__GRLSPEC:
 				return eInternalContainer().eInverseRemove(this, GrlPackage.GR_LSPEC__CONTRIBUTION_CONTEXTS, GRLspec.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
 	/**
@@ -266,8 +269,9 @@ public class ContributionContextImpl extends GRLmodelElementImpl implements Cont
 				return getParentContexts();
 			case GrlPackage.CONTRIBUTION_CONTEXT__INCLUDED_CONTEXTS:
 				return getIncludedContexts();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -296,8 +300,10 @@ public class ContributionContextImpl extends GRLmodelElementImpl implements Cont
 				getIncludedContexts().clear();
 				getIncludedContexts().addAll((Collection)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -322,8 +328,10 @@ public class ContributionContextImpl extends GRLmodelElementImpl implements Cont
 			case GrlPackage.CONTRIBUTION_CONTEXT__INCLUDED_CONTEXTS:
 				getIncludedContexts().clear();
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -343,8 +351,9 @@ public class ContributionContextImpl extends GRLmodelElementImpl implements Cont
 				return parentContexts != null && !parentContexts.isEmpty();
 			case GrlPackage.CONTRIBUTION_CONTEXT__INCLUDED_CONTEXTS:
 				return includedContexts != null && !includedContexts.isEmpty();
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //ContributionContextImpl

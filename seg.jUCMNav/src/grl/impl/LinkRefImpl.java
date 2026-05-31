@@ -418,8 +418,9 @@ public class LinkRefImpl extends MinimalEObjectImpl.Container implements LinkRef
 				return basicSetLink((ElementLink)otherEnd, msgs);
 			case GrlPackage.LINK_REF__BENDPOINTS:
 				return ((InternalEList)getBendpoints()).basicAdd(otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -441,8 +442,9 @@ public class LinkRefImpl extends MinimalEObjectImpl.Container implements LinkRef
 				return basicSetLink(null, msgs);
 			case GrlPackage.LINK_REF__BENDPOINTS:
 				return ((InternalEList)getBendpoints()).basicRemove(otherEnd, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -454,8 +456,9 @@ public class LinkRefImpl extends MinimalEObjectImpl.Container implements LinkRef
 		switch (eContainerFeatureID()) {
 			case GrlPackage.LINK_REF__DIAGRAM:
 				return eInternalContainer().eInverseRemove(this, UrncorePackage.IURN_DIAGRAM__CONNECTIONS, IURNDiagram.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
     /**
@@ -480,8 +483,9 @@ public class LinkRefImpl extends MinimalEObjectImpl.Container implements LinkRef
 				return basicGetLink();
 			case GrlPackage.LINK_REF__BENDPOINTS:
 				return getBendpoints();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -510,8 +514,10 @@ public class LinkRefImpl extends MinimalEObjectImpl.Container implements LinkRef
 				getBendpoints().clear();
 				getBendpoints().addAll((Collection)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -539,8 +545,10 @@ public class LinkRefImpl extends MinimalEObjectImpl.Container implements LinkRef
 			case GrlPackage.LINK_REF__BENDPOINTS:
 				getBendpoints().clear();
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -562,8 +570,9 @@ public class LinkRefImpl extends MinimalEObjectImpl.Container implements LinkRef
 				return link != null;
 			case GrlPackage.LINK_REF__BENDPOINTS:
 				return bendpoints != null && !bendpoints.isEmpty();
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //LinkRefImpl

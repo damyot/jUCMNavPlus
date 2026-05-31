@@ -140,8 +140,9 @@ public abstract class ActiveResourceImpl extends GeneralResourceImpl implements 
 				return getOpTime();
 			case PerformancePackage.ACTIVE_RESOURCE__UNIT:
 				return getUnit();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -157,8 +158,10 @@ public abstract class ActiveResourceImpl extends GeneralResourceImpl implements 
 			case PerformancePackage.ACTIVE_RESOURCE__UNIT:
 				setUnit((TimeUnit)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -174,8 +177,10 @@ public abstract class ActiveResourceImpl extends GeneralResourceImpl implements 
 			case PerformancePackage.ACTIVE_RESOURCE__UNIT:
 				setUnit(UNIT_EDEFAULT);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -189,8 +194,9 @@ public abstract class ActiveResourceImpl extends GeneralResourceImpl implements 
 				return OP_TIME_EDEFAULT == null ? opTime != null : !OP_TIME_EDEFAULT.equals(opTime);
 			case PerformancePackage.ACTIVE_RESOURCE__UNIT:
 				return unit != UNIT_EDEFAULT;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
     /**

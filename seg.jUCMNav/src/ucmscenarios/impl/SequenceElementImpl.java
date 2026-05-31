@@ -25,12 +25,12 @@ import ucmscenarios.UcmscenariosPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link ucmscenarios.impl.SequenceElementImpl#getParentScenario <em>Parent Scenario</em>}</li>
  *   <li>{@link ucmscenarios.impl.SequenceElementImpl#getSequence <em>Sequence</em>}</li>
  *   <li>{@link ucmscenarios.impl.SequenceElementImpl#getInstance <em>Instance</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -224,8 +224,9 @@ public class SequenceElementImpl extends ModelElementImpl implements SequenceEle
 				if (instance != null)
 					msgs = ((InternalEObject)instance).eInverseRemove(this, UcmscenariosPackage.INSTANCE__ELEMENTS, Instance.class, msgs);
 				return basicSetInstance((Instance)otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -241,8 +242,9 @@ public class SequenceElementImpl extends ModelElementImpl implements SequenceEle
 				return basicSetSequence(null, msgs);
 			case UcmscenariosPackage.SEQUENCE_ELEMENT__INSTANCE:
 				return basicSetInstance(null, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -256,8 +258,9 @@ public class SequenceElementImpl extends ModelElementImpl implements SequenceEle
 				return eInternalContainer().eInverseRemove(this, UcmscenariosPackage.SCENARIO_DEF__CHILDREN, ScenarioDef.class, msgs);
 			case UcmscenariosPackage.SEQUENCE_ELEMENT__SEQUENCE:
 				return eInternalContainer().eInverseRemove(this, UcmscenariosPackage.SEQUENCE__CHILDREN, Sequence.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
 	/**
@@ -274,8 +277,9 @@ public class SequenceElementImpl extends ModelElementImpl implements SequenceEle
 			case UcmscenariosPackage.SEQUENCE_ELEMENT__INSTANCE:
 				if (resolve) return getInstance();
 				return basicGetInstance();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -294,8 +298,10 @@ public class SequenceElementImpl extends ModelElementImpl implements SequenceEle
 			case UcmscenariosPackage.SEQUENCE_ELEMENT__INSTANCE:
 				setInstance((Instance)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -314,8 +320,10 @@ public class SequenceElementImpl extends ModelElementImpl implements SequenceEle
 			case UcmscenariosPackage.SEQUENCE_ELEMENT__INSTANCE:
 				setInstance((Instance)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -331,8 +339,9 @@ public class SequenceElementImpl extends ModelElementImpl implements SequenceEle
 				return getSequence() != null;
 			case UcmscenariosPackage.SEQUENCE_ELEMENT__INSTANCE:
 				return instance != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //SequenceElementImpl

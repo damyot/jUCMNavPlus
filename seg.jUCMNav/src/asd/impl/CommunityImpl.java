@@ -158,8 +158,9 @@ public class CommunityImpl extends MediatedElementImpl implements Community {
 				return basicSetAsdSpec((ASDspec)otherEnd, msgs);
 			case AsdPackage.COMMUNITY__SUBJECT:
 				return ((InternalEList)getSubject()).basicAdd(otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -175,8 +176,9 @@ public class CommunityImpl extends MediatedElementImpl implements Community {
 				return basicSetAsdSpec(null, msgs);
 			case AsdPackage.COMMUNITY__SUBJECT:
 				return ((InternalEList)getSubject()).basicRemove(otherEnd, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -188,8 +190,9 @@ public class CommunityImpl extends MediatedElementImpl implements Community {
 		switch (eContainerFeatureID()) {
 			case AsdPackage.COMMUNITY__ASD_SPEC:
 				return eInternalContainer().eInverseRemove(this, AsdPackage.AS_DSPEC__COMMUNITIES, ASDspec.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
 	/**
@@ -205,8 +208,9 @@ public class CommunityImpl extends MediatedElementImpl implements Community {
 				return getAsdSpec();
 			case AsdPackage.COMMUNITY__SUBJECT:
 				return getSubject();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -227,8 +231,10 @@ public class CommunityImpl extends MediatedElementImpl implements Community {
 				getSubject().clear();
 				getSubject().addAll((Collection)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -247,8 +253,10 @@ public class CommunityImpl extends MediatedElementImpl implements Community {
 			case AsdPackage.COMMUNITY__SUBJECT:
 				getSubject().clear();
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -264,8 +272,9 @@ public class CommunityImpl extends MediatedElementImpl implements Community {
 				return getAsdSpec() != null;
 			case AsdPackage.COMMUNITY__SUBJECT:
 				return subject != null && !subject.isEmpty();
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //CommunityImpl

@@ -275,8 +275,8 @@ public final class ContributionType extends AbstractEnumerator {
 			case SOME_NEGATIVE: return SOME_NEGATIVE_LITERAL;
 			case HURT: return HURT_LITERAL;
 			case BREAK: return BREAK_LITERAL;
+			default: return null;
 		}
-		return null;
 	}
 
     /**

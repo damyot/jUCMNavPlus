@@ -513,8 +513,9 @@ public class PluginBindingImpl extends MinimalEObjectImpl.Container implements P
 				return ((InternalEList)getComponents()).basicAdd(otherEnd, msgs);
 			case MapPackage.PLUGIN_BINDING__RESPONSIBILITIES:
 				return ((InternalEList)getResponsibilities()).basicAdd(otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -538,8 +539,9 @@ public class PluginBindingImpl extends MinimalEObjectImpl.Container implements P
 				return ((InternalEList)getComponents()).basicRemove(otherEnd, msgs);
 			case MapPackage.PLUGIN_BINDING__RESPONSIBILITIES:
 				return ((InternalEList)getResponsibilities()).basicRemove(otherEnd, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -551,8 +553,9 @@ public class PluginBindingImpl extends MinimalEObjectImpl.Container implements P
 		switch (eContainerFeatureID()) {
 			case MapPackage.PLUGIN_BINDING__STUB:
 				return eInternalContainer().eInverseRemove(this, MapPackage.STUB__BINDINGS, Stub.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
     /**
@@ -585,8 +588,9 @@ public class PluginBindingImpl extends MinimalEObjectImpl.Container implements P
 				return getComponents();
 			case MapPackage.PLUGIN_BINDING__RESPONSIBILITIES:
 				return getResponsibilities();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -633,8 +637,10 @@ public class PluginBindingImpl extends MinimalEObjectImpl.Container implements P
 				getResponsibilities().clear();
 				getResponsibilities().addAll((Collection)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -677,8 +683,10 @@ public class PluginBindingImpl extends MinimalEObjectImpl.Container implements P
 			case MapPackage.PLUGIN_BINDING__RESPONSIBILITIES:
 				getResponsibilities().clear();
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -710,8 +718,9 @@ public class PluginBindingImpl extends MinimalEObjectImpl.Container implements P
 				return components != null && !components.isEmpty();
 			case MapPackage.PLUGIN_BINDING__RESPONSIBILITIES:
 				return responsibilities != null && !responsibilities.isEmpty();
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
     /**

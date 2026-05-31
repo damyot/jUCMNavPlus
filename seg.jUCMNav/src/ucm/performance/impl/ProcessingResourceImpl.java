@@ -128,8 +128,9 @@ public class ProcessingResourceImpl extends ActiveResourceImpl implements Proces
 		switch (featureID) {
 			case PerformancePackage.PROCESSING_RESOURCE__COMPONENTS:
 				return ((InternalEList)getComponents()).basicAdd(otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -141,8 +142,9 @@ public class ProcessingResourceImpl extends ActiveResourceImpl implements Proces
 		switch (featureID) {
 			case PerformancePackage.PROCESSING_RESOURCE__COMPONENTS:
 				return ((InternalEList)getComponents()).basicRemove(otherEnd, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -156,8 +158,9 @@ public class ProcessingResourceImpl extends ActiveResourceImpl implements Proces
 				return getKind();
 			case PerformancePackage.PROCESSING_RESOURCE__COMPONENTS:
 				return getComponents();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -174,8 +177,10 @@ public class ProcessingResourceImpl extends ActiveResourceImpl implements Proces
 				getComponents().clear();
 				getComponents().addAll((Collection)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -191,8 +196,10 @@ public class ProcessingResourceImpl extends ActiveResourceImpl implements Proces
 			case PerformancePackage.PROCESSING_RESOURCE__COMPONENTS:
 				getComponents().clear();
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -206,8 +213,9 @@ public class ProcessingResourceImpl extends ActiveResourceImpl implements Proces
 				return kind != KIND_EDEFAULT;
 			case PerformancePackage.PROCESSING_RESOURCE__COMPONENTS:
 				return components != null && !components.isEmpty();
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
     /**

@@ -287,8 +287,9 @@ public class GRLGraphImpl extends GRLmodelElementImpl implements GRLGraph {
 				return basicSetConcern((Concern)otherEnd, msgs);
 			case GrlPackage.GRL_GRAPH__COMMENTS:
 				return ((InternalEList)getComments()).basicAdd(otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -310,8 +311,9 @@ public class GRLGraphImpl extends GRLmodelElementImpl implements GRLGraph {
 				return basicSetConcern(null, msgs);
 			case GrlPackage.GRL_GRAPH__COMMENTS:
 				return ((InternalEList)getComments()).basicRemove(otherEnd, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -323,8 +325,9 @@ public class GRLGraphImpl extends GRLmodelElementImpl implements GRLGraph {
 		switch (eContainerFeatureID()) {
 			case GrlPackage.GRL_GRAPH__URNDEFINITION:
 				return eInternalContainer().eInverseRemove(this, UrncorePackage.UR_NDEFINITION__SPEC_DIAGRAMS, URNdefinition.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
     /**
@@ -347,8 +350,9 @@ public class GRLGraphImpl extends GRLmodelElementImpl implements GRLGraph {
 				return basicGetConcern();
 			case GrlPackage.GRL_GRAPH__COMMENTS:
 				return getComments();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -380,8 +384,10 @@ public class GRLGraphImpl extends GRLmodelElementImpl implements GRLGraph {
 				getComments().clear();
 				getComments().addAll((Collection)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -409,8 +415,10 @@ public class GRLGraphImpl extends GRLmodelElementImpl implements GRLGraph {
 			case GrlPackage.GRL_GRAPH__COMMENTS:
 				getComments().clear();
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -432,8 +440,9 @@ public class GRLGraphImpl extends GRLmodelElementImpl implements GRLGraph {
 				return concern != null;
 			case GrlPackage.GRL_GRAPH__COMMENTS:
 				return comments != null && !comments.isEmpty();
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
     /**

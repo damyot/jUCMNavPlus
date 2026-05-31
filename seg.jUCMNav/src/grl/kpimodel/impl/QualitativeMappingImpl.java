@@ -228,8 +228,9 @@ public class QualitativeMappingImpl extends MinimalEObjectImpl.Container impleme
 				return getQualitativeEvaluation();
 			case KpimodelPackage.QUALITATIVE_MAPPING__EXCEEDS:
 				return isExceeds() ? Boolean.TRUE : Boolean.FALSE;
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -251,8 +252,10 @@ public class QualitativeMappingImpl extends MinimalEObjectImpl.Container impleme
 			case KpimodelPackage.QUALITATIVE_MAPPING__EXCEEDS:
 				setExceeds(((Boolean)newValue).booleanValue());
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -274,8 +277,10 @@ public class QualitativeMappingImpl extends MinimalEObjectImpl.Container impleme
 			case KpimodelPackage.QUALITATIVE_MAPPING__EXCEEDS:
 				setExceeds(EXCEEDS_EDEFAULT);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -293,8 +298,9 @@ public class QualitativeMappingImpl extends MinimalEObjectImpl.Container impleme
 				return qualitativeEvaluation != QUALITATIVE_EVALUATION_EDEFAULT;
 			case KpimodelPackage.QUALITATIVE_MAPPING__EXCEEDS:
 				return exceeds != EXCEEDS_EDEFAULT;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 	/**

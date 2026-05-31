@@ -167,8 +167,8 @@ public final class FailureKind extends AbstractEnumerator {
 			case FAILURE: return FAILURE_LITERAL;
 			case ABORT: return ABORT_LITERAL;
 			case NONE: return NONE_LITERAL;
+			default: return null;
 		}
-		return null;
 	}
 
     /**

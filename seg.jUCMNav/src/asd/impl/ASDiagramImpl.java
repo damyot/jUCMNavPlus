@@ -470,8 +470,9 @@ public class ASDiagramImpl extends ASDmodelElementImpl implements ASDiagram {
 				return ((InternalEList)getParentDoLs()).basicAdd(otherEnd, msgs);
 			case AsdPackage.AS_DIAGRAM__CONTRADICTIONS:
 				return ((InternalEList)getContradictions()).basicAdd(otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -507,8 +508,9 @@ public class ASDiagramImpl extends ASDmodelElementImpl implements ASDiagram {
 				return ((InternalEList)getParentDoLs()).basicRemove(otherEnd, msgs);
 			case AsdPackage.AS_DIAGRAM__CONTRADICTIONS:
 				return ((InternalEList)getContradictions()).basicRemove(otherEnd, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -520,8 +522,9 @@ public class ASDiagramImpl extends ASDmodelElementImpl implements ASDiagram {
 		switch (eContainerFeatureID()) {
 			case AsdPackage.AS_DIAGRAM__URNDEFINITION:
 				return eInternalContainer().eInverseRemove(this, UrncorePackage.UR_NDEFINITION__SPEC_DIAGRAMS, URNdefinition.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
 	/**
@@ -558,8 +561,9 @@ public class ASDiagramImpl extends ASDmodelElementImpl implements ASDiagram {
 				return getParentDoLs();
 			case AsdPackage.AS_DIAGRAM__CONTRADICTIONS:
 				return getContradictions();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -619,8 +623,10 @@ public class ASDiagramImpl extends ASDmodelElementImpl implements ASDiagram {
 				getContradictions().clear();
 				getContradictions().addAll((Collection)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -669,8 +675,10 @@ public class ASDiagramImpl extends ASDmodelElementImpl implements ASDiagram {
 			case AsdPackage.AS_DIAGRAM__CONTRADICTIONS:
 				getContradictions().clear();
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -706,8 +714,9 @@ public class ASDiagramImpl extends ASDmodelElementImpl implements ASDiagram {
 				return parentDoLs != null && !parentDoLs.isEmpty();
 			case AsdPackage.AS_DIAGRAM__CONTRADICTIONS:
 				return contradictions != null && !contradictions.isEmpty();
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 	/**

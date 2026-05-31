@@ -190,8 +190,8 @@ public final class StrategyType extends AbstractEnumerator {
 			case PUBLIC: return PUBLIC_LITERAL;
 			case SELECTED: return SELECTED_LITERAL;
 			case PRIVATE: return PRIVATE_LITERAL;
+			default: return null;
 		}
-		return null;
 	}
 
 	/**

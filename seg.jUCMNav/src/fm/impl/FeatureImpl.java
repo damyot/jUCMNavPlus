@@ -141,8 +141,9 @@ public class FeatureImpl extends IntentionalElementImpl implements Feature {
 			case FmPackage.FEATURE__CORE_FEATURE:
 				if (resolve) return getCoreFeature();
 				return basicGetCoreFeature();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -158,8 +159,10 @@ public class FeatureImpl extends IntentionalElementImpl implements Feature {
 			case FmPackage.FEATURE__CORE_FEATURE:
 				setCoreFeature((COREFeature)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -175,8 +178,10 @@ public class FeatureImpl extends IntentionalElementImpl implements Feature {
 			case FmPackage.FEATURE__CORE_FEATURE:
 				setCoreFeature((COREFeature)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -190,8 +195,9 @@ public class FeatureImpl extends IntentionalElementImpl implements Feature {
 				return selectable != SELECTABLE_EDEFAULT;
 			case FmPackage.FEATURE__CORE_FEATURE:
 				return coreFeature != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 	/**

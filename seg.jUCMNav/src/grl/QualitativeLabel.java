@@ -275,8 +275,8 @@ public final class QualitativeLabel extends AbstractEnumerator {
 			case CONFLICT: return CONFLICT_LITERAL;
 			case UNKNOWN: return UNKNOWN_LITERAL;
 			case NONE: return NONE_LITERAL;
+			default: return null;
 		}
-		return null;
 	}
 
 	/**

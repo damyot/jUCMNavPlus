@@ -100,8 +100,9 @@ public class MotivationImpl extends ASDelementImpl implements Motivation {
 				if (eInternalContainer() != null)
 					msgs = eBasicRemoveFromContainer(msgs);
 				return basicSetAsdSpec((ASDspec)otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -113,8 +114,9 @@ public class MotivationImpl extends ASDelementImpl implements Motivation {
 		switch (featureID) {
 			case AsdPackage.MOTIVATION__ASD_SPEC:
 				return basicSetAsdSpec(null, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -126,8 +128,9 @@ public class MotivationImpl extends ASDelementImpl implements Motivation {
 		switch (eContainerFeatureID()) {
 			case AsdPackage.MOTIVATION__ASD_SPEC:
 				return eInternalContainer().eInverseRemove(this, AsdPackage.AS_DSPEC__MOTIVATIONS, ASDspec.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
 	/**
@@ -139,8 +142,9 @@ public class MotivationImpl extends ASDelementImpl implements Motivation {
 		switch (featureID) {
 			case AsdPackage.MOTIVATION__ASD_SPEC:
 				return getAsdSpec();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -153,8 +157,10 @@ public class MotivationImpl extends ASDelementImpl implements Motivation {
 			case AsdPackage.MOTIVATION__ASD_SPEC:
 				setAsdSpec((ASDspec)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -167,8 +173,10 @@ public class MotivationImpl extends ASDelementImpl implements Motivation {
 			case AsdPackage.MOTIVATION__ASD_SPEC:
 				setAsdSpec((ASDspec)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -180,8 +188,9 @@ public class MotivationImpl extends ASDelementImpl implements Motivation {
 		switch (featureID) {
 			case AsdPackage.MOTIVATION__ASD_SPEC:
 				return getAsdSpec() != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //MotivationImpl

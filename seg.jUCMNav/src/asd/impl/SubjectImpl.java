@@ -208,8 +208,9 @@ public class SubjectImpl extends MediatedElementImpl implements Subject {
 				return basicSetMemberOf((Community)otherEnd, msgs);
 			case AsdPackage.SUBJECT__OBJECTS:
 				return ((InternalEList)getObjects()).basicAdd(otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -225,8 +226,9 @@ public class SubjectImpl extends MediatedElementImpl implements Subject {
 				return basicSetMemberOf(null, msgs);
 			case AsdPackage.SUBJECT__OBJECTS:
 				return ((InternalEList)getObjects()).basicRemove(otherEnd, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -238,8 +240,9 @@ public class SubjectImpl extends MediatedElementImpl implements Subject {
 		switch (eContainerFeatureID()) {
 			case AsdPackage.SUBJECT__ASD_SPEC:
 				return eInternalContainer().eInverseRemove(this, AsdPackage.AS_DSPEC__SUBJECTS, ASDspec.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
 	/**
@@ -256,8 +259,9 @@ public class SubjectImpl extends MediatedElementImpl implements Subject {
 				return basicGetMemberOf();
 			case AsdPackage.SUBJECT__OBJECTS:
 				return getObjects();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -277,8 +281,10 @@ public class SubjectImpl extends MediatedElementImpl implements Subject {
 				getObjects().clear();
 				getObjects().addAll((Collection)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -297,8 +303,10 @@ public class SubjectImpl extends MediatedElementImpl implements Subject {
 			case AsdPackage.SUBJECT__OBJECTS:
 				getObjects().clear();
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -314,8 +322,9 @@ public class SubjectImpl extends MediatedElementImpl implements Subject {
 				return memberOf != null;
 			case AsdPackage.SUBJECT__OBJECTS:
 				return objects != null && !objects.isEmpty();
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //SubjectImpl

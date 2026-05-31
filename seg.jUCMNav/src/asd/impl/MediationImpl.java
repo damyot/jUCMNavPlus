@@ -208,8 +208,9 @@ public class MediationImpl extends ASDmodelElementImpl implements Mediation {
 				if (eInternalContainer() != null)
 					msgs = eBasicRemoveFromContainer(msgs);
 				return basicSetRelevantASD((ASDiagram)otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -225,8 +226,9 @@ public class MediationImpl extends ASDmodelElementImpl implements Mediation {
 				return ((InternalEList)getMediates()).basicRemove(otherEnd, msgs);
 			case AsdPackage.MEDIATION__RELEVANT_ASD:
 				return basicSetRelevantASD(null, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -238,8 +240,9 @@ public class MediationImpl extends ASDmodelElementImpl implements Mediation {
 		switch (eContainerFeatureID()) {
 			case AsdPackage.MEDIATION__RELEVANT_ASD:
 				return eInternalContainer().eInverseRemove(this, AsdPackage.AS_DIAGRAM__MEDIATIONS, ASDiagram.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
 	/**
@@ -256,8 +259,9 @@ public class MediationImpl extends ASDmodelElementImpl implements Mediation {
 				return getMediates();
 			case AsdPackage.MEDIATION__RELEVANT_ASD:
 				return getRelevantASD();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -277,8 +281,10 @@ public class MediationImpl extends ASDmodelElementImpl implements Mediation {
 			case AsdPackage.MEDIATION__RELEVANT_ASD:
 				setRelevantASD((ASDiagram)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -297,8 +303,10 @@ public class MediationImpl extends ASDmodelElementImpl implements Mediation {
 			case AsdPackage.MEDIATION__RELEVANT_ASD:
 				setRelevantASD((ASDiagram)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -314,8 +322,9 @@ public class MediationImpl extends ASDmodelElementImpl implements Mediation {
 				return mediates != null && !mediates.isEmpty();
 			case AsdPackage.MEDIATION__RELEVANT_ASD:
 				return getRelevantASD() != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //MediationImpl

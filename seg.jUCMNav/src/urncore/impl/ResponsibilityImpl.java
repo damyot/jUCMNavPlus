@@ -313,8 +313,9 @@ public class ResponsibilityImpl extends UCMmodelElementImpl implements Responsib
 				return ((InternalEList)getRespRefs()).basicAdd(otherEnd, msgs);
 			case UrncorePackage.RESPONSIBILITY__PARENT_BINDINGS:
 				return ((InternalEList)getParentBindings()).basicAdd(otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -332,8 +333,9 @@ public class ResponsibilityImpl extends UCMmodelElementImpl implements Responsib
 				return ((InternalEList)getRespRefs()).basicRemove(otherEnd, msgs);
 			case UrncorePackage.RESPONSIBILITY__PARENT_BINDINGS:
 				return ((InternalEList)getParentBindings()).basicRemove(otherEnd, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -345,8 +347,9 @@ public class ResponsibilityImpl extends UCMmodelElementImpl implements Responsib
 		switch (eContainerFeatureID()) {
 			case UrncorePackage.RESPONSIBILITY__URNDEFINITION:
 				return eInternalContainer().eInverseRemove(this, UrncorePackage.UR_NDEFINITION__RESPONSIBILITIES, URNdefinition.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
     /**
@@ -370,8 +373,9 @@ public class ResponsibilityImpl extends UCMmodelElementImpl implements Responsib
 				return getRespRefs();
 			case UrncorePackage.RESPONSIBILITY__PARENT_BINDINGS:
 				return getParentBindings();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -405,8 +409,10 @@ public class ResponsibilityImpl extends UCMmodelElementImpl implements Responsib
 				getParentBindings().clear();
 				getParentBindings().addAll((Collection)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -437,8 +443,10 @@ public class ResponsibilityImpl extends UCMmodelElementImpl implements Responsib
 			case UrncorePackage.RESPONSIBILITY__PARENT_BINDINGS:
 				getParentBindings().clear();
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -462,8 +470,9 @@ public class ResponsibilityImpl extends UCMmodelElementImpl implements Responsib
 				return respRefs != null && !respRefs.isEmpty();
 			case UrncorePackage.RESPONSIBILITY__PARENT_BINDINGS:
 				return parentBindings != null && !parentBindings.isEmpty();
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
     /**

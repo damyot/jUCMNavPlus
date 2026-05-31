@@ -515,8 +515,9 @@ public class UCMmapImpl extends UCMmodelElementImpl implements UCMmap {
 				return basicSetCoreConcern((COREConcern)otherEnd, msgs);
 			case MapPackage.UC_MMAP__PARENT_STUB:
 				return ((InternalEList)getParentStub()).basicAdd(otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -546,8 +547,9 @@ public class UCMmapImpl extends UCMmodelElementImpl implements UCMmap {
 				return basicSetCoreConcern(null, msgs);
 			case MapPackage.UC_MMAP__PARENT_STUB:
 				return ((InternalEList)getParentStub()).basicRemove(otherEnd, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -559,8 +561,9 @@ public class UCMmapImpl extends UCMmodelElementImpl implements UCMmap {
 		switch (eContainerFeatureID()) {
 			case MapPackage.UC_MMAP__URNDEFINITION:
 				return eInternalContainer().eInverseRemove(this, UrncorePackage.UR_NDEFINITION__SPEC_DIAGRAMS, URNdefinition.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
 	/**
@@ -596,8 +599,9 @@ public class UCMmapImpl extends UCMmodelElementImpl implements UCMmap {
 				return isSingleton() ? Boolean.TRUE : Boolean.FALSE;
 			case MapPackage.UC_MMAP__PARENT_STUB:
 				return getParentStub();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -647,8 +651,10 @@ public class UCMmapImpl extends UCMmodelElementImpl implements UCMmap {
 				getParentStub().clear();
 				getParentStub().addAll((Collection)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -691,8 +697,10 @@ public class UCMmapImpl extends UCMmodelElementImpl implements UCMmap {
 			case MapPackage.UC_MMAP__PARENT_STUB:
 				getParentStub().clear();
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -726,8 +734,9 @@ public class UCMmapImpl extends UCMmodelElementImpl implements UCMmap {
 				return singleton != SINGLETON_EDEFAULT;
 			case MapPackage.UC_MMAP__PARENT_STUB:
 				return parentStub != null && !parentStub.isEmpty();
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 	/**

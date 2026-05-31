@@ -31,6 +31,7 @@ import ucmscenarios.UcmscenariosPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link ucmscenarios.impl.InstanceImpl#getScenario <em>Scenario</em>}</li>
  *   <li>{@link ucmscenarios.impl.InstanceImpl#getDefinition <em>Definition</em>}</li>
@@ -38,7 +39,6 @@ import ucmscenarios.UcmscenariosPackage;
  *   <li>{@link ucmscenarios.impl.InstanceImpl#getSent <em>Sent</em>}</li>
  *   <li>{@link ucmscenarios.impl.InstanceImpl#getReceived <em>Received</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -259,8 +259,9 @@ public class InstanceImpl extends ModelElementImpl implements Instance {
 				return ((InternalEList)getSent()).basicAdd(otherEnd, msgs);
 			case UcmscenariosPackage.INSTANCE__RECEIVED:
 				return ((InternalEList)getReceived()).basicAdd(otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -280,8 +281,9 @@ public class InstanceImpl extends ModelElementImpl implements Instance {
 				return ((InternalEList)getSent()).basicRemove(otherEnd, msgs);
 			case UcmscenariosPackage.INSTANCE__RECEIVED:
 				return ((InternalEList)getReceived()).basicRemove(otherEnd, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -293,8 +295,9 @@ public class InstanceImpl extends ModelElementImpl implements Instance {
 		switch (eContainerFeatureID()) {
 			case UcmscenariosPackage.INSTANCE__SCENARIO:
 				return eInternalContainer().eInverseRemove(this, UcmscenariosPackage.SCENARIO_DEF__INSTANCES, ScenarioDef.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
 	/**
@@ -315,8 +318,9 @@ public class InstanceImpl extends ModelElementImpl implements Instance {
 				return getSent();
 			case UcmscenariosPackage.INSTANCE__RECEIVED:
 				return getReceived();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -344,8 +348,10 @@ public class InstanceImpl extends ModelElementImpl implements Instance {
 				getReceived().clear();
 				getReceived().addAll((Collection)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -370,8 +376,10 @@ public class InstanceImpl extends ModelElementImpl implements Instance {
 			case UcmscenariosPackage.INSTANCE__RECEIVED:
 				getReceived().clear();
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -391,8 +399,9 @@ public class InstanceImpl extends ModelElementImpl implements Instance {
 				return sent != null && !sent.isEmpty();
 			case UcmscenariosPackage.INSTANCE__RECEIVED:
 				return received != null && !received.isEmpty();
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //InstanceImpl

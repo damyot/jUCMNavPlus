@@ -29,11 +29,11 @@ import ucmscenarios.UcmscenariosPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link ucmscenarios.impl.ComponentImpl#getScenarioSpec <em>Scenario Spec</em>}</li>
  *   <li>{@link ucmscenarios.impl.ComponentImpl#getInstances <em>Instances</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -132,8 +132,9 @@ public class ComponentImpl extends ModelElementImpl implements Component {
 				return basicSetScenarioSpec((ScenarioSpec)otherEnd, msgs);
 			case UcmscenariosPackage.COMPONENT__INSTANCES:
 				return ((InternalEList)getInstances()).basicAdd(otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -147,8 +148,9 @@ public class ComponentImpl extends ModelElementImpl implements Component {
 				return basicSetScenarioSpec(null, msgs);
 			case UcmscenariosPackage.COMPONENT__INSTANCES:
 				return ((InternalEList)getInstances()).basicRemove(otherEnd, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -160,8 +162,9 @@ public class ComponentImpl extends ModelElementImpl implements Component {
 		switch (eContainerFeatureID()) {
 			case UcmscenariosPackage.COMPONENT__SCENARIO_SPEC:
 				return eInternalContainer().eInverseRemove(this, UcmscenariosPackage.SCENARIO_SPEC__COMPONENTS, ScenarioSpec.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
 	/**
@@ -175,8 +178,9 @@ public class ComponentImpl extends ModelElementImpl implements Component {
 				return getScenarioSpec();
 			case UcmscenariosPackage.COMPONENT__INSTANCES:
 				return getInstances();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -193,8 +197,10 @@ public class ComponentImpl extends ModelElementImpl implements Component {
 				getInstances().clear();
 				getInstances().addAll((Collection)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -210,8 +216,10 @@ public class ComponentImpl extends ModelElementImpl implements Component {
 			case UcmscenariosPackage.COMPONENT__INSTANCES:
 				getInstances().clear();
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -225,8 +233,9 @@ public class ComponentImpl extends ModelElementImpl implements Component {
 				return getScenarioSpec() != null;
 			case UcmscenariosPackage.COMPONENT__INSTANCES:
 				return instances != null && !instances.isEmpty();
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //ComponentImpl

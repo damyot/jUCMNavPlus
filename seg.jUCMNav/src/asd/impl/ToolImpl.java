@@ -132,8 +132,9 @@ public class ToolImpl extends MediatingElementImpl implements Tool {
 				return basicSetAsdSpec((ASDspec)otherEnd, msgs);
 			case AsdPackage.TOOL__DOLS:
 				return ((InternalEList)getDols()).basicAdd(otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -147,8 +148,9 @@ public class ToolImpl extends MediatingElementImpl implements Tool {
 				return basicSetAsdSpec(null, msgs);
 			case AsdPackage.TOOL__DOLS:
 				return ((InternalEList)getDols()).basicRemove(otherEnd, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -160,8 +162,9 @@ public class ToolImpl extends MediatingElementImpl implements Tool {
 		switch (eContainerFeatureID()) {
 			case AsdPackage.TOOL__ASD_SPEC:
 				return eInternalContainer().eInverseRemove(this, AsdPackage.AS_DSPEC__TOOLS, ASDspec.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
 	/**
@@ -175,8 +178,9 @@ public class ToolImpl extends MediatingElementImpl implements Tool {
 				return getAsdSpec();
 			case AsdPackage.TOOL__DOLS:
 				return getDols();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -193,8 +197,10 @@ public class ToolImpl extends MediatingElementImpl implements Tool {
 				getDols().clear();
 				getDols().addAll((Collection)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -210,8 +216,10 @@ public class ToolImpl extends MediatingElementImpl implements Tool {
 			case AsdPackage.TOOL__DOLS:
 				getDols().clear();
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -225,8 +233,9 @@ public class ToolImpl extends MediatingElementImpl implements Tool {
 				return getAsdSpec() != null;
 			case AsdPackage.TOOL__DOLS:
 				return dols != null && !dols.isEmpty();
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //ToolImpl

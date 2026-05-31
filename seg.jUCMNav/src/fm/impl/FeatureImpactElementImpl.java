@@ -106,8 +106,9 @@ public class FeatureImpactElementImpl extends IntentionalElementImpl implements 
 			case FmPackage.FEATURE_IMPACT_ELEMENT__CORE_FEATURE_IMPACT_NODE:
 				if (resolve) return getCoreFeatureImpactNode();
 				return basicGetCoreFeatureImpactNode();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -120,8 +121,10 @@ public class FeatureImpactElementImpl extends IntentionalElementImpl implements 
 			case FmPackage.FEATURE_IMPACT_ELEMENT__CORE_FEATURE_IMPACT_NODE:
 				setCoreFeatureImpactNode((COREFeatureImpactNode)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -134,8 +137,10 @@ public class FeatureImpactElementImpl extends IntentionalElementImpl implements 
 			case FmPackage.FEATURE_IMPACT_ELEMENT__CORE_FEATURE_IMPACT_NODE:
 				setCoreFeatureImpactNode((COREFeatureImpactNode)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -147,8 +152,9 @@ public class FeatureImpactElementImpl extends IntentionalElementImpl implements 
 		switch (featureID) {
 			case FmPackage.FEATURE_IMPACT_ELEMENT__CORE_FEATURE_IMPACT_NODE:
 				return coreFeatureImpactNode != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //FeatureImpactElementImpl

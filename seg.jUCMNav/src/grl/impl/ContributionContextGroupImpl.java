@@ -134,8 +134,9 @@ public class ContributionContextGroupImpl extends GRLmodelElementImpl implements
 				return basicSetGrlspec((GRLspec)otherEnd, msgs);
 			case GrlPackage.CONTRIBUTION_CONTEXT_GROUP__CONTRIBS:
 				return ((InternalEList)getContribs()).basicAdd(otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -149,8 +150,9 @@ public class ContributionContextGroupImpl extends GRLmodelElementImpl implements
 				return basicSetGrlspec(null, msgs);
 			case GrlPackage.CONTRIBUTION_CONTEXT_GROUP__CONTRIBS:
 				return ((InternalEList)getContribs()).basicRemove(otherEnd, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -162,8 +164,9 @@ public class ContributionContextGroupImpl extends GRLmodelElementImpl implements
 		switch (eContainerFeatureID()) {
 			case GrlPackage.CONTRIBUTION_CONTEXT_GROUP__GRLSPEC:
 				return eInternalContainer().eInverseRemove(this, GrlPackage.GR_LSPEC__CONTRIBUTION_GROUPS, GRLspec.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
 	/**
@@ -177,8 +180,9 @@ public class ContributionContextGroupImpl extends GRLmodelElementImpl implements
 				return getGrlspec();
 			case GrlPackage.CONTRIBUTION_CONTEXT_GROUP__CONTRIBS:
 				return getContribs();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -195,8 +199,10 @@ public class ContributionContextGroupImpl extends GRLmodelElementImpl implements
 				getContribs().clear();
 				getContribs().addAll((Collection)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -212,8 +218,10 @@ public class ContributionContextGroupImpl extends GRLmodelElementImpl implements
 			case GrlPackage.CONTRIBUTION_CONTEXT_GROUP__CONTRIBS:
 				getContribs().clear();
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -227,8 +235,9 @@ public class ContributionContextGroupImpl extends GRLmodelElementImpl implements
 				return getGrlspec() != null;
 			case GrlPackage.CONTRIBUTION_CONTEXT_GROUP__CONTRIBS:
 				return contribs != null && !contribs.isEmpty();
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //ContributionContextGroupImpl

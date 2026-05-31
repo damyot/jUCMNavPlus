@@ -236,8 +236,9 @@ public class URNdefinitionImpl extends MinimalEObjectImpl.Container implements U
 				return ((InternalEList)getComponents()).basicAdd(otherEnd, msgs);
 			case UrncorePackage.UR_NDEFINITION__COMPONENT_TYPES:
 				return ((InternalEList)getComponentTypes()).basicAdd(otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -259,8 +260,9 @@ public class URNdefinitionImpl extends MinimalEObjectImpl.Container implements U
 				return ((InternalEList)getComponents()).basicRemove(otherEnd, msgs);
 			case UrncorePackage.UR_NDEFINITION__COMPONENT_TYPES:
 				return ((InternalEList)getComponentTypes()).basicRemove(otherEnd, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -272,8 +274,9 @@ public class URNdefinitionImpl extends MinimalEObjectImpl.Container implements U
 		switch (eContainerFeatureID()) {
 			case UrncorePackage.UR_NDEFINITION__URNSPEC:
 				return eInternalContainer().eInverseRemove(this, UrnPackage.UR_NSPEC__URNDEF, URNspec.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
     /**
@@ -295,8 +298,9 @@ public class URNdefinitionImpl extends MinimalEObjectImpl.Container implements U
 				return getComponents();
 			case UrncorePackage.UR_NDEFINITION__COMPONENT_TYPES:
 				return getComponentTypes();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -329,8 +333,10 @@ public class URNdefinitionImpl extends MinimalEObjectImpl.Container implements U
 				getComponentTypes().clear();
 				getComponentTypes().addAll((Collection)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -358,8 +364,10 @@ public class URNdefinitionImpl extends MinimalEObjectImpl.Container implements U
 			case UrncorePackage.UR_NDEFINITION__COMPONENT_TYPES:
 				getComponentTypes().clear();
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -381,8 +389,9 @@ public class URNdefinitionImpl extends MinimalEObjectImpl.Container implements U
 				return components != null && !components.isEmpty();
 			case UrncorePackage.UR_NDEFINITION__COMPONENT_TYPES:
 				return componentTypes != null && !componentTypes.isEmpty();
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //URNdefinitionImpl

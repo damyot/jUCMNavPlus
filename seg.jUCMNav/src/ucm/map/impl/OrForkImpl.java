@@ -95,8 +95,9 @@ public class OrForkImpl extends PathNodeImpl implements OrFork {
 		switch (featureID) {
 			case MapPackage.OR_FORK__ORIENTATION:
 				return getOrientation();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -109,8 +110,10 @@ public class OrForkImpl extends PathNodeImpl implements OrFork {
 			case MapPackage.OR_FORK__ORIENTATION:
 				setOrientation((String)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -123,8 +126,10 @@ public class OrForkImpl extends PathNodeImpl implements OrFork {
 			case MapPackage.OR_FORK__ORIENTATION:
 				setOrientation(ORIENTATION_EDEFAULT);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -136,8 +141,9 @@ public class OrForkImpl extends PathNodeImpl implements OrFork {
 		switch (featureID) {
 			case MapPackage.OR_FORK__ORIENTATION:
 				return ORIENTATION_EDEFAULT == null ? orientation != null : !ORIENTATION_EDEFAULT.equals(orientation);
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
     /**

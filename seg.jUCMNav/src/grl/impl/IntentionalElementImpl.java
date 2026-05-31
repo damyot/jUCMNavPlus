@@ -479,8 +479,9 @@ public class IntentionalElementImpl extends GRLLinkableElementImpl implements In
 				return basicSetGrlspec((GRLspec)otherEnd, msgs);
 			case GrlPackage.INTENTIONAL_ELEMENT__REFS:
 				return ((InternalEList)getRefs()).basicAdd(otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -494,8 +495,9 @@ public class IntentionalElementImpl extends GRLLinkableElementImpl implements In
 				return basicSetGrlspec(null, msgs);
 			case GrlPackage.INTENTIONAL_ELEMENT__REFS:
 				return ((InternalEList)getRefs()).basicRemove(otherEnd, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -507,8 +509,9 @@ public class IntentionalElementImpl extends GRLLinkableElementImpl implements In
 		switch (eContainerFeatureID()) {
 			case GrlPackage.INTENTIONAL_ELEMENT__GRLSPEC:
 				return eInternalContainer().eInverseRemove(this, GrlPackage.GR_LSPEC__INT_ELEMENTS, GRLspec.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
     /**
@@ -539,8 +542,9 @@ public class IntentionalElementImpl extends GRLLinkableElementImpl implements In
 			case GrlPackage.INTENTIONAL_ELEMENT__CORE_IMPACT_NODE:
 				if (resolve) return getCoreImpactNode();
 				return basicGetCoreImpactNode();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -581,8 +585,10 @@ public class IntentionalElementImpl extends GRLLinkableElementImpl implements In
 			case GrlPackage.INTENTIONAL_ELEMENT__CORE_IMPACT_NODE:
 				setCoreImpactNode((COREImpactNode)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -622,8 +628,10 @@ public class IntentionalElementImpl extends GRLLinkableElementImpl implements In
 			case GrlPackage.INTENTIONAL_ELEMENT__CORE_IMPACT_NODE:
 				setCoreImpactNode((COREImpactNode)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -653,8 +661,9 @@ public class IntentionalElementImpl extends GRLLinkableElementImpl implements In
 				return refs != null && !refs.isEmpty();
 			case GrlPackage.INTENTIONAL_ELEMENT__CORE_IMPACT_NODE:
 				return coreImpactNode != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
     /**

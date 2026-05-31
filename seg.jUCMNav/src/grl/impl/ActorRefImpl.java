@@ -581,8 +581,9 @@ public class ActorRefImpl extends GRLmodelElementImpl implements ActorRef {
 				return basicSetParent((IURNContainerRef)otherEnd, msgs);
 			case GrlPackage.ACTOR_REF__CHILDREN:
 				return ((InternalEList)getChildren()).basicAdd(otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -604,8 +605,9 @@ public class ActorRefImpl extends GRLmodelElementImpl implements ActorRef {
 				return basicSetParent(null, msgs);
 			case GrlPackage.ACTOR_REF__CHILDREN:
 				return ((InternalEList)getChildren()).basicRemove(otherEnd, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -617,8 +619,9 @@ public class ActorRefImpl extends GRLmodelElementImpl implements ActorRef {
 		switch (eContainerFeatureID()) {
 			case GrlPackage.ACTOR_REF__DIAGRAM:
 				return eInternalContainer().eInverseRemove(this, UrncorePackage.IURN_DIAGRAM__CONT_REFS, IURNDiagram.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
     /**
@@ -652,8 +655,9 @@ public class ActorRefImpl extends GRLmodelElementImpl implements ActorRef {
 				return basicGetParent();
 			case GrlPackage.ACTOR_REF__CHILDREN:
 				return getChildren();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -698,8 +702,10 @@ public class ActorRefImpl extends GRLmodelElementImpl implements ActorRef {
 				getChildren().clear();
 				getChildren().addAll((Collection)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -742,8 +748,10 @@ public class ActorRefImpl extends GRLmodelElementImpl implements ActorRef {
 			case GrlPackage.ACTOR_REF__CHILDREN:
 				getChildren().clear();
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -775,8 +783,9 @@ public class ActorRefImpl extends GRLmodelElementImpl implements ActorRef {
 				return parent != null;
 			case GrlPackage.ACTOR_REF__CHILDREN:
 				return children != null && !children.isEmpty();
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
     /**

@@ -213,8 +213,9 @@ public class EndPointImpl extends PathNodeImpl implements EndPoint {
 				return basicSetPostcondition((Condition)otherEnd, msgs);
 			case MapPackage.END_POINT__SCENARIO_END_POINTS:
 				return ((InternalEList)getScenarioEndPoints()).basicAdd(otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -230,8 +231,9 @@ public class EndPointImpl extends PathNodeImpl implements EndPoint {
 				return basicSetPostcondition(null, msgs);
 			case MapPackage.END_POINT__SCENARIO_END_POINTS:
 				return ((InternalEList)getScenarioEndPoints()).basicRemove(otherEnd, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -249,8 +251,9 @@ public class EndPointImpl extends PathNodeImpl implements EndPoint {
 				return getPostcondition();
 			case MapPackage.END_POINT__SCENARIO_END_POINTS:
 				return getScenarioEndPoints();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -274,8 +277,10 @@ public class EndPointImpl extends PathNodeImpl implements EndPoint {
 				getScenarioEndPoints().clear();
 				getScenarioEndPoints().addAll((Collection)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -297,8 +302,10 @@ public class EndPointImpl extends PathNodeImpl implements EndPoint {
 			case MapPackage.END_POINT__SCENARIO_END_POINTS:
 				getScenarioEndPoints().clear();
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -316,8 +323,9 @@ public class EndPointImpl extends PathNodeImpl implements EndPoint {
 				return postcondition != null;
 			case MapPackage.END_POINT__SCENARIO_END_POINTS:
 				return scenarioEndPoints != null && !scenarioEndPoints.isEmpty();
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
     /**

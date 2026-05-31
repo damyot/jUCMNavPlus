@@ -387,8 +387,9 @@ public class ASDlayoutImpl extends MinimalEObjectImpl.Container implements ASDla
 				if (asDiagram != null)
 					msgs = ((InternalEObject)asDiagram).eInverseRemove(this, AsdPackage.AS_DIAGRAM__ASD_LAYOUTS, ASDiagram.class, msgs);
 				return basicSetAsDiagram((ASDiagram)otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -402,8 +403,9 @@ public class ASDlayoutImpl extends MinimalEObjectImpl.Container implements ASDla
 				return basicSetAsNetwork(null, msgs);
 			case AsdPackage.AS_DLAYOUT__AS_DIAGRAM:
 				return basicSetAsDiagram(null, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -415,8 +417,9 @@ public class ASDlayoutImpl extends MinimalEObjectImpl.Container implements ASDla
 		switch (eContainerFeatureID()) {
 			case AsdPackage.AS_DLAYOUT__AS_NETWORK:
 				return eInternalContainer().eInverseRemove(this, AsdPackage.AS_NETWORK__ASD_LAYOUTS, ASNetwork.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
 	/**
@@ -441,8 +444,9 @@ public class ASDlayoutImpl extends MinimalEObjectImpl.Container implements ASDla
 			case AsdPackage.AS_DLAYOUT__AS_DIAGRAM:
 				if (resolve) return getAsDiagram();
 				return basicGetAsDiagram();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -473,8 +477,10 @@ public class ASDlayoutImpl extends MinimalEObjectImpl.Container implements ASDla
 			case AsdPackage.AS_DLAYOUT__AS_DIAGRAM:
 				setAsDiagram((ASDiagram)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -505,8 +511,10 @@ public class ASDlayoutImpl extends MinimalEObjectImpl.Container implements ASDla
 			case AsdPackage.AS_DLAYOUT__AS_DIAGRAM:
 				setAsDiagram((ASDiagram)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -530,8 +538,9 @@ public class ASDlayoutImpl extends MinimalEObjectImpl.Container implements ASDla
 				return getAsNetwork() != null;
 			case AsdPackage.AS_DLAYOUT__AS_DIAGRAM:
 				return asDiagram != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 	/**

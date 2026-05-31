@@ -139,8 +139,9 @@ public class MetadataImpl extends MinimalEObjectImpl.Container implements Metada
 				return getName();
 			case UrncorePackage.METADATA__VALUE:
 				return getValue();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -156,8 +157,10 @@ public class MetadataImpl extends MinimalEObjectImpl.Container implements Metada
 			case UrncorePackage.METADATA__VALUE:
 				setValue((String)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -173,8 +176,10 @@ public class MetadataImpl extends MinimalEObjectImpl.Container implements Metada
 			case UrncorePackage.METADATA__VALUE:
 				setValue(VALUE_EDEFAULT);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -188,8 +193,9 @@ public class MetadataImpl extends MinimalEObjectImpl.Container implements Metada
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
 			case UrncorePackage.METADATA__VALUE:
 				return VALUE_EDEFAULT == null ? value != null : !VALUE_EDEFAULT.equals(value);
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
     /**

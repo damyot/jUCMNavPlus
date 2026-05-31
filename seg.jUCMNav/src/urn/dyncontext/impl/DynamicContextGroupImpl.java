@@ -136,8 +136,9 @@ public class DynamicContextGroupImpl extends URNmodelElementImpl implements Dyna
 				return basicSetUrnspec((URNspec)otherEnd, msgs);
 			case DyncontextPackage.DYNAMIC_CONTEXT_GROUP__CONTEXTS:
 				return ((InternalEList)getContexts()).basicAdd(otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -151,8 +152,9 @@ public class DynamicContextGroupImpl extends URNmodelElementImpl implements Dyna
 				return basicSetUrnspec(null, msgs);
 			case DyncontextPackage.DYNAMIC_CONTEXT_GROUP__CONTEXTS:
 				return ((InternalEList)getContexts()).basicRemove(otherEnd, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -164,8 +166,9 @@ public class DynamicContextGroupImpl extends URNmodelElementImpl implements Dyna
 		switch (eContainerFeatureID()) {
 			case DyncontextPackage.DYNAMIC_CONTEXT_GROUP__URNSPEC:
 				return eInternalContainer().eInverseRemove(this, UrnPackage.UR_NSPEC__DYNAMIC_CONTEXT_GROUPS, URNspec.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
 	/**
@@ -179,8 +182,9 @@ public class DynamicContextGroupImpl extends URNmodelElementImpl implements Dyna
 				return getUrnspec();
 			case DyncontextPackage.DYNAMIC_CONTEXT_GROUP__CONTEXTS:
 				return getContexts();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -197,8 +201,10 @@ public class DynamicContextGroupImpl extends URNmodelElementImpl implements Dyna
 				getContexts().clear();
 				getContexts().addAll((Collection)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -214,8 +220,10 @@ public class DynamicContextGroupImpl extends URNmodelElementImpl implements Dyna
 			case DyncontextPackage.DYNAMIC_CONTEXT_GROUP__CONTEXTS:
 				getContexts().clear();
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -229,8 +237,9 @@ public class DynamicContextGroupImpl extends URNmodelElementImpl implements Dyna
 				return getUrnspec() != null;
 			case DyncontextPackage.DYNAMIC_CONTEXT_GROUP__CONTEXTS:
 				return contexts != null && !contexts.isEmpty();
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //DynamicContextGroupImpl

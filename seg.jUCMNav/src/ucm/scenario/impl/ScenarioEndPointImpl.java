@@ -262,8 +262,9 @@ public class ScenarioEndPointImpl extends MinimalEObjectImpl.Container implement
 				if (endPoint != null)
 					msgs = ((InternalEObject)endPoint).eInverseRemove(this, MapPackage.END_POINT__SCENARIO_END_POINTS, EndPoint.class, msgs);
 				return basicSetEndPoint((EndPoint)otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -277,8 +278,9 @@ public class ScenarioEndPointImpl extends MinimalEObjectImpl.Container implement
 				return basicSetScenarioDef(null, msgs);
 			case ScenarioPackage.SCENARIO_END_POINT__END_POINT:
 				return basicSetEndPoint(null, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -290,8 +292,9 @@ public class ScenarioEndPointImpl extends MinimalEObjectImpl.Container implement
 		switch (eContainerFeatureID()) {
 			case ScenarioPackage.SCENARIO_END_POINT__SCENARIO_DEF:
 				return eInternalContainer().eInverseRemove(this, ScenarioPackage.SCENARIO_DEF__END_POINTS, ScenarioDef.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
     /**
@@ -310,8 +313,9 @@ public class ScenarioEndPointImpl extends MinimalEObjectImpl.Container implement
 			case ScenarioPackage.SCENARIO_END_POINT__END_POINT:
 				if (resolve) return getEndPoint();
 				return basicGetEndPoint();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -333,8 +337,10 @@ public class ScenarioEndPointImpl extends MinimalEObjectImpl.Container implement
 			case ScenarioPackage.SCENARIO_END_POINT__END_POINT:
 				setEndPoint((EndPoint)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -356,8 +362,10 @@ public class ScenarioEndPointImpl extends MinimalEObjectImpl.Container implement
 			case ScenarioPackage.SCENARIO_END_POINT__END_POINT:
 				setEndPoint((EndPoint)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -375,8 +383,9 @@ public class ScenarioEndPointImpl extends MinimalEObjectImpl.Container implement
 				return getScenarioDef() != null;
 			case ScenarioPackage.SCENARIO_END_POINT__END_POINT:
 				return endPoint != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
     /**

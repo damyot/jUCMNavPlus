@@ -285,8 +285,9 @@ public class ElementLinkImpl extends GRLmodelElementImpl implements ElementLink 
 				if (src != null)
 					msgs = ((InternalEObject)src).eInverseRemove(this, GrlPackage.GRL_LINKABLE_ELEMENT__LINKS_SRC, GRLLinkableElement.class, msgs);
 				return basicSetSrc((GRLLinkableElement)otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -304,8 +305,9 @@ public class ElementLinkImpl extends GRLmodelElementImpl implements ElementLink 
 				return basicSetDest(null, msgs);
 			case GrlPackage.ELEMENT_LINK__SRC:
 				return basicSetSrc(null, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -317,8 +319,9 @@ public class ElementLinkImpl extends GRLmodelElementImpl implements ElementLink 
 		switch (eContainerFeatureID()) {
 			case GrlPackage.ELEMENT_LINK__GRLSPEC:
 				return eInternalContainer().eInverseRemove(this, GrlPackage.GR_LSPEC__LINKS, GRLspec.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
     /**
@@ -338,8 +341,9 @@ public class ElementLinkImpl extends GRLmodelElementImpl implements ElementLink 
 			case GrlPackage.ELEMENT_LINK__SRC:
 				if (resolve) return getSrc();
 				return basicGetSrc();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -362,8 +366,10 @@ public class ElementLinkImpl extends GRLmodelElementImpl implements ElementLink 
 			case GrlPackage.ELEMENT_LINK__SRC:
 				setSrc((GRLLinkableElement)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -385,8 +391,10 @@ public class ElementLinkImpl extends GRLmodelElementImpl implements ElementLink 
 			case GrlPackage.ELEMENT_LINK__SRC:
 				setSrc((GRLLinkableElement)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -404,8 +412,9 @@ public class ElementLinkImpl extends GRLmodelElementImpl implements ElementLink 
 				return dest != null;
 			case GrlPackage.ELEMENT_LINK__SRC:
 				return src != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //ElementLinkImpl

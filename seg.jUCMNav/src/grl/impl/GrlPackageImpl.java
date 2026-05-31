@@ -351,7 +351,7 @@ public class GrlPackageImpl extends EPackageImpl implements GrlPackage {
 
     /**
 	 * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
-	 * 
+	 *
 	 * <p>This method is used to initialize {@link GrlPackage#eINSTANCE} when that field is accessed.
 	 * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
 	 * <!-- begin-user-doc -->
@@ -365,7 +365,8 @@ public class GrlPackageImpl extends EPackageImpl implements GrlPackage {
 		if (isInited) return (GrlPackage)EPackage.Registry.INSTANCE.getEPackage(GrlPackage.eNS_URI);
 
 		// Obtain or create and register package
-		GrlPackageImpl theGrlPackage = (GrlPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof GrlPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new GrlPackageImpl());
+		Object registeredGrlPackage = EPackage.Registry.INSTANCE.get(eNS_URI);
+		GrlPackageImpl theGrlPackage = registeredGrlPackage instanceof GrlPackageImpl ? (GrlPackageImpl)registeredGrlPackage : new GrlPackageImpl();
 
 		isInited = true;
 
@@ -373,16 +374,26 @@ public class GrlPackageImpl extends EPackageImpl implements GrlPackage {
 		CorePackage.eINSTANCE.eClass();
 
 		// Obtain or create and register interdependencies
-		FmPackageImpl theFmPackage = (FmPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(FmPackage.eNS_URI) instanceof FmPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(FmPackage.eNS_URI) : FmPackage.eINSTANCE);
-		KpimodelPackageImpl theKpimodelPackage = (KpimodelPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(KpimodelPackage.eNS_URI) instanceof KpimodelPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(KpimodelPackage.eNS_URI) : KpimodelPackage.eINSTANCE);
-		UrncorePackageImpl theUrncorePackage = (UrncorePackageImpl)(EPackage.Registry.INSTANCE.getEPackage(UrncorePackage.eNS_URI) instanceof UrncorePackageImpl ? EPackage.Registry.INSTANCE.getEPackage(UrncorePackage.eNS_URI) : UrncorePackage.eINSTANCE);
-		UrnPackageImpl theUrnPackage = (UrnPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(UrnPackage.eNS_URI) instanceof UrnPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(UrnPackage.eNS_URI) : UrnPackage.eINSTANCE);
-		DyncontextPackageImpl theDyncontextPackage = (DyncontextPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(DyncontextPackage.eNS_URI) instanceof DyncontextPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(DyncontextPackage.eNS_URI) : DyncontextPackage.eINSTANCE);
-		UcmPackageImpl theUcmPackage = (UcmPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(UcmPackage.eNS_URI) instanceof UcmPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(UcmPackage.eNS_URI) : UcmPackage.eINSTANCE);
-		PerformancePackageImpl thePerformancePackage = (PerformancePackageImpl)(EPackage.Registry.INSTANCE.getEPackage(PerformancePackage.eNS_URI) instanceof PerformancePackageImpl ? EPackage.Registry.INSTANCE.getEPackage(PerformancePackage.eNS_URI) : PerformancePackage.eINSTANCE);
-		MapPackageImpl theMapPackage = (MapPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(MapPackage.eNS_URI) instanceof MapPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(MapPackage.eNS_URI) : MapPackage.eINSTANCE);
-		ScenarioPackageImpl theScenarioPackage = (ScenarioPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ScenarioPackage.eNS_URI) instanceof ScenarioPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ScenarioPackage.eNS_URI) : ScenarioPackage.eINSTANCE);
-		AsdPackageImpl theAsdPackage = (AsdPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(AsdPackage.eNS_URI) instanceof AsdPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(AsdPackage.eNS_URI) : AsdPackage.eINSTANCE);
+		Object registeredPackage = EPackage.Registry.INSTANCE.getEPackage(FmPackage.eNS_URI);
+		FmPackageImpl theFmPackage = (FmPackageImpl)(registeredPackage instanceof FmPackageImpl ? registeredPackage : FmPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(KpimodelPackage.eNS_URI);
+		KpimodelPackageImpl theKpimodelPackage = (KpimodelPackageImpl)(registeredPackage instanceof KpimodelPackageImpl ? registeredPackage : KpimodelPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(UrncorePackage.eNS_URI);
+		UrncorePackageImpl theUrncorePackage = (UrncorePackageImpl)(registeredPackage instanceof UrncorePackageImpl ? registeredPackage : UrncorePackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(UrnPackage.eNS_URI);
+		UrnPackageImpl theUrnPackage = (UrnPackageImpl)(registeredPackage instanceof UrnPackageImpl ? registeredPackage : UrnPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(DyncontextPackage.eNS_URI);
+		DyncontextPackageImpl theDyncontextPackage = (DyncontextPackageImpl)(registeredPackage instanceof DyncontextPackageImpl ? registeredPackage : DyncontextPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(UcmPackage.eNS_URI);
+		UcmPackageImpl theUcmPackage = (UcmPackageImpl)(registeredPackage instanceof UcmPackageImpl ? registeredPackage : UcmPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(PerformancePackage.eNS_URI);
+		PerformancePackageImpl thePerformancePackage = (PerformancePackageImpl)(registeredPackage instanceof PerformancePackageImpl ? registeredPackage : PerformancePackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(MapPackage.eNS_URI);
+		MapPackageImpl theMapPackage = (MapPackageImpl)(registeredPackage instanceof MapPackageImpl ? registeredPackage : MapPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(ScenarioPackage.eNS_URI);
+		ScenarioPackageImpl theScenarioPackage = (ScenarioPackageImpl)(registeredPackage instanceof ScenarioPackageImpl ? registeredPackage : ScenarioPackage.eINSTANCE);
+		registeredPackage = EPackage.Registry.INSTANCE.getEPackage(AsdPackage.eNS_URI);
+		AsdPackageImpl theAsdPackage = (AsdPackageImpl)(registeredPackage instanceof AsdPackageImpl ? registeredPackage : AsdPackage.eINSTANCE);
 
 		// Create package meta-data objects
 		theGrlPackage.createPackageContents();
@@ -413,7 +424,6 @@ public class GrlPackageImpl extends EPackageImpl implements GrlPackage {
 		// Mark meta-data to indicate it can't be changed
 		theGrlPackage.freeze();
 
-  
 		// Update the registry and return the package
 		EPackage.Registry.INSTANCE.put(GrlPackage.eNS_URI, theGrlPackage);
 		return theGrlPackage;

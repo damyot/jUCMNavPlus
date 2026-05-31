@@ -22,11 +22,11 @@ import ucmscenarios.UcmscenariosPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link ucmscenarios.impl.MessageImpl#getSource <em>Source</em>}</li>
  *   <li>{@link ucmscenarios.impl.MessageImpl#getTarget <em>Target</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -204,8 +204,9 @@ public class MessageImpl extends SequenceElementImpl implements Message {
 				if (target != null)
 					msgs = ((InternalEObject)target).eInverseRemove(this, UcmscenariosPackage.INSTANCE__RECEIVED, Instance.class, msgs);
 				return basicSetTarget((Instance)otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -219,8 +220,9 @@ public class MessageImpl extends SequenceElementImpl implements Message {
 				return basicSetSource(null, msgs);
 			case UcmscenariosPackage.MESSAGE__TARGET:
 				return basicSetTarget(null, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -236,8 +238,9 @@ public class MessageImpl extends SequenceElementImpl implements Message {
 			case UcmscenariosPackage.MESSAGE__TARGET:
 				if (resolve) return getTarget();
 				return basicGetTarget();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -253,8 +256,10 @@ public class MessageImpl extends SequenceElementImpl implements Message {
 			case UcmscenariosPackage.MESSAGE__TARGET:
 				setTarget((Instance)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -270,8 +275,10 @@ public class MessageImpl extends SequenceElementImpl implements Message {
 			case UcmscenariosPackage.MESSAGE__TARGET:
 				setTarget((Instance)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -285,8 +292,9 @@ public class MessageImpl extends SequenceElementImpl implements Message {
 				return source != null;
 			case UcmscenariosPackage.MESSAGE__TARGET:
 				return target != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //MessageImpl

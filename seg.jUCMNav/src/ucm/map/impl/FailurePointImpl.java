@@ -95,8 +95,9 @@ public class FailurePointImpl extends PathNodeImpl implements FailurePoint {
 		switch (featureID) {
 			case MapPackage.FAILURE_POINT__EXPRESSION:
 				return getExpression();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -109,8 +110,10 @@ public class FailurePointImpl extends PathNodeImpl implements FailurePoint {
 			case MapPackage.FAILURE_POINT__EXPRESSION:
 				setExpression((String)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -123,8 +126,10 @@ public class FailurePointImpl extends PathNodeImpl implements FailurePoint {
 			case MapPackage.FAILURE_POINT__EXPRESSION:
 				setExpression(EXPRESSION_EDEFAULT);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -136,8 +141,9 @@ public class FailurePointImpl extends PathNodeImpl implements FailurePoint {
 		switch (featureID) {
 			case MapPackage.FAILURE_POINT__EXPRESSION:
 				return EXPRESSION_EDEFAULT == null ? expression != null : !EXPRESSION_EDEFAULT.equals(expression);
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
     /**

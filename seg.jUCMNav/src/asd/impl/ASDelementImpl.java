@@ -236,8 +236,9 @@ public abstract class ASDelementImpl extends ASDmodelElementImpl implements ASDe
 				return ((InternalEList)getRequiredOutcomes()).basicAdd(otherEnd, msgs);
 			case AsdPackage.AS_DELEMENT__CONTRADICTIONS:
 				return ((InternalEList)getContradictions()).basicAdd(otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -257,8 +258,9 @@ public abstract class ASDelementImpl extends ASDmodelElementImpl implements ASDe
 				return ((InternalEList)getRequiredOutcomes()).basicRemove(otherEnd, msgs);
 			case AsdPackage.AS_DELEMENT__CONTRADICTIONS:
 				return ((InternalEList)getContradictions()).basicRemove(otherEnd, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -279,8 +281,9 @@ public abstract class ASDelementImpl extends ASDmodelElementImpl implements ASDe
 				return getRequiredOutcomes();
 			case AsdPackage.AS_DELEMENT__CONTRADICTIONS:
 				return getContradictions();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -309,8 +312,10 @@ public abstract class ASDelementImpl extends ASDmodelElementImpl implements ASDe
 				getContradictions().clear();
 				getContradictions().addAll((Collection)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -335,8 +340,10 @@ public abstract class ASDelementImpl extends ASDmodelElementImpl implements ASDe
 			case AsdPackage.AS_DELEMENT__CONTRADICTIONS:
 				getContradictions().clear();
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -356,8 +363,9 @@ public abstract class ASDelementImpl extends ASDmodelElementImpl implements ASDe
 				return requiredOutcomes != null && !requiredOutcomes.isEmpty();
 			case AsdPackage.AS_DELEMENT__CONTRADICTIONS:
 				return contradictions != null && !contradictions.isEmpty();
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //ASDelementImpl

@@ -15,11 +15,11 @@ import org.eclipse.emf.common.util.EList;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link ucmscenarios.ScenarioGroup#getScenarioSpec <em>Scenario Spec</em>}</li>
  *   <li>{@link ucmscenarios.ScenarioGroup#getScenarios <em>Scenarios</em>}</li>
  * </ul>
- * </p>
  *
  * @see ucmscenarios.UcmscenariosPackage#getScenarioGroup()
  * @model

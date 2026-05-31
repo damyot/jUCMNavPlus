@@ -28,6 +28,7 @@ import ucmscenarios.UcmscenariosPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link ucmscenarios.impl.ScenarioSpecImpl#getFilename <em>Filename</em>}</li>
  *   <li>{@link ucmscenarios.impl.ScenarioSpecImpl#getCreated <em>Created</em>}</li>
@@ -36,7 +37,6 @@ import ucmscenarios.UcmscenariosPackage;
  *   <li>{@link ucmscenarios.impl.ScenarioSpecImpl#getComponents <em>Components</em>}</li>
  *   <li>{@link ucmscenarios.impl.ScenarioSpecImpl#getGroups <em>Groups</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -278,8 +278,9 @@ public class ScenarioSpecImpl extends ModelElementImpl implements ScenarioSpec {
 				return ((InternalEList)getComponents()).basicAdd(otherEnd, msgs);
 			case UcmscenariosPackage.SCENARIO_SPEC__GROUPS:
 				return ((InternalEList)getGroups()).basicAdd(otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -293,8 +294,9 @@ public class ScenarioSpecImpl extends ModelElementImpl implements ScenarioSpec {
 				return ((InternalEList)getComponents()).basicRemove(otherEnd, msgs);
 			case UcmscenariosPackage.SCENARIO_SPEC__GROUPS:
 				return ((InternalEList)getGroups()).basicRemove(otherEnd, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -316,8 +318,9 @@ public class ScenarioSpecImpl extends ModelElementImpl implements ScenarioSpec {
 				return getComponents();
 			case UcmscenariosPackage.SCENARIO_SPEC__GROUPS:
 				return getGroups();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -347,8 +350,10 @@ public class ScenarioSpecImpl extends ModelElementImpl implements ScenarioSpec {
 				getGroups().clear();
 				getGroups().addAll((Collection)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -376,8 +381,10 @@ public class ScenarioSpecImpl extends ModelElementImpl implements ScenarioSpec {
 			case UcmscenariosPackage.SCENARIO_SPEC__GROUPS:
 				getGroups().clear();
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -399,8 +406,9 @@ public class ScenarioSpecImpl extends ModelElementImpl implements ScenarioSpec {
 				return components != null && !components.isEmpty();
 			case UcmscenariosPackage.SCENARIO_SPEC__GROUPS:
 				return groups != null && !groups.isEmpty();
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 	/**

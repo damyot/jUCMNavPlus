@@ -81,8 +81,9 @@ public abstract class MediatingElementImpl extends ASDelementImpl implements Med
 		switch (featureID) {
 			case AsdPackage.MEDIATING_ELEMENT__MEDIATIONS:
 				return ((InternalEList)getMediations()).basicAdd(otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -94,8 +95,9 @@ public abstract class MediatingElementImpl extends ASDelementImpl implements Med
 		switch (featureID) {
 			case AsdPackage.MEDIATING_ELEMENT__MEDIATIONS:
 				return ((InternalEList)getMediations()).basicRemove(otherEnd, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -107,8 +109,9 @@ public abstract class MediatingElementImpl extends ASDelementImpl implements Med
 		switch (featureID) {
 			case AsdPackage.MEDIATING_ELEMENT__MEDIATIONS:
 				return getMediations();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -122,8 +125,10 @@ public abstract class MediatingElementImpl extends ASDelementImpl implements Med
 				getMediations().clear();
 				getMediations().addAll((Collection)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -136,8 +141,10 @@ public abstract class MediatingElementImpl extends ASDelementImpl implements Med
 			case AsdPackage.MEDIATING_ELEMENT__MEDIATIONS:
 				getMediations().clear();
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -149,8 +156,9 @@ public abstract class MediatingElementImpl extends ASDelementImpl implements Med
 		switch (featureID) {
 			case AsdPackage.MEDIATING_ELEMENT__MEDIATIONS:
 				return mediations != null && !mediations.isEmpty();
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //MediatingElementImpl

@@ -147,8 +147,9 @@ public class ImpactModelImpl extends MinimalEObjectImpl.Container implements Imp
 				if (eInternalContainer() != null)
 					msgs = eBasicRemoveFromContainer(msgs);
 				return basicSetGrlspec((GRLspec)otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -160,8 +161,9 @@ public class ImpactModelImpl extends MinimalEObjectImpl.Container implements Imp
 		switch (featureID) {
 			case GrlPackage.IMPACT_MODEL__GRLSPEC:
 				return basicSetGrlspec(null, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -173,8 +175,9 @@ public class ImpactModelImpl extends MinimalEObjectImpl.Container implements Imp
 		switch (eContainerFeatureID()) {
 			case GrlPackage.IMPACT_MODEL__GRLSPEC:
 				return eInternalContainer().eInverseRemove(this, GrlPackage.GR_LSPEC__IMPACT_MODEL, GRLspec.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
 	/**
@@ -189,8 +192,9 @@ public class ImpactModelImpl extends MinimalEObjectImpl.Container implements Imp
 			case GrlPackage.IMPACT_MODEL__CORE_IMPACT_MODEL:
 				if (resolve) return getCoreImpactModel();
 				return basicGetCoreImpactModel();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -206,8 +210,10 @@ public class ImpactModelImpl extends MinimalEObjectImpl.Container implements Imp
 			case GrlPackage.IMPACT_MODEL__CORE_IMPACT_MODEL:
 				setCoreImpactModel((COREImpactModel)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -223,8 +229,10 @@ public class ImpactModelImpl extends MinimalEObjectImpl.Container implements Imp
 			case GrlPackage.IMPACT_MODEL__CORE_IMPACT_MODEL:
 				setCoreImpactModel((COREImpactModel)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -238,8 +246,9 @@ public class ImpactModelImpl extends MinimalEObjectImpl.Container implements Imp
 				return getGrlspec() != null;
 			case GrlPackage.IMPACT_MODEL__CORE_IMPACT_MODEL:
 				return coreImpactModel != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //ImpactModelImpl

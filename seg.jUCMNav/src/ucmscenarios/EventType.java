@@ -330,6 +330,8 @@ public final class EventType extends AbstractEnumerator {
 	 * Returns the '<em><b>Event Type</b></em>' literal with the specified literal value.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @param literal the literal.
+	 * @return the matching enumerator or <code>null</code>.
 	 * @generated
 	 */
 	public static EventType get(String literal) {
@@ -346,6 +348,8 @@ public final class EventType extends AbstractEnumerator {
 	 * Returns the '<em><b>Event Type</b></em>' literal with the specified name.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @param name the name.
+	 * @return the matching enumerator or <code>null</code>.
 	 * @generated
 	 */
 	public static EventType getByName(String name) {
@@ -362,6 +366,8 @@ public final class EventType extends AbstractEnumerator {
 	 * Returns the '<em><b>Event Type</b></em>' literal with the specified integer value.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @param value the integer value.
+	 * @return the matching enumerator or <code>null</code>.
 	 * @generated
 	 */
 	public static EventType get(int value) {
@@ -377,8 +383,8 @@ public final class EventType extends AbstractEnumerator {
 			case TIMER_SET: return TIMER_SET_LITERAL;
 			case TIMER_RESET: return TIMER_RESET_LITERAL;
 			case TIMEOUT: return TIMEOUT_LITERAL;
+			default: return null;
 		}
-		return null;
 	}
 
 	/**

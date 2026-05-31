@@ -154,8 +154,9 @@ public class FeatureModelImpl extends MinimalEObjectImpl.Container implements Fe
 				if (eInternalContainer() != null)
 					msgs = eBasicRemoveFromContainer(msgs);
 				return basicSetGrlspec((GRLspec)otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -167,8 +168,9 @@ public class FeatureModelImpl extends MinimalEObjectImpl.Container implements Fe
 		switch (featureID) {
 			case FmPackage.FEATURE_MODEL__GRLSPEC:
 				return basicSetGrlspec(null, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -180,8 +182,9 @@ public class FeatureModelImpl extends MinimalEObjectImpl.Container implements Fe
 		switch (eContainerFeatureID()) {
 			case FmPackage.FEATURE_MODEL__GRLSPEC:
 				return eInternalContainer().eInverseRemove(this, GrlPackage.GR_LSPEC__FEATURE_MODEL, GRLspec.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
 	/**
@@ -196,8 +199,9 @@ public class FeatureModelImpl extends MinimalEObjectImpl.Container implements Fe
 			case FmPackage.FEATURE_MODEL__CORE_FEATURE_MODEL:
 				if (resolve) return getCoreFeatureModel();
 				return basicGetCoreFeatureModel();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -213,8 +217,10 @@ public class FeatureModelImpl extends MinimalEObjectImpl.Container implements Fe
 			case FmPackage.FEATURE_MODEL__CORE_FEATURE_MODEL:
 				setCoreFeatureModel((COREFeatureModel)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -230,8 +236,10 @@ public class FeatureModelImpl extends MinimalEObjectImpl.Container implements Fe
 			case FmPackage.FEATURE_MODEL__CORE_FEATURE_MODEL:
 				setCoreFeatureModel((COREFeatureModel)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -245,8 +253,9 @@ public class FeatureModelImpl extends MinimalEObjectImpl.Container implements Fe
 				return getGrlspec() != null;
 			case FmPackage.FEATURE_MODEL__CORE_FEATURE_MODEL:
 				return coreFeatureModel != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //FeatureModelImpl

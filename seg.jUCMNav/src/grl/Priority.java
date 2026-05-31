@@ -194,8 +194,8 @@ public final class Priority extends AbstractEnumerator {
 			case MEDIUM: return MEDIUM_LITERAL;
 			case LOW: return LOW_LITERAL;
 			case NONE: return NONE_LITERAL;
+			default: return null;
 		}
-		return null;
 	}
 
     /**

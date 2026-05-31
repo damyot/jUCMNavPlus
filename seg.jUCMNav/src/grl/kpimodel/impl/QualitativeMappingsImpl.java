@@ -85,8 +85,9 @@ public class QualitativeMappingsImpl extends KPIConversionImpl implements Qualit
 		switch (featureID) {
 			case KpimodelPackage.QUALITATIVE_MAPPINGS__MAPPING:
 				return ((InternalEList)getMapping()).basicRemove(otherEnd, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -98,8 +99,9 @@ public class QualitativeMappingsImpl extends KPIConversionImpl implements Qualit
 		switch (featureID) {
 			case KpimodelPackage.QUALITATIVE_MAPPINGS__MAPPING:
 				return getMapping();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -113,8 +115,10 @@ public class QualitativeMappingsImpl extends KPIConversionImpl implements Qualit
 				getMapping().clear();
 				getMapping().addAll((Collection)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -127,8 +131,10 @@ public class QualitativeMappingsImpl extends KPIConversionImpl implements Qualit
 			case KpimodelPackage.QUALITATIVE_MAPPINGS__MAPPING:
 				getMapping().clear();
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -140,8 +146,9 @@ public class QualitativeMappingsImpl extends KPIConversionImpl implements Qualit
 		switch (featureID) {
 			case KpimodelPackage.QUALITATIVE_MAPPINGS__MAPPING:
 				return mapping != null && !mapping.isEmpty();
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //QualitativeMappingsImpl

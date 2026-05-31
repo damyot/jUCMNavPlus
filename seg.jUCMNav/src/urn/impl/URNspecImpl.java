@@ -758,8 +758,9 @@ public class URNspecImpl extends MinimalEObjectImpl.Container implements URNspec
 				return ((InternalEList)getDynamicContextGroups()).basicAdd(otherEnd, msgs);
 			case UrnPackage.UR_NSPEC__TIMEPOINT_GROUPS:
 				return ((InternalEList)getTimepointGroups()).basicAdd(otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -787,8 +788,9 @@ public class URNspecImpl extends MinimalEObjectImpl.Container implements URNspec
 				return ((InternalEList)getDynamicContextGroups()).basicRemove(otherEnd, msgs);
 			case UrnPackage.UR_NSPEC__TIMEPOINT_GROUPS:
 				return ((InternalEList)getTimepointGroups()).basicRemove(otherEnd, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -832,8 +834,9 @@ public class URNspecImpl extends MinimalEObjectImpl.Container implements URNspec
 				return getDynamicContextGroups();
 			case UrnPackage.UR_NSPEC__TIMEPOINT_GROUPS:
 				return getTimepointGroups();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -899,8 +902,10 @@ public class URNspecImpl extends MinimalEObjectImpl.Container implements URNspec
 				getTimepointGroups().clear();
 				getTimepointGroups().addAll((Collection)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -961,8 +966,10 @@ public class URNspecImpl extends MinimalEObjectImpl.Container implements URNspec
 			case UrnPackage.UR_NSPEC__TIMEPOINT_GROUPS:
 				getTimepointGroups().clear();
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -1006,8 +1013,9 @@ public class URNspecImpl extends MinimalEObjectImpl.Container implements URNspec
 				return dynamicContextGroups != null && !dynamicContextGroups.isEmpty();
 			case UrnPackage.UR_NSPEC__TIMEPOINT_GROUPS:
 				return timepointGroups != null && !timepointGroups.isEmpty();
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
     /**

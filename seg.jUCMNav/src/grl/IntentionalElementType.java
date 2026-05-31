@@ -221,8 +221,8 @@ public final class IntentionalElementType extends AbstractEnumerator {
 			case TASK: return TASK_LITERAL;
 			case RESSOURCE: return RESSOURCE_LITERAL;
 			case INDICATOR: return INDICATOR_LITERAL;
+			default: return null;
 		}
-		return null;
 	}
 
     /**

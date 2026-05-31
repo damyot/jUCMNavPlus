@@ -93,8 +93,9 @@ public class LinearChangeImpl extends NumericChangeImpl implements LinearChange 
 		switch (featureID) {
 			case DyncontextPackage.LINEAR_CHANGE__NEW_VALUE:
 				return new Integer(getNewValue());
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -107,8 +108,10 @@ public class LinearChangeImpl extends NumericChangeImpl implements LinearChange 
 			case DyncontextPackage.LINEAR_CHANGE__NEW_VALUE:
 				setNewValue(((Integer)newValue).intValue());
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -121,8 +124,10 @@ public class LinearChangeImpl extends NumericChangeImpl implements LinearChange 
 			case DyncontextPackage.LINEAR_CHANGE__NEW_VALUE:
 				setNewValue(NEW_VALUE_EDEFAULT);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -134,8 +139,9 @@ public class LinearChangeImpl extends NumericChangeImpl implements LinearChange 
 		switch (featureID) {
 			case DyncontextPackage.LINEAR_CHANGE__NEW_VALUE:
 				return newValue != NEW_VALUE_EDEFAULT;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 	/**

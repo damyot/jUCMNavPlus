@@ -15,6 +15,7 @@ import org.eclipse.emf.common.util.EList;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link ucmscenarios.Instance#getScenario <em>Scenario</em>}</li>
  *   <li>{@link ucmscenarios.Instance#getDefinition <em>Definition</em>}</li>
@@ -22,7 +23,6 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link ucmscenarios.Instance#getSent <em>Sent</em>}</li>
  *   <li>{@link ucmscenarios.Instance#getReceived <em>Received</em>}</li>
  * </ul>
- * </p>
  *
  * @see ucmscenarios.UcmscenariosPackage#getInstance()
  * @model

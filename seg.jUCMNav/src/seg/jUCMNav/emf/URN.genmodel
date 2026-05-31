@@ -3,7 +3,8 @@
     xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/seg.jUCMNav/src" editDirectory="/seg.jUCMNav.edit/src"
     editorDirectory="/seg.jUCMNav.editor/src" modelPluginID="seg.jUCMNav" runtimeJar="true"
     modelName="URN" editPluginClass="grl.provider.URNEditPlugin" editorPluginClass="grl.presentation.URNEditorPlugin"
-    importerID="org.eclipse.emf.importer.rose">
+    importerID="org.eclipse.emf.importer.rose"
+    usedGenPackages="../../../../../ca.mcgill.sel.core/model/CORE.genmodel#//core">
   <foreignModel>G:\Study_Materials\Thesis\New folder\URN_30.mdl</foreignModel>
   <genPackages prefix="Urn" disposableProviderFactory="true" ecorePackage="urn.ecore#/">
     <genClasses ecoreClass="urn.ecore#//URNspec">
@@ -909,18 +910,5 @@
     <genClasses ecoreClass="fm.ecore#//ReuseLink">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference fm.ecore#//ReuseLink/reuseLinkInFM"/>
     </genClasses>
-  </genPackages>
-  <genPackages prefix="Core" disposableProviderFactory="true" ecorePackage="core.ecore#/">
-    <genClasses image="false" ecoreClass="core.ecore#//COREFeatureModel"/>
-    <genClasses image="false" ecoreClass="core.ecore#//COREFeature"/>
-    <genClasses image="false" ecoreClass="core.ecore#//COREImpactModel"/>
-    <genClasses ecoreClass="core.ecore#//COREConcern"/>
-    <genClasses image="false" ecoreClass="core.ecore#//CORENamedElement">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute core.ecore#//CORENamedElement/name"/>
-    </genClasses>
-    <genClasses image="false" ecoreClass="core.ecore#//COREModel"/>
-    <genClasses ecoreClass="core.ecore#//COREImpactNode"/>
-    <genClasses ecoreClass="core.ecore#//COREFeatureImpactNode"/>
-    <genClasses ecoreClass="core.ecore#//COREContribution"/>
   </genPackages>
 </genmodel:GenModel>

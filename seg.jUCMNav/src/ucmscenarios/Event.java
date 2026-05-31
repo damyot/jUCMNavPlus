@@ -14,10 +14,10 @@ package ucmscenarios;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link ucmscenarios.Event#getType <em>Type</em>}</li>
  * </ul>
- * </p>
  *
  * @see ucmscenarios.UcmscenariosPackage#getEvent()
  * @model

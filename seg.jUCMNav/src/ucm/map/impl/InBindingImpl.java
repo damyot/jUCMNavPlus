@@ -328,8 +328,9 @@ public class InBindingImpl extends MinimalEObjectImpl.Container implements InBin
 				if (pointcutExit != null)
 					msgs = ((InternalEObject)pointcutExit).eInverseRemove(this, MapPackage.NODE_CONNECTION__IN_BINDINGS_PLUGIN, NodeConnection.class, msgs);
 				return basicSetPointcutExit((NodeConnection)otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -347,8 +348,9 @@ public class InBindingImpl extends MinimalEObjectImpl.Container implements InBin
 				return basicSetStubEntry(null, msgs);
 			case MapPackage.IN_BINDING__POINTCUT_EXIT:
 				return basicSetPointcutExit(null, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -360,8 +362,9 @@ public class InBindingImpl extends MinimalEObjectImpl.Container implements InBin
 		switch (eContainerFeatureID()) {
 			case MapPackage.IN_BINDING__BINDING:
 				return eInternalContainer().eInverseRemove(this, MapPackage.PLUGIN_BINDING__IN, PluginBinding.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
     /**
@@ -382,8 +385,9 @@ public class InBindingImpl extends MinimalEObjectImpl.Container implements InBin
 			case MapPackage.IN_BINDING__POINTCUT_EXIT:
 				if (resolve) return getPointcutExit();
 				return basicGetPointcutExit();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -405,8 +409,10 @@ public class InBindingImpl extends MinimalEObjectImpl.Container implements InBin
 			case MapPackage.IN_BINDING__POINTCUT_EXIT:
 				setPointcutExit((NodeConnection)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -428,8 +434,10 @@ public class InBindingImpl extends MinimalEObjectImpl.Container implements InBin
 			case MapPackage.IN_BINDING__POINTCUT_EXIT:
 				setPointcutExit((NodeConnection)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -447,8 +455,9 @@ public class InBindingImpl extends MinimalEObjectImpl.Container implements InBin
 				return stubEntry != null;
 			case MapPackage.IN_BINDING__POINTCUT_EXIT:
 				return pointcutExit != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //InBindingImpl

@@ -510,8 +510,9 @@ public class ConditionImpl extends LabelImpl implements Condition {
 				if (eInternalContainer() != null)
 					msgs = eBasicRemoveFromContainer(msgs);
 				return basicSetScenarioDefPost((ScenarioDef)otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -535,8 +536,9 @@ public class ConditionImpl extends LabelImpl implements Condition {
 				return basicSetScenarioDefPre(null, msgs);
 			case UrncorePackage.CONDITION__SCENARIO_DEF_POST:
 				return basicSetScenarioDefPost(null, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -560,8 +562,9 @@ public class ConditionImpl extends LabelImpl implements Condition {
 				return eInternalContainer().eInverseRemove(this, ScenarioPackage.SCENARIO_DEF__PRECONDITIONS, ScenarioDef.class, msgs);
 			case UrncorePackage.CONDITION__SCENARIO_DEF_POST:
 				return eInternalContainer().eInverseRemove(this, ScenarioPackage.SCENARIO_DEF__POSTCONDITIONS, ScenarioDef.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
     /**
@@ -591,8 +594,9 @@ public class ConditionImpl extends LabelImpl implements Condition {
 				return getScenarioDefPre();
 			case UrncorePackage.CONDITION__SCENARIO_DEF_POST:
 				return getScenarioDefPost();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -632,8 +636,10 @@ public class ConditionImpl extends LabelImpl implements Condition {
 			case UrncorePackage.CONDITION__SCENARIO_DEF_POST:
 				setScenarioDefPost((ScenarioDef)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -673,8 +679,10 @@ public class ConditionImpl extends LabelImpl implements Condition {
 			case UrncorePackage.CONDITION__SCENARIO_DEF_POST:
 				setScenarioDefPost((ScenarioDef)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -704,8 +712,9 @@ public class ConditionImpl extends LabelImpl implements Condition {
 				return getScenarioDefPre() != null;
 			case UrncorePackage.CONDITION__SCENARIO_DEF_POST:
 				return getScenarioDefPost() != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
     /**

@@ -252,8 +252,9 @@ public class ComponentBindingImpl extends MinimalEObjectImpl.Container implement
 				if (pluginComponent != null)
 					msgs = ((InternalEObject)pluginComponent).eInverseRemove(this, MapPackage.COMPONENT_REF__PLUGIN_BINDINGS, ComponentRef.class, msgs);
 				return basicSetPluginComponent((ComponentRef)otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -269,8 +270,9 @@ public class ComponentBindingImpl extends MinimalEObjectImpl.Container implement
 				return basicSetParentComponent(null, msgs);
 			case MapPackage.COMPONENT_BINDING__PLUGIN_COMPONENT:
 				return basicSetPluginComponent(null, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -282,8 +284,9 @@ public class ComponentBindingImpl extends MinimalEObjectImpl.Container implement
 		switch (eContainerFeatureID()) {
 			case MapPackage.COMPONENT_BINDING__BINDING:
 				return eInternalContainer().eInverseRemove(this, MapPackage.PLUGIN_BINDING__COMPONENTS, PluginBinding.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
 	/**
@@ -301,8 +304,9 @@ public class ComponentBindingImpl extends MinimalEObjectImpl.Container implement
 			case MapPackage.COMPONENT_BINDING__PLUGIN_COMPONENT:
 				if (resolve) return getPluginComponent();
 				return basicGetPluginComponent();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -321,8 +325,10 @@ public class ComponentBindingImpl extends MinimalEObjectImpl.Container implement
 			case MapPackage.COMPONENT_BINDING__PLUGIN_COMPONENT:
 				setPluginComponent((ComponentRef)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -341,8 +347,10 @@ public class ComponentBindingImpl extends MinimalEObjectImpl.Container implement
 			case MapPackage.COMPONENT_BINDING__PLUGIN_COMPONENT:
 				setPluginComponent((ComponentRef)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -358,8 +366,9 @@ public class ComponentBindingImpl extends MinimalEObjectImpl.Container implement
 				return parentComponent != null;
 			case MapPackage.COMPONENT_BINDING__PLUGIN_COMPONENT:
 				return pluginComponent != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //ComponentBindingImpl

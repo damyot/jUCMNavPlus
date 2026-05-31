@@ -20,10 +20,10 @@ import ucmscenarios.UcmscenariosPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link ucmscenarios.impl.EventImpl#getType <em>Type</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -96,8 +96,9 @@ public class EventImpl extends SequenceElementImpl implements Event {
 		switch (featureID) {
 			case UcmscenariosPackage.EVENT__TYPE:
 				return getType();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -110,8 +111,10 @@ public class EventImpl extends SequenceElementImpl implements Event {
 			case UcmscenariosPackage.EVENT__TYPE:
 				setType((EventType)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -124,8 +127,10 @@ public class EventImpl extends SequenceElementImpl implements Event {
 			case UcmscenariosPackage.EVENT__TYPE:
 				setType(TYPE_EDEFAULT);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -137,8 +142,9 @@ public class EventImpl extends SequenceElementImpl implements Event {
 		switch (featureID) {
 			case UcmscenariosPackage.EVENT__TYPE:
 				return type != TYPE_EDEFAULT;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 	/**

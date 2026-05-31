@@ -430,8 +430,9 @@ public class KPIEvalValueSetImpl extends MinimalEObjectImpl.Container implements
 				if (kpiConv != null)
 					msgs = ((InternalEObject)kpiConv).eInverseRemove(this, KpimodelPackage.KPI_CONVERSION__KPI_EVAL_VALUE_SET, KPIConversion.class, msgs);
 				return basicSetKpiConv((KPIConversion)otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -445,8 +446,9 @@ public class KPIEvalValueSetImpl extends MinimalEObjectImpl.Container implements
 				return basicSetEval(null, msgs);
 			case KpimodelPackage.KPI_EVAL_VALUE_SET__KPI_CONV:
 				return basicSetKpiConv(null, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -458,8 +460,9 @@ public class KPIEvalValueSetImpl extends MinimalEObjectImpl.Container implements
 		switch (eContainerFeatureID()) {
 			case KpimodelPackage.KPI_EVAL_VALUE_SET__EVAL:
 				return eInternalContainer().eInverseRemove(this, GrlPackage.EVALUATION__KPI_EVAL_VALUE_SET, Evaluation.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
     /**
@@ -486,8 +489,9 @@ public class KPIEvalValueSetImpl extends MinimalEObjectImpl.Container implements
 			case KpimodelPackage.KPI_EVAL_VALUE_SET__KPI_CONV:
 				if (resolve) return getKpiConv();
 				return basicGetKpiConv();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -521,8 +525,10 @@ public class KPIEvalValueSetImpl extends MinimalEObjectImpl.Container implements
 			case KpimodelPackage.KPI_EVAL_VALUE_SET__KPI_CONV:
 				setKpiConv((KPIConversion)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -556,8 +562,10 @@ public class KPIEvalValueSetImpl extends MinimalEObjectImpl.Container implements
 			case KpimodelPackage.KPI_EVAL_VALUE_SET__KPI_CONV:
 				setKpiConv((KPIConversion)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -583,8 +591,9 @@ public class KPIEvalValueSetImpl extends MinimalEObjectImpl.Container implements
 				return getEval() != null;
 			case KpimodelPackage.KPI_EVAL_VALUE_SET__KPI_CONV:
 				return kpiConv != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
     /**

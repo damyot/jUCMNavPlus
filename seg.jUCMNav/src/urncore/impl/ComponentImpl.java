@@ -739,8 +739,9 @@ public class ComponentImpl extends UCMmodelElementImpl implements Component {
 				if (host != null)
 					msgs = ((InternalEObject)host).eInverseRemove(this, PerformancePackage.PROCESSING_RESOURCE__COMPONENTS, ProcessingResource.class, msgs);
 				return basicSetHost((ProcessingResource)otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -764,8 +765,9 @@ public class ComponentImpl extends UCMmodelElementImpl implements Component {
 				return basicSetResource(null, msgs);
 			case UrncorePackage.COMPONENT__HOST:
 				return basicSetHost(null, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -777,8 +779,9 @@ public class ComponentImpl extends UCMmodelElementImpl implements Component {
 		switch (eContainerFeatureID()) {
 			case UrncorePackage.COMPONENT__URNDEFINITION:
 				return eInternalContainer().eInverseRemove(this, UrncorePackage.UR_NDEFINITION__COMPONENTS, URNdefinition.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
 				/**
@@ -820,8 +823,9 @@ public class ComponentImpl extends UCMmodelElementImpl implements Component {
 			case UrncorePackage.COMPONENT__HOST:
 				if (resolve) return getHost();
 				return basicGetHost();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -875,8 +879,10 @@ public class ComponentImpl extends UCMmodelElementImpl implements Component {
 			case UrncorePackage.COMPONENT__HOST:
 				setHost((ProcessingResource)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -928,8 +934,10 @@ public class ComponentImpl extends UCMmodelElementImpl implements Component {
 			case UrncorePackage.COMPONENT__HOST:
 				setHost((ProcessingResource)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -967,8 +975,9 @@ public class ComponentImpl extends UCMmodelElementImpl implements Component {
 				return resource != null;
 			case UrncorePackage.COMPONENT__HOST:
 				return host != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 				/**

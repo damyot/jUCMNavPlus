@@ -15,6 +15,7 @@ import org.eclipse.emf.common.util.EList;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link ucmscenarios.ScenarioSpec#getFilename <em>Filename</em>}</li>
  *   <li>{@link ucmscenarios.ScenarioSpec#getCreated <em>Created</em>}</li>
@@ -23,7 +24,6 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link ucmscenarios.ScenarioSpec#getComponents <em>Components</em>}</li>
  *   <li>{@link ucmscenarios.ScenarioSpec#getGroups <em>Groups</em>}</li>
  * </ul>
- * </p>
  *
  * @see ucmscenarios.UcmscenariosPackage#getScenarioSpec()
  * @model

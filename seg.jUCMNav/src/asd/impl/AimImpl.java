@@ -158,8 +158,9 @@ public class AimImpl extends MediatedElementImpl implements Aim {
 				return ((InternalEList)getOutcomes()).basicAdd(otherEnd, msgs);
 			case AsdPackage.AIM__SUBJECTS:
 				return ((InternalEList)getSubjects()).basicAdd(otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -175,8 +176,9 @@ public class AimImpl extends MediatedElementImpl implements Aim {
 				return ((InternalEList)getOutcomes()).basicRemove(otherEnd, msgs);
 			case AsdPackage.AIM__SUBJECTS:
 				return ((InternalEList)getSubjects()).basicRemove(otherEnd, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -188,8 +190,9 @@ public class AimImpl extends MediatedElementImpl implements Aim {
 		switch (eContainerFeatureID()) {
 			case AsdPackage.AIM__ASD_SPEC:
 				return eInternalContainer().eInverseRemove(this, AsdPackage.AS_DSPEC__OBJECTS, ASDspec.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
 	/**
@@ -205,8 +208,9 @@ public class AimImpl extends MediatedElementImpl implements Aim {
 				return getOutcomes();
 			case AsdPackage.AIM__SUBJECTS:
 				return getSubjects();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -227,8 +231,10 @@ public class AimImpl extends MediatedElementImpl implements Aim {
 				getSubjects().clear();
 				getSubjects().addAll((Collection)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -247,8 +253,10 @@ public class AimImpl extends MediatedElementImpl implements Aim {
 			case AsdPackage.AIM__SUBJECTS:
 				getSubjects().clear();
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -264,8 +272,9 @@ public class AimImpl extends MediatedElementImpl implements Aim {
 				return outcomes != null && !outcomes.isEmpty();
 			case AsdPackage.AIM__SUBJECTS:
 				return subjects != null && !subjects.isEmpty();
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //AimImpl

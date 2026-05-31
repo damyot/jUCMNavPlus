@@ -176,8 +176,9 @@ public class EnumerationTypeImpl extends UCMmodelElementImpl implements Enumerat
 				return basicSetUcmspec((UCMspec)otherEnd, msgs);
 			case ScenarioPackage.ENUMERATION_TYPE__INSTANCES:
 				return ((InternalEList)getInstances()).basicAdd(otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -191,8 +192,9 @@ public class EnumerationTypeImpl extends UCMmodelElementImpl implements Enumerat
 				return basicSetUcmspec(null, msgs);
 			case ScenarioPackage.ENUMERATION_TYPE__INSTANCES:
 				return ((InternalEList)getInstances()).basicRemove(otherEnd, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -204,8 +206,9 @@ public class EnumerationTypeImpl extends UCMmodelElementImpl implements Enumerat
 		switch (eContainerFeatureID()) {
 			case ScenarioPackage.ENUMERATION_TYPE__UCMSPEC:
 				return eInternalContainer().eInverseRemove(this, UcmPackage.UC_MSPEC__ENUMERATION_TYPES, UCMspec.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
     /**
@@ -221,8 +224,9 @@ public class EnumerationTypeImpl extends UCMmodelElementImpl implements Enumerat
 				return getUcmspec();
 			case ScenarioPackage.ENUMERATION_TYPE__INSTANCES:
 				return getInstances();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -242,8 +246,10 @@ public class EnumerationTypeImpl extends UCMmodelElementImpl implements Enumerat
 				getInstances().clear();
 				getInstances().addAll((Collection)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -262,8 +268,10 @@ public class EnumerationTypeImpl extends UCMmodelElementImpl implements Enumerat
 			case ScenarioPackage.ENUMERATION_TYPE__INSTANCES:
 				getInstances().clear();
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -279,8 +287,9 @@ public class EnumerationTypeImpl extends UCMmodelElementImpl implements Enumerat
 				return getUcmspec() != null;
 			case ScenarioPackage.ENUMERATION_TYPE__INSTANCES:
 				return instances != null && !instances.isEmpty();
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
     /**

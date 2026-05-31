@@ -388,8 +388,9 @@ public class KPIModelLinkRefImpl extends MinimalEObjectImpl.Container implements
 				if (link != null)
 					msgs = ((InternalEObject)link).eInverseRemove(this, KpimodelPackage.KPI_MODEL_LINK__REFS, KPIModelLink.class, msgs);
 				return basicSetLink((KPIModelLink)otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -409,8 +410,9 @@ public class KPIModelLinkRefImpl extends MinimalEObjectImpl.Container implements
 				return basicSetLabel(null, msgs);
 			case KpimodelPackage.KPI_MODEL_LINK_REF__LINK:
 				return basicSetLink(null, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -422,8 +424,9 @@ public class KPIModelLinkRefImpl extends MinimalEObjectImpl.Container implements
 		switch (eContainerFeatureID()) {
 			case KpimodelPackage.KPI_MODEL_LINK_REF__DIAGRAM:
 				return eInternalContainer().eInverseRemove(this, UrncorePackage.IURN_DIAGRAM__CONNECTIONS, IURNDiagram.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
     /**
@@ -446,8 +449,9 @@ public class KPIModelLinkRefImpl extends MinimalEObjectImpl.Container implements
 			case KpimodelPackage.KPI_MODEL_LINK_REF__LINK:
 				if (resolve) return getLink();
 				return basicGetLink();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -472,8 +476,10 @@ public class KPIModelLinkRefImpl extends MinimalEObjectImpl.Container implements
 			case KpimodelPackage.KPI_MODEL_LINK_REF__LINK:
 				setLink((KPIModelLink)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -498,8 +504,10 @@ public class KPIModelLinkRefImpl extends MinimalEObjectImpl.Container implements
 			case KpimodelPackage.KPI_MODEL_LINK_REF__LINK:
 				setLink((KPIModelLink)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -519,8 +527,9 @@ public class KPIModelLinkRefImpl extends MinimalEObjectImpl.Container implements
 				return label != null;
 			case KpimodelPackage.KPI_MODEL_LINK_REF__LINK:
 				return link != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //KPIModelLinkRefImpl

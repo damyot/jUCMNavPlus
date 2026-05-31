@@ -167,8 +167,8 @@ public final class PointcutKind extends AbstractEnumerator {
 			case NONE: return NONE_LITERAL;
 			case REGULAR: return REGULAR_LITERAL;
 			case REPLACEMENT: return REPLACEMENT_LITERAL;
+			default: return null;
 		}
-		return null;
 	}
 
     /**

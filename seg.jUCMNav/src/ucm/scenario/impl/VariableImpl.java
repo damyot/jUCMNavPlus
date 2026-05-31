@@ -221,8 +221,9 @@ public class VariableImpl extends UCMmodelElementImpl implements Variable {
 				if (enumerationType != null)
 					msgs = ((InternalEObject)enumerationType).eInverseRemove(this, ScenarioPackage.ENUMERATION_TYPE__INSTANCES, EnumerationType.class, msgs);
 				return basicSetEnumerationType((EnumerationType)otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -236,8 +237,9 @@ public class VariableImpl extends UCMmodelElementImpl implements Variable {
 				return basicSetUcmspec(null, msgs);
 			case ScenarioPackage.VARIABLE__ENUMERATION_TYPE:
 				return basicSetEnumerationType(null, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -249,8 +251,9 @@ public class VariableImpl extends UCMmodelElementImpl implements Variable {
 		switch (eContainerFeatureID()) {
 			case ScenarioPackage.VARIABLE__UCMSPEC:
 				return eInternalContainer().eInverseRemove(this, UcmPackage.UC_MSPEC__VARIABLES, UCMspec.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
     /**
@@ -267,8 +270,9 @@ public class VariableImpl extends UCMmodelElementImpl implements Variable {
 			case ScenarioPackage.VARIABLE__ENUMERATION_TYPE:
 				if (resolve) return getEnumerationType();
 				return basicGetEnumerationType();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -287,8 +291,10 @@ public class VariableImpl extends UCMmodelElementImpl implements Variable {
 			case ScenarioPackage.VARIABLE__ENUMERATION_TYPE:
 				setEnumerationType((EnumerationType)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -307,8 +313,10 @@ public class VariableImpl extends UCMmodelElementImpl implements Variable {
 			case ScenarioPackage.VARIABLE__ENUMERATION_TYPE:
 				setEnumerationType((EnumerationType)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -324,8 +332,9 @@ public class VariableImpl extends UCMmodelElementImpl implements Variable {
 				return getUcmspec() != null;
 			case ScenarioPackage.VARIABLE__ENUMERATION_TYPE:
 				return enumerationType != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
     /**

@@ -288,8 +288,9 @@ public class ScenarioDefImpl extends UCMmodelElementImpl implements ScenarioDef 
 				return ((InternalEList)getStartPoints()).basicAdd(otherEnd, msgs);
 			case ScenarioPackage.SCENARIO_DEF__END_POINTS:
 				return ((InternalEList)getEndPoints()).basicAdd(otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -315,8 +316,9 @@ public class ScenarioDefImpl extends UCMmodelElementImpl implements ScenarioDef 
 				return ((InternalEList)getStartPoints()).basicRemove(otherEnd, msgs);
 			case ScenarioPackage.SCENARIO_DEF__END_POINTS:
 				return ((InternalEList)getEndPoints()).basicRemove(otherEnd, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -328,8 +330,9 @@ public class ScenarioDefImpl extends UCMmodelElementImpl implements ScenarioDef 
 		switch (eContainerFeatureID()) {
 			case ScenarioPackage.SCENARIO_DEF__GROUP:
 				return eInternalContainer().eInverseRemove(this, ScenarioPackage.SCENARIO_GROUP__SCENARIOS, ScenarioGroup.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
     /**
@@ -355,8 +358,9 @@ public class ScenarioDefImpl extends UCMmodelElementImpl implements ScenarioDef 
 				return getStartPoints();
 			case ScenarioPackage.SCENARIO_DEF__END_POINTS:
 				return getEndPoints();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -397,8 +401,10 @@ public class ScenarioDefImpl extends UCMmodelElementImpl implements ScenarioDef 
 				getEndPoints().clear();
 				getEndPoints().addAll((Collection)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -432,8 +438,10 @@ public class ScenarioDefImpl extends UCMmodelElementImpl implements ScenarioDef 
 			case ScenarioPackage.SCENARIO_DEF__END_POINTS:
 				getEndPoints().clear();
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -459,8 +467,9 @@ public class ScenarioDefImpl extends UCMmodelElementImpl implements ScenarioDef 
 				return startPoints != null && !startPoints.isEmpty();
 			case ScenarioPackage.SCENARIO_DEF__END_POINTS:
 				return endPoints != null && !endPoints.isEmpty();
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //ScenarioDefImpl

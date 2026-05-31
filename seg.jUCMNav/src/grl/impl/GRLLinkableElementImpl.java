@@ -109,8 +109,9 @@ public abstract class GRLLinkableElementImpl extends GRLmodelElementImpl impleme
 				return ((InternalEList)getLinksDest()).basicAdd(otherEnd, msgs);
 			case GrlPackage.GRL_LINKABLE_ELEMENT__LINKS_SRC:
 				return ((InternalEList)getLinksSrc()).basicAdd(otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -124,8 +125,9 @@ public abstract class GRLLinkableElementImpl extends GRLmodelElementImpl impleme
 				return ((InternalEList)getLinksDest()).basicRemove(otherEnd, msgs);
 			case GrlPackage.GRL_LINKABLE_ELEMENT__LINKS_SRC:
 				return ((InternalEList)getLinksSrc()).basicRemove(otherEnd, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -139,8 +141,9 @@ public abstract class GRLLinkableElementImpl extends GRLmodelElementImpl impleme
 				return getLinksDest();
 			case GrlPackage.GRL_LINKABLE_ELEMENT__LINKS_SRC:
 				return getLinksSrc();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -158,8 +161,10 @@ public abstract class GRLLinkableElementImpl extends GRLmodelElementImpl impleme
 				getLinksSrc().clear();
 				getLinksSrc().addAll((Collection)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -175,8 +180,10 @@ public abstract class GRLLinkableElementImpl extends GRLmodelElementImpl impleme
 			case GrlPackage.GRL_LINKABLE_ELEMENT__LINKS_SRC:
 				getLinksSrc().clear();
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -190,8 +197,9 @@ public abstract class GRLLinkableElementImpl extends GRLmodelElementImpl impleme
 				return linksDest != null && !linksDest.isEmpty();
 			case GrlPackage.GRL_LINKABLE_ELEMENT__LINKS_SRC:
 				return linksSrc != null && !linksSrc.isEmpty();
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //GRLLinkableElementImpl

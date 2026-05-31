@@ -227,8 +227,9 @@ public class EvaluationRangeImpl extends MinimalEObjectImpl.Container implements
 				if (eInternalContainer() != null)
 					msgs = eBasicRemoveFromContainer(msgs);
 				return basicSetEval((Evaluation)otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -240,8 +241,9 @@ public class EvaluationRangeImpl extends MinimalEObjectImpl.Container implements
 		switch (featureID) {
 			case GrlPackage.EVALUATION_RANGE__EVAL:
 				return basicSetEval(null, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -253,8 +255,9 @@ public class EvaluationRangeImpl extends MinimalEObjectImpl.Container implements
 		switch (eContainerFeatureID()) {
 			case GrlPackage.EVALUATION_RANGE__EVAL:
 				return eInternalContainer().eInverseRemove(this, GrlPackage.EVALUATION__EVAL_RANGE, Evaluation.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
 	/**
@@ -272,8 +275,9 @@ public class EvaluationRangeImpl extends MinimalEObjectImpl.Container implements
 				return new Integer(getStep());
 			case GrlPackage.EVALUATION_RANGE__EVAL:
 				return getEval();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -295,8 +299,10 @@ public class EvaluationRangeImpl extends MinimalEObjectImpl.Container implements
 			case GrlPackage.EVALUATION_RANGE__EVAL:
 				setEval((Evaluation)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -318,8 +324,10 @@ public class EvaluationRangeImpl extends MinimalEObjectImpl.Container implements
 			case GrlPackage.EVALUATION_RANGE__EVAL:
 				setEval((Evaluation)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -337,8 +345,9 @@ public class EvaluationRangeImpl extends MinimalEObjectImpl.Container implements
 				return step != STEP_EDEFAULT;
 			case GrlPackage.EVALUATION_RANGE__EVAL:
 				return getEval() != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 	/**

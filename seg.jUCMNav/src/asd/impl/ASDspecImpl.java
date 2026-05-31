@@ -22,7 +22,6 @@ import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
@@ -339,8 +338,9 @@ public class ASDspecImpl extends MinimalEObjectImpl.Container implements ASDspec
 				return ((InternalEList)getTools()).basicAdd(otherEnd, msgs);
 			case AsdPackage.AS_DSPEC__RULES:
 				return ((InternalEList)getRules()).basicAdd(otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -368,8 +368,9 @@ public class ASDspecImpl extends MinimalEObjectImpl.Container implements ASDspec
 				return ((InternalEList)getTools()).basicRemove(otherEnd, msgs);
 			case AsdPackage.AS_DSPEC__RULES:
 				return ((InternalEList)getRules()).basicRemove(otherEnd, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -401,8 +402,9 @@ public class ASDspecImpl extends MinimalEObjectImpl.Container implements ASDspec
 				return getTools();
 			case AsdPackage.AS_DSPEC__RULES:
 				return getRules();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -456,8 +458,10 @@ public class ASDspecImpl extends MinimalEObjectImpl.Container implements ASDspec
 				getRules().clear();
 				getRules().addAll((Collection)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -500,8 +504,10 @@ public class ASDspecImpl extends MinimalEObjectImpl.Container implements ASDspec
 			case AsdPackage.AS_DSPEC__RULES:
 				getRules().clear();
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -533,8 +539,9 @@ public class ASDspecImpl extends MinimalEObjectImpl.Container implements ASDspec
 				return tools != null && !tools.isEmpty();
 			case AsdPackage.AS_DSPEC__RULES:
 				return rules != null && !rules.isEmpty();
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //ASDspecImpl

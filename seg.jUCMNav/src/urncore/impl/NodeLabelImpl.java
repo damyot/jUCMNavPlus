@@ -101,8 +101,9 @@ public class NodeLabelImpl extends LabelImpl implements NodeLabel {
 				if (eInternalContainer() != null)
 					msgs = eBasicRemoveFromContainer(msgs);
 				return basicSetNode((IURNNode)otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -114,8 +115,9 @@ public class NodeLabelImpl extends LabelImpl implements NodeLabel {
 		switch (featureID) {
 			case UrncorePackage.NODE_LABEL__NODE:
 				return basicSetNode(null, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -127,8 +129,9 @@ public class NodeLabelImpl extends LabelImpl implements NodeLabel {
 		switch (eContainerFeatureID()) {
 			case UrncorePackage.NODE_LABEL__NODE:
 				return eInternalContainer().eInverseRemove(this, UrncorePackage.IURN_NODE__LABEL, IURNNode.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
     /**
@@ -140,8 +143,9 @@ public class NodeLabelImpl extends LabelImpl implements NodeLabel {
 		switch (featureID) {
 			case UrncorePackage.NODE_LABEL__NODE:
 				return getNode();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -154,8 +158,10 @@ public class NodeLabelImpl extends LabelImpl implements NodeLabel {
 			case UrncorePackage.NODE_LABEL__NODE:
 				setNode((IURNNode)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -168,8 +174,10 @@ public class NodeLabelImpl extends LabelImpl implements NodeLabel {
 			case UrncorePackage.NODE_LABEL__NODE:
 				setNode((IURNNode)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -181,8 +189,9 @@ public class NodeLabelImpl extends LabelImpl implements NodeLabel {
 		switch (featureID) {
 			case UrncorePackage.NODE_LABEL__NODE:
 				return getNode() != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //NodeLabelImpl

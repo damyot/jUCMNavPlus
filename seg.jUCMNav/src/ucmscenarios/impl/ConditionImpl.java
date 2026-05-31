@@ -19,11 +19,11 @@ import ucmscenarios.UcmscenariosPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link ucmscenarios.impl.ConditionImpl#getExpression <em>Expression</em>}</li>
  *   <li>{@link ucmscenarios.impl.ConditionImpl#getLabel <em>Label</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -139,8 +139,9 @@ public class ConditionImpl extends SequenceElementImpl implements Condition {
 				return getExpression();
 			case UcmscenariosPackage.CONDITION__LABEL:
 				return getLabel();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -156,8 +157,10 @@ public class ConditionImpl extends SequenceElementImpl implements Condition {
 			case UcmscenariosPackage.CONDITION__LABEL:
 				setLabel((String)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -173,8 +176,10 @@ public class ConditionImpl extends SequenceElementImpl implements Condition {
 			case UcmscenariosPackage.CONDITION__LABEL:
 				setLabel(LABEL_EDEFAULT);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -188,8 +193,9 @@ public class ConditionImpl extends SequenceElementImpl implements Condition {
 				return EXPRESSION_EDEFAULT == null ? expression != null : !EXPRESSION_EDEFAULT.equals(expression);
 			case UcmscenariosPackage.CONDITION__LABEL:
 				return LABEL_EDEFAULT == null ? label != null : !LABEL_EDEFAULT.equals(label);
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 	/**

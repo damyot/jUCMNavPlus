@@ -483,8 +483,9 @@ public class WorkloadImpl extends UCMmodelElementImpl implements Workload {
 				if (eInternalContainer() != null)
 					msgs = eBasicRemoveFromContainer(msgs);
 				return basicSetStartPoint((StartPoint)otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -496,8 +497,9 @@ public class WorkloadImpl extends UCMmodelElementImpl implements Workload {
 		switch (featureID) {
 			case PerformancePackage.WORKLOAD__START_POINT:
 				return basicSetStartPoint(null, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -509,8 +511,9 @@ public class WorkloadImpl extends UCMmodelElementImpl implements Workload {
 		switch (eContainerFeatureID()) {
 			case PerformancePackage.WORKLOAD__START_POINT:
 				return eInternalContainer().eInverseRemove(this, MapPackage.START_POINT__WORKLOAD, StartPoint.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
     /**
@@ -540,8 +543,9 @@ public class WorkloadImpl extends UCMmodelElementImpl implements Workload {
 				return getUnit();
 			case PerformancePackage.WORKLOAD__START_POINT:
 				return getStartPoint();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -581,8 +585,10 @@ public class WorkloadImpl extends UCMmodelElementImpl implements Workload {
 			case PerformancePackage.WORKLOAD__START_POINT:
 				setStartPoint((StartPoint)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -622,8 +628,10 @@ public class WorkloadImpl extends UCMmodelElementImpl implements Workload {
 			case PerformancePackage.WORKLOAD__START_POINT:
 				setStartPoint((StartPoint)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -653,8 +661,9 @@ public class WorkloadImpl extends UCMmodelElementImpl implements Workload {
 				return unit != UNIT_EDEFAULT;
 			case PerformancePackage.WORKLOAD__START_POINT:
 				return getStartPoint() != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
     /**

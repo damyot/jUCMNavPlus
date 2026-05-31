@@ -265,8 +265,9 @@ public class ConcernImpl extends URNmodelElementImpl implements Concern {
 				if (condition != null)
 					msgs = ((InternalEObject)condition).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - UrncorePackage.CONCERN__CONDITION, null, msgs);
 				return basicSetCondition((Condition)otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -284,8 +285,9 @@ public class ConcernImpl extends URNmodelElementImpl implements Concern {
 				return ((InternalEList)getElements()).basicRemove(otherEnd, msgs);
 			case UrncorePackage.CONCERN__CONDITION:
 				return basicSetCondition(null, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -297,8 +299,9 @@ public class ConcernImpl extends URNmodelElementImpl implements Concern {
 		switch (eContainerFeatureID()) {
 			case UrncorePackage.CONCERN__URNDEFINITION:
 				return eInternalContainer().eInverseRemove(this, UrncorePackage.UR_NDEFINITION__CONCERNS, URNdefinition.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
     /**
@@ -319,8 +322,9 @@ public class ConcernImpl extends URNmodelElementImpl implements Concern {
 				return basicGetCoreConcern();
 			case UrncorePackage.CONCERN__CONDITION:
 				return getCondition();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -347,8 +351,10 @@ public class ConcernImpl extends URNmodelElementImpl implements Concern {
 			case UrncorePackage.CONCERN__CONDITION:
 				setCondition((Condition)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -373,8 +379,10 @@ public class ConcernImpl extends URNmodelElementImpl implements Concern {
 			case UrncorePackage.CONCERN__CONDITION:
 				setCondition((Condition)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -394,8 +402,9 @@ public class ConcernImpl extends URNmodelElementImpl implements Concern {
 				return coreConcern != null;
 			case UrncorePackage.CONCERN__CONDITION:
 				return condition != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //ConcernImpl

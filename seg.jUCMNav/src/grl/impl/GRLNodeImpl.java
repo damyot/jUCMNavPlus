@@ -380,8 +380,9 @@ public class GRLNodeImpl extends GRLmodelElementImpl implements GRLNode {
 				if (label != null)
 					msgs = ((InternalEObject)label).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - GrlPackage.GRL_NODE__LABEL, null, msgs);
 				return basicSetLabel((NodeLabel)otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -401,8 +402,9 @@ public class GRLNodeImpl extends GRLmodelElementImpl implements GRLNode {
 				return ((InternalEList)getPred()).basicRemove(otherEnd, msgs);
 			case GrlPackage.GRL_NODE__LABEL:
 				return basicSetLabel(null, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -414,8 +416,9 @@ public class GRLNodeImpl extends GRLmodelElementImpl implements GRLNode {
 		switch (eContainerFeatureID()) {
 			case GrlPackage.GRL_NODE__DIAGRAM:
 				return eInternalContainer().eInverseRemove(this, UrncorePackage.IURN_DIAGRAM__NODES, IURNDiagram.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
     /**
@@ -440,8 +443,9 @@ public class GRLNodeImpl extends GRLmodelElementImpl implements GRLNode {
 				return getPred();
 			case GrlPackage.GRL_NODE__LABEL:
 				return getLabel();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -474,8 +478,10 @@ public class GRLNodeImpl extends GRLmodelElementImpl implements GRLNode {
 			case GrlPackage.GRL_NODE__LABEL:
 				setLabel((NodeLabel)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -506,8 +512,10 @@ public class GRLNodeImpl extends GRLmodelElementImpl implements GRLNode {
 			case GrlPackage.GRL_NODE__LABEL:
 				setLabel((NodeLabel)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -531,8 +539,9 @@ public class GRLNodeImpl extends GRLmodelElementImpl implements GRLNode {
 				return pred != null && !pred.isEmpty();
 			case GrlPackage.GRL_NODE__LABEL:
 				return label != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
     /**

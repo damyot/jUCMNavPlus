@@ -132,8 +132,9 @@ public class ComponentTypeImpl extends UCMmodelElementImpl implements ComponentT
 				if (eInternalContainer() != null)
 					msgs = eBasicRemoveFromContainer(msgs);
 				return basicSetUrndefinition((URNdefinition)otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -147,8 +148,9 @@ public class ComponentTypeImpl extends UCMmodelElementImpl implements ComponentT
 				return ((InternalEList)getInstances()).basicRemove(otherEnd, msgs);
 			case UrncorePackage.COMPONENT_TYPE__URNDEFINITION:
 				return basicSetUrndefinition(null, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -160,8 +162,9 @@ public class ComponentTypeImpl extends UCMmodelElementImpl implements ComponentT
 		switch (eContainerFeatureID()) {
 			case UrncorePackage.COMPONENT_TYPE__URNDEFINITION:
 				return eInternalContainer().eInverseRemove(this, UrncorePackage.UR_NDEFINITION__COMPONENT_TYPES, URNdefinition.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
 				/**
@@ -175,8 +178,9 @@ public class ComponentTypeImpl extends UCMmodelElementImpl implements ComponentT
 				return getInstances();
 			case UrncorePackage.COMPONENT_TYPE__URNDEFINITION:
 				return getUrndefinition();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -193,8 +197,10 @@ public class ComponentTypeImpl extends UCMmodelElementImpl implements ComponentT
 			case UrncorePackage.COMPONENT_TYPE__URNDEFINITION:
 				setUrndefinition((URNdefinition)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -210,8 +216,10 @@ public class ComponentTypeImpl extends UCMmodelElementImpl implements ComponentT
 			case UrncorePackage.COMPONENT_TYPE__URNDEFINITION:
 				setUrndefinition((URNdefinition)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -225,8 +233,9 @@ public class ComponentTypeImpl extends UCMmodelElementImpl implements ComponentT
 				return instances != null && !instances.isEmpty();
 			case UrncorePackage.COMPONENT_TYPE__URNDEFINITION:
 				return getUrndefinition() != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //ComponentTypeImpl

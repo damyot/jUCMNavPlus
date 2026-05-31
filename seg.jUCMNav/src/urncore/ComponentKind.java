@@ -251,8 +251,8 @@ public final class ComponentKind extends AbstractEnumerator {
 			case AGENT: return AGENT_LITERAL;
 			case ACTOR: return ACTOR_LITERAL;
 			case OTHER: return OTHER_LITERAL;
+			default: return null;
 		}
-		return null;
 	}
 
     /**

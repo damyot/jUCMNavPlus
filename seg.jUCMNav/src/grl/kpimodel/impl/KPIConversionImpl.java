@@ -140,8 +140,9 @@ public abstract class KPIConversionImpl extends GRLmodelElementImpl implements K
 				if (eInternalContainer() != null)
 					msgs = eBasicRemoveFromContainer(msgs);
 				return basicSetGrlspec((GRLspec)otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -155,8 +156,9 @@ public abstract class KPIConversionImpl extends GRLmodelElementImpl implements K
 				return ((InternalEList)getKpiEvalValueSet()).basicRemove(otherEnd, msgs);
 			case KpimodelPackage.KPI_CONVERSION__GRLSPEC:
 				return basicSetGrlspec(null, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -168,8 +170,9 @@ public abstract class KPIConversionImpl extends GRLmodelElementImpl implements K
 		switch (eContainerFeatureID()) {
 			case KpimodelPackage.KPI_CONVERSION__GRLSPEC:
 				return eInternalContainer().eInverseRemove(this, GrlPackage.GR_LSPEC__KPI_CONVERSION, GRLspec.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
 	/**
@@ -183,8 +186,9 @@ public abstract class KPIConversionImpl extends GRLmodelElementImpl implements K
 				return getKpiEvalValueSet();
 			case KpimodelPackage.KPI_CONVERSION__GRLSPEC:
 				return getGrlspec();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -201,8 +205,10 @@ public abstract class KPIConversionImpl extends GRLmodelElementImpl implements K
 			case KpimodelPackage.KPI_CONVERSION__GRLSPEC:
 				setGrlspec((GRLspec)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -218,8 +224,10 @@ public abstract class KPIConversionImpl extends GRLmodelElementImpl implements K
 			case KpimodelPackage.KPI_CONVERSION__GRLSPEC:
 				setGrlspec((GRLspec)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -233,8 +241,9 @@ public abstract class KPIConversionImpl extends GRLmodelElementImpl implements K
 				return kpiEvalValueSet != null && !kpiEvalValueSet.isEmpty();
 			case KpimodelPackage.KPI_CONVERSION__GRLSPEC:
 				return getGrlspec() != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //KPIConversionImpl

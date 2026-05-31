@@ -101,8 +101,9 @@ public class ComponentLabelImpl extends LabelImpl implements ComponentLabel {
 				if (eInternalContainer() != null)
 					msgs = eBasicRemoveFromContainer(msgs);
 				return basicSetContRef((IURNContainerRef)otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -114,8 +115,9 @@ public class ComponentLabelImpl extends LabelImpl implements ComponentLabel {
 		switch (featureID) {
 			case UrncorePackage.COMPONENT_LABEL__CONT_REF:
 				return basicSetContRef(null, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -127,8 +129,9 @@ public class ComponentLabelImpl extends LabelImpl implements ComponentLabel {
 		switch (eContainerFeatureID()) {
 			case UrncorePackage.COMPONENT_LABEL__CONT_REF:
 				return eInternalContainer().eInverseRemove(this, UrncorePackage.IURN_CONTAINER_REF__LABEL, IURNContainerRef.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
     /**
@@ -140,8 +143,9 @@ public class ComponentLabelImpl extends LabelImpl implements ComponentLabel {
 		switch (featureID) {
 			case UrncorePackage.COMPONENT_LABEL__CONT_REF:
 				return getContRef();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -154,8 +158,10 @@ public class ComponentLabelImpl extends LabelImpl implements ComponentLabel {
 			case UrncorePackage.COMPONENT_LABEL__CONT_REF:
 				setContRef((IURNContainerRef)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -168,8 +174,10 @@ public class ComponentLabelImpl extends LabelImpl implements ComponentLabel {
 			case UrncorePackage.COMPONENT_LABEL__CONT_REF:
 				setContRef((IURNContainerRef)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -181,8 +189,9 @@ public class ComponentLabelImpl extends LabelImpl implements ComponentLabel {
 		switch (featureID) {
 			case UrncorePackage.COMPONENT_LABEL__CONT_REF:
 				return getContRef() != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //ComponentLabelImpl

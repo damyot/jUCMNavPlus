@@ -15,11 +15,11 @@ import org.eclipse.emf.common.util.EList;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link ucmscenarios.Sequence#getParent <em>Parent</em>}</li>
  *   <li>{@link ucmscenarios.Sequence#getChildren <em>Children</em>}</li>
  * </ul>
- * </p>
  *
  * @see ucmscenarios.UcmscenariosPackage#getSequence()
  * @model

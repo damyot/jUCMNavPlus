@@ -295,8 +295,9 @@ public class ContributionChangeImpl extends MinimalEObjectImpl.Container impleme
 				if (contribRange != null)
 					msgs = ((InternalEObject)contribRange).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - GrlPackage.CONTRIBUTION_CHANGE__CONTRIB_RANGE, null, msgs);
 				return basicSetContribRange((ContributionRange)otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -310,8 +311,9 @@ public class ContributionChangeImpl extends MinimalEObjectImpl.Container impleme
 				return basicSetContext(null, msgs);
 			case GrlPackage.CONTRIBUTION_CHANGE__CONTRIB_RANGE:
 				return basicSetContribRange(null, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -323,8 +325,9 @@ public class ContributionChangeImpl extends MinimalEObjectImpl.Container impleme
 		switch (eContainerFeatureID()) {
 			case GrlPackage.CONTRIBUTION_CHANGE__CONTEXT:
 				return eInternalContainer().eInverseRemove(this, GrlPackage.CONTRIBUTION_CONTEXT__CHANGES, ContributionContext.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
 	/**
@@ -345,8 +348,9 @@ public class ContributionChangeImpl extends MinimalEObjectImpl.Container impleme
 				return basicGetContribution();
 			case GrlPackage.CONTRIBUTION_CHANGE__CONTRIB_RANGE:
 				return getContribRange();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -371,8 +375,10 @@ public class ContributionChangeImpl extends MinimalEObjectImpl.Container impleme
 			case GrlPackage.CONTRIBUTION_CHANGE__CONTRIB_RANGE:
 				setContribRange((ContributionRange)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -397,8 +403,10 @@ public class ContributionChangeImpl extends MinimalEObjectImpl.Container impleme
 			case GrlPackage.CONTRIBUTION_CHANGE__CONTRIB_RANGE:
 				setContribRange((ContributionRange)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -418,8 +426,9 @@ public class ContributionChangeImpl extends MinimalEObjectImpl.Container impleme
 				return contribution != null;
 			case GrlPackage.CONTRIBUTION_CHANGE__CONTRIB_RANGE:
 				return contribRange != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 	/**

@@ -342,8 +342,9 @@ public class ASNetworkImpl extends MinimalEObjectImpl.Container implements ASNet
 				return ((InternalEList)getASDspec()).basicAdd(otherEnd, msgs);
 			case AsdPackage.AS_NETWORK__ASD_LAYOUTS:
 				return ((InternalEList)getAsdLayouts()).basicAdd(otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -369,8 +370,9 @@ public class ASNetworkImpl extends MinimalEObjectImpl.Container implements ASNet
 				return ((InternalEList)getASDspec()).basicRemove(otherEnd, msgs);
 			case AsdPackage.AS_NETWORK__ASD_LAYOUTS:
 				return ((InternalEList)getAsdLayouts()).basicRemove(otherEnd, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -382,8 +384,9 @@ public class ASNetworkImpl extends MinimalEObjectImpl.Container implements ASNet
 		switch (eContainerFeatureID()) {
 			case AsdPackage.AS_NETWORK__URNDEFINITION:
 				return eInternalContainer().eInverseRemove(this, UrncorePackage.UR_NDEFINITION__SPEC_DIAGRAMS, URNdefinition.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
 	/**
@@ -410,8 +413,9 @@ public class ASNetworkImpl extends MinimalEObjectImpl.Container implements ASNet
 				return getASDspec();
 			case AsdPackage.AS_NETWORK__ASD_LAYOUTS:
 				return getAsdLayouts();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -451,8 +455,10 @@ public class ASNetworkImpl extends MinimalEObjectImpl.Container implements ASNet
 				getAsdLayouts().clear();
 				getAsdLayouts().addAll((Collection)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -486,8 +492,10 @@ public class ASNetworkImpl extends MinimalEObjectImpl.Container implements ASNet
 			case AsdPackage.AS_NETWORK__ASD_LAYOUTS:
 				getAsdLayouts().clear();
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -513,8 +521,9 @@ public class ASNetworkImpl extends MinimalEObjectImpl.Container implements ASNet
 				return asDspec != null && !asDspec.isEmpty();
 			case AsdPackage.AS_NETWORK__ASD_LAYOUTS:
 				return asdLayouts != null && !asdLayouts.isEmpty();
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //ASNetworkImpl

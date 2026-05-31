@@ -275,8 +275,8 @@ public final class TimeUnit extends AbstractEnumerator {
 			case MS: return MS_LITERAL;
 			case US: return US_LITERAL;
 			case NS: return NS_LITERAL;
+			default: return null;
 		}
-		return null;
 	}
 
     /**

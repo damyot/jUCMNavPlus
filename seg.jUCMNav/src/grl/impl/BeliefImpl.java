@@ -95,8 +95,9 @@ public class BeliefImpl extends GRLNodeImpl implements Belief {
 		switch (featureID) {
 			case GrlPackage.BELIEF__AUTHOR:
 				return getAuthor();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -109,8 +110,10 @@ public class BeliefImpl extends GRLNodeImpl implements Belief {
 			case GrlPackage.BELIEF__AUTHOR:
 				setAuthor((String)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -123,8 +126,10 @@ public class BeliefImpl extends GRLNodeImpl implements Belief {
 			case GrlPackage.BELIEF__AUTHOR:
 				setAuthor(AUTHOR_EDEFAULT);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -136,8 +141,9 @@ public class BeliefImpl extends GRLNodeImpl implements Belief {
 		switch (featureID) {
 			case GrlPackage.BELIEF__AUTHOR:
 				return AUTHOR_EDEFAULT == null ? author != null : !AUTHOR_EDEFAULT.equals(author);
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
     /**

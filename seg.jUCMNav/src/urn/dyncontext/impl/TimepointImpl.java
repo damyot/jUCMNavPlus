@@ -144,8 +144,9 @@ public class TimepointImpl extends MinimalEObjectImpl.Container implements Timep
 				if (eInternalContainer() != null)
 					msgs = eBasicRemoveFromContainer(msgs);
 				return basicSetGroup((TimepointGroup)otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -157,8 +158,9 @@ public class TimepointImpl extends MinimalEObjectImpl.Container implements Timep
 		switch (featureID) {
 			case DyncontextPackage.TIMEPOINT__GROUP:
 				return basicSetGroup(null, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -170,8 +172,9 @@ public class TimepointImpl extends MinimalEObjectImpl.Container implements Timep
 		switch (eContainerFeatureID()) {
 			case DyncontextPackage.TIMEPOINT__GROUP:
 				return eInternalContainer().eInverseRemove(this, DyncontextPackage.TIMEPOINT_GROUP__TIMEPOINTS, TimepointGroup.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
 	/**
@@ -185,8 +188,9 @@ public class TimepointImpl extends MinimalEObjectImpl.Container implements Timep
 				return getTimepoint();
 			case DyncontextPackage.TIMEPOINT__GROUP:
 				return getGroup();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -202,8 +206,10 @@ public class TimepointImpl extends MinimalEObjectImpl.Container implements Timep
 			case DyncontextPackage.TIMEPOINT__GROUP:
 				setGroup((TimepointGroup)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -219,8 +225,10 @@ public class TimepointImpl extends MinimalEObjectImpl.Container implements Timep
 			case DyncontextPackage.TIMEPOINT__GROUP:
 				setGroup((TimepointGroup)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -234,8 +242,9 @@ public class TimepointImpl extends MinimalEObjectImpl.Container implements Timep
 				return TIMEPOINT_EDEFAULT == null ? timepoint != null : !TIMEPOINT_EDEFAULT.equals(timepoint);
 			case DyncontextPackage.TIMEPOINT__GROUP:
 				return getGroup() != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 	/**

@@ -158,8 +158,9 @@ public class OutcomeImpl extends ASDelementImpl implements Outcome {
 				return basicSetAsdSpec((ASDspec)otherEnd, msgs);
 			case AsdPackage.OUTCOME__OBJECTS:
 				return ((InternalEList)getObjects()).basicAdd(otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -175,8 +176,9 @@ public class OutcomeImpl extends ASDelementImpl implements Outcome {
 				return basicSetAsdSpec(null, msgs);
 			case AsdPackage.OUTCOME__OBJECTS:
 				return ((InternalEList)getObjects()).basicRemove(otherEnd, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -188,8 +190,9 @@ public class OutcomeImpl extends ASDelementImpl implements Outcome {
 		switch (eContainerFeatureID()) {
 			case AsdPackage.OUTCOME__ASD_SPEC:
 				return eInternalContainer().eInverseRemove(this, AsdPackage.AS_DSPEC__OUTCOMES, ASDspec.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
 	/**
@@ -205,8 +208,9 @@ public class OutcomeImpl extends ASDelementImpl implements Outcome {
 				return getAsdSpec();
 			case AsdPackage.OUTCOME__OBJECTS:
 				return getObjects();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -227,8 +231,10 @@ public class OutcomeImpl extends ASDelementImpl implements Outcome {
 				getObjects().clear();
 				getObjects().addAll((Collection)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -247,8 +253,10 @@ public class OutcomeImpl extends ASDelementImpl implements Outcome {
 			case AsdPackage.OUTCOME__OBJECTS:
 				getObjects().clear();
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -264,8 +272,9 @@ public class OutcomeImpl extends ASDelementImpl implements Outcome {
 				return getAsdSpec() != null;
 			case AsdPackage.OUTCOME__OBJECTS:
 				return objects != null && !objects.isEmpty();
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //OutcomeImpl

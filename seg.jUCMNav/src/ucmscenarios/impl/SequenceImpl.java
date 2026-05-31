@@ -29,11 +29,11 @@ import ucmscenarios.UcmscenariosPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link ucmscenarios.impl.SequenceImpl#getParent <em>Parent</em>}</li>
  *   <li>{@link ucmscenarios.impl.SequenceImpl#getChildren <em>Children</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -132,8 +132,9 @@ public class SequenceImpl extends SequenceElementImpl implements Sequence {
 				return basicSetParent((Parallel)otherEnd, msgs);
 			case UcmscenariosPackage.SEQUENCE__CHILDREN:
 				return ((InternalEList)getChildren()).basicAdd(otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -147,8 +148,9 @@ public class SequenceImpl extends SequenceElementImpl implements Sequence {
 				return basicSetParent(null, msgs);
 			case UcmscenariosPackage.SEQUENCE__CHILDREN:
 				return ((InternalEList)getChildren()).basicRemove(otherEnd, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -160,8 +162,9 @@ public class SequenceImpl extends SequenceElementImpl implements Sequence {
 		switch (eContainerFeatureID()) {
 			case UcmscenariosPackage.SEQUENCE__PARENT:
 				return eInternalContainer().eInverseRemove(this, UcmscenariosPackage.PARALLEL__CHILDREN, Parallel.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
 	/**
@@ -175,8 +178,9 @@ public class SequenceImpl extends SequenceElementImpl implements Sequence {
 				return getParent();
 			case UcmscenariosPackage.SEQUENCE__CHILDREN:
 				return getChildren();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -193,8 +197,10 @@ public class SequenceImpl extends SequenceElementImpl implements Sequence {
 				getChildren().clear();
 				getChildren().addAll((Collection)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -210,8 +216,10 @@ public class SequenceImpl extends SequenceElementImpl implements Sequence {
 			case UcmscenariosPackage.SEQUENCE__CHILDREN:
 				getChildren().clear();
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -225,8 +233,9 @@ public class SequenceImpl extends SequenceElementImpl implements Sequence {
 				return getParent() != null;
 			case UcmscenariosPackage.SEQUENCE__CHILDREN:
 				return children != null && !children.isEmpty();
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //SequenceImpl

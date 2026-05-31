@@ -16,13 +16,13 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link ucmscenarios.ModelElement#getId <em>Id</em>}</li>
  *   <li>{@link ucmscenarios.ModelElement#getName <em>Name</em>}</li>
  *   <li>{@link ucmscenarios.ModelElement#getDescription <em>Description</em>}</li>
  *   <li>{@link ucmscenarios.ModelElement#getMetadata <em>Metadata</em>}</li>
  * </ul>
- * </p>
  *
  * @see ucmscenarios.UcmscenariosPackage#getModelElement()
  * @model

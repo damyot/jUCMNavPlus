@@ -93,8 +93,9 @@ public class EnumChangeImpl extends PropertyChangeImpl implements EnumChange {
 		switch (featureID) {
 			case DyncontextPackage.ENUM_CHANGE__NEW_VALUE:
 				return getNewValue();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -107,8 +108,10 @@ public class EnumChangeImpl extends PropertyChangeImpl implements EnumChange {
 			case DyncontextPackage.ENUM_CHANGE__NEW_VALUE:
 				setNewValue((String)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -121,8 +124,10 @@ public class EnumChangeImpl extends PropertyChangeImpl implements EnumChange {
 			case DyncontextPackage.ENUM_CHANGE__NEW_VALUE:
 				setNewValue(NEW_VALUE_EDEFAULT);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -134,8 +139,9 @@ public class EnumChangeImpl extends PropertyChangeImpl implements EnumChange {
 		switch (featureID) {
 			case DyncontextPackage.ENUM_CHANGE__NEW_VALUE:
 				return NEW_VALUE_EDEFAULT == null ? newValue != null : !NEW_VALUE_EDEFAULT.equals(newValue);
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 	/**

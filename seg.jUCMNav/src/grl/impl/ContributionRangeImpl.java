@@ -227,8 +227,9 @@ public class ContributionRangeImpl extends MinimalEObjectImpl.Container implemen
 				if (eInternalContainer() != null)
 					msgs = eBasicRemoveFromContainer(msgs);
 				return basicSetChange((ContributionChange)otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -240,8 +241,9 @@ public class ContributionRangeImpl extends MinimalEObjectImpl.Container implemen
 		switch (featureID) {
 			case GrlPackage.CONTRIBUTION_RANGE__CHANGE:
 				return basicSetChange(null, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -253,8 +255,9 @@ public class ContributionRangeImpl extends MinimalEObjectImpl.Container implemen
 		switch (eContainerFeatureID()) {
 			case GrlPackage.CONTRIBUTION_RANGE__CHANGE:
 				return eInternalContainer().eInverseRemove(this, GrlPackage.CONTRIBUTION_CHANGE__CONTRIB_RANGE, ContributionChange.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
 	/**
@@ -272,8 +275,9 @@ public class ContributionRangeImpl extends MinimalEObjectImpl.Container implemen
 				return new Integer(getStep());
 			case GrlPackage.CONTRIBUTION_RANGE__CHANGE:
 				return getChange();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -295,8 +299,10 @@ public class ContributionRangeImpl extends MinimalEObjectImpl.Container implemen
 			case GrlPackage.CONTRIBUTION_RANGE__CHANGE:
 				setChange((ContributionChange)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -318,8 +324,10 @@ public class ContributionRangeImpl extends MinimalEObjectImpl.Container implemen
 			case GrlPackage.CONTRIBUTION_RANGE__CHANGE:
 				setChange((ContributionChange)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -337,8 +345,9 @@ public class ContributionRangeImpl extends MinimalEObjectImpl.Container implemen
 				return step != STEP_EDEFAULT;
 			case GrlPackage.CONTRIBUTION_RANGE__CHANGE:
 				return getChange() != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 	/**

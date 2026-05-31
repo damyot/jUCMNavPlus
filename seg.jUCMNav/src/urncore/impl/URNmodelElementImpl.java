@@ -294,8 +294,9 @@ public abstract class URNmodelElementImpl extends CORENamedElementImpl implement
 				if (inconcern != null)
 					msgs = ((InternalEObject)inconcern).eInverseRemove(this, UrncorePackage.CONCERN__ELEMENTS, Concern.class, msgs);
 				return basicSetInconcern((Concern)otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -313,8 +314,9 @@ public abstract class URNmodelElementImpl extends CORENamedElementImpl implement
 				return ((InternalEList)getMetadata()).basicRemove(otherEnd, msgs);
 			case UrncorePackage.UR_NMODEL_ELEMENT__INCONCERN:
 				return basicSetInconcern(null, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -337,8 +339,9 @@ public abstract class URNmodelElementImpl extends CORENamedElementImpl implement
 			case UrncorePackage.UR_NMODEL_ELEMENT__INCONCERN:
 				if (resolve) return getInconcern();
 				return basicGetInconcern();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -369,8 +372,10 @@ public abstract class URNmodelElementImpl extends CORENamedElementImpl implement
 			case UrncorePackage.UR_NMODEL_ELEMENT__INCONCERN:
 				setInconcern((Concern)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -398,8 +403,10 @@ public abstract class URNmodelElementImpl extends CORENamedElementImpl implement
 			case UrncorePackage.UR_NMODEL_ELEMENT__INCONCERN:
 				setInconcern((Concern)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -421,8 +428,9 @@ public abstract class URNmodelElementImpl extends CORENamedElementImpl implement
 				return metadata != null && !metadata.isEmpty();
 			case UrncorePackage.UR_NMODEL_ELEMENT__INCONCERN:
 				return inconcern != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
     /**

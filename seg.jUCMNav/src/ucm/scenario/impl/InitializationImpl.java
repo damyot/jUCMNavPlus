@@ -193,8 +193,9 @@ public class InitializationImpl extends MinimalEObjectImpl.Container implements 
 				if (eInternalContainer() != null)
 					msgs = eBasicRemoveFromContainer(msgs);
 				return basicSetScenarioDef((ScenarioDef)otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -206,8 +207,9 @@ public class InitializationImpl extends MinimalEObjectImpl.Container implements 
 		switch (featureID) {
 			case ScenarioPackage.INITIALIZATION__SCENARIO_DEF:
 				return basicSetScenarioDef(null, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -219,8 +221,9 @@ public class InitializationImpl extends MinimalEObjectImpl.Container implements 
 		switch (eContainerFeatureID()) {
 			case ScenarioPackage.INITIALIZATION__SCENARIO_DEF:
 				return eInternalContainer().eInverseRemove(this, ScenarioPackage.SCENARIO_DEF__INITIALIZATIONS, ScenarioDef.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
     /**
@@ -237,8 +240,9 @@ public class InitializationImpl extends MinimalEObjectImpl.Container implements 
 			case ScenarioPackage.INITIALIZATION__VARIABLE:
 				if (resolve) return getVariable();
 				return basicGetVariable();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -257,8 +261,10 @@ public class InitializationImpl extends MinimalEObjectImpl.Container implements 
 			case ScenarioPackage.INITIALIZATION__VARIABLE:
 				setVariable((Variable)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -277,8 +283,10 @@ public class InitializationImpl extends MinimalEObjectImpl.Container implements 
 			case ScenarioPackage.INITIALIZATION__VARIABLE:
 				setVariable((Variable)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -294,8 +302,9 @@ public class InitializationImpl extends MinimalEObjectImpl.Container implements 
 				return getScenarioDef() != null;
 			case ScenarioPackage.INITIALIZATION__VARIABLE:
 				return variable != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
     /**

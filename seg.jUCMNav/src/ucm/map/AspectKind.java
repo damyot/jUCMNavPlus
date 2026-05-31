@@ -221,8 +221,8 @@ public final class AspectKind extends AbstractEnumerator {
 			case ENTRANCE: return ENTRANCE_LITERAL;
 			case EXIT: return EXIT_LITERAL;
 			case CONDITIONAL: return CONDITIONAL_LITERAL;
+			default: return null;
 		}
-		return null;
 	}
 
     /**

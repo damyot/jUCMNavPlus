@@ -144,8 +144,9 @@ public class KPINewEvalValueImpl extends MinimalEObjectImpl.Container implements
 				if (eInternalContainer() != null)
 					msgs = eBasicRemoveFromContainer(msgs);
 				return basicSetEval((Evaluation)otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -157,8 +158,9 @@ public class KPINewEvalValueImpl extends MinimalEObjectImpl.Container implements
 		switch (featureID) {
 			case KpimodelPackage.KPI_NEW_EVAL_VALUE__EVAL:
 				return basicSetEval(null, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -170,8 +172,9 @@ public class KPINewEvalValueImpl extends MinimalEObjectImpl.Container implements
 		switch (eContainerFeatureID()) {
 			case KpimodelPackage.KPI_NEW_EVAL_VALUE__EVAL:
 				return eInternalContainer().eInverseRemove(this, GrlPackage.EVALUATION__KPI_NEW_EVAL_VALUE, Evaluation.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
 	/**
@@ -185,8 +188,9 @@ public class KPINewEvalValueImpl extends MinimalEObjectImpl.Container implements
 				return new Double(getEvaluationValue());
 			case KpimodelPackage.KPI_NEW_EVAL_VALUE__EVAL:
 				return getEval();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -202,8 +206,10 @@ public class KPINewEvalValueImpl extends MinimalEObjectImpl.Container implements
 			case KpimodelPackage.KPI_NEW_EVAL_VALUE__EVAL:
 				setEval((Evaluation)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -219,8 +225,10 @@ public class KPINewEvalValueImpl extends MinimalEObjectImpl.Container implements
 			case KpimodelPackage.KPI_NEW_EVAL_VALUE__EVAL:
 				setEval((Evaluation)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -234,8 +242,9 @@ public class KPINewEvalValueImpl extends MinimalEObjectImpl.Container implements
 				return evaluationValue != EVALUATION_VALUE_EDEFAULT;
 			case KpimodelPackage.KPI_NEW_EVAL_VALUE__EVAL:
 				return getEval() != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 	/**

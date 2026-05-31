@@ -757,8 +757,9 @@ public class ComponentRefImpl extends UCMmodelElementImpl implements ComponentRe
 				return ((InternalEList)getParentBindings()).basicAdd(otherEnd, msgs);
 			case MapPackage.COMPONENT_REF__PLUGIN_BINDINGS:
 				return ((InternalEList)getPluginBindings()).basicAdd(otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -784,8 +785,9 @@ public class ComponentRefImpl extends UCMmodelElementImpl implements ComponentRe
 				return ((InternalEList)getParentBindings()).basicRemove(otherEnd, msgs);
 			case MapPackage.COMPONENT_REF__PLUGIN_BINDINGS:
 				return ((InternalEList)getPluginBindings()).basicRemove(otherEnd, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -797,8 +799,9 @@ public class ComponentRefImpl extends UCMmodelElementImpl implements ComponentRe
 		switch (eContainerFeatureID()) {
 			case MapPackage.COMPONENT_REF__DIAGRAM:
 				return eInternalContainer().eInverseRemove(this, UrncorePackage.IURN_DIAGRAM__CONT_REFS, IURNDiagram.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
     /**
@@ -842,8 +845,9 @@ public class ComponentRefImpl extends UCMmodelElementImpl implements ComponentRe
 				return getParentBindings();
 			case MapPackage.COMPONENT_REF__PLUGIN_BINDINGS:
 				return getPluginBindings();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -905,8 +909,10 @@ public class ComponentRefImpl extends UCMmodelElementImpl implements ComponentRe
 				getPluginBindings().clear();
 				getPluginBindings().addAll((Collection)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -964,8 +970,10 @@ public class ComponentRefImpl extends UCMmodelElementImpl implements ComponentRe
 			case MapPackage.COMPONENT_REF__PLUGIN_BINDINGS:
 				getPluginBindings().clear();
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -1007,8 +1015,9 @@ public class ComponentRefImpl extends UCMmodelElementImpl implements ComponentRe
 				return parentBindings != null && !parentBindings.isEmpty();
 			case MapPackage.COMPONENT_REF__PLUGIN_BINDINGS:
 				return pluginBindings != null && !pluginBindings.isEmpty();
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
     /**

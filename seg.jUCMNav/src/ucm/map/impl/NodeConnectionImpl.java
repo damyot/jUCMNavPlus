@@ -561,8 +561,9 @@ public class NodeConnectionImpl extends MinimalEObjectImpl.Container implements 
 				return ((InternalEList)getOutBindingsPlugin()).basicAdd(otherEnd, msgs);
 			case MapPackage.NODE_CONNECTION__IN_BINDINGS_PLUGIN:
 				return ((InternalEList)getInBindingsPlugin()).basicAdd(otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -590,8 +591,9 @@ public class NodeConnectionImpl extends MinimalEObjectImpl.Container implements 
 				return ((InternalEList)getOutBindingsPlugin()).basicRemove(otherEnd, msgs);
 			case MapPackage.NODE_CONNECTION__IN_BINDINGS_PLUGIN:
 				return ((InternalEList)getInBindingsPlugin()).basicRemove(otherEnd, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -603,8 +605,9 @@ public class NodeConnectionImpl extends MinimalEObjectImpl.Container implements 
 		switch (eContainerFeatureID()) {
 			case MapPackage.NODE_CONNECTION__DIAGRAM:
 				return eInternalContainer().eInverseRemove(this, UrncorePackage.IURN_DIAGRAM__CONNECTIONS, IURNDiagram.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
     /**
@@ -638,8 +641,9 @@ public class NodeConnectionImpl extends MinimalEObjectImpl.Container implements 
 				return getOutBindingsPlugin();
 			case MapPackage.NODE_CONNECTION__IN_BINDINGS_PLUGIN:
 				return getInBindingsPlugin();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -686,8 +690,10 @@ public class NodeConnectionImpl extends MinimalEObjectImpl.Container implements 
 				getInBindingsPlugin().clear();
 				getInBindingsPlugin().addAll((Collection)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -730,8 +736,10 @@ public class NodeConnectionImpl extends MinimalEObjectImpl.Container implements 
 			case MapPackage.NODE_CONNECTION__IN_BINDINGS_PLUGIN:
 				getInBindingsPlugin().clear();
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -763,8 +771,9 @@ public class NodeConnectionImpl extends MinimalEObjectImpl.Container implements 
 				return outBindingsPlugin != null && !outBindingsPlugin.isEmpty();
 			case MapPackage.NODE_CONNECTION__IN_BINDINGS_PLUGIN:
 				return inBindingsPlugin != null && !inBindingsPlugin.isEmpty();
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
     /**

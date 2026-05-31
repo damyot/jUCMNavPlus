@@ -130,8 +130,9 @@ public class KPIInformationElementRefImpl extends GRLNodeImpl implements KPIInfo
 				if (def != null)
 					msgs = ((InternalEObject)def).eInverseRemove(this, KpimodelPackage.KPI_INFORMATION_ELEMENT__REFS, KPIInformationElement.class, msgs);
 				return basicSetDef((KPIInformationElement)otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -143,8 +144,9 @@ public class KPIInformationElementRefImpl extends GRLNodeImpl implements KPIInfo
 		switch (featureID) {
 			case KpimodelPackage.KPI_INFORMATION_ELEMENT_REF__DEF:
 				return basicSetDef(null, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -157,8 +159,9 @@ public class KPIInformationElementRefImpl extends GRLNodeImpl implements KPIInfo
 			case KpimodelPackage.KPI_INFORMATION_ELEMENT_REF__DEF:
 				if (resolve) return getDef();
 				return basicGetDef();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -171,8 +174,10 @@ public class KPIInformationElementRefImpl extends GRLNodeImpl implements KPIInfo
 			case KpimodelPackage.KPI_INFORMATION_ELEMENT_REF__DEF:
 				setDef((KPIInformationElement)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -185,8 +190,10 @@ public class KPIInformationElementRefImpl extends GRLNodeImpl implements KPIInfo
 			case KpimodelPackage.KPI_INFORMATION_ELEMENT_REF__DEF:
 				setDef((KPIInformationElement)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -198,8 +205,9 @@ public class KPIInformationElementRefImpl extends GRLNodeImpl implements KPIInfo
 		switch (featureID) {
 			case KpimodelPackage.KPI_INFORMATION_ELEMENT_REF__DEF:
 				return def != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //KPIInformationElementRefImpl

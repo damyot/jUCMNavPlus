@@ -14,12 +14,12 @@ package ucmscenarios;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link ucmscenarios.SequenceElement#getParentScenario <em>Parent Scenario</em>}</li>
  *   <li>{@link ucmscenarios.SequenceElement#getSequence <em>Sequence</em>}</li>
  *   <li>{@link ucmscenarios.SequenceElement#getInstance <em>Instance</em>}</li>
  * </ul>
- * </p>
  *
  * @see ucmscenarios.UcmscenariosPackage#getSequenceElement()
  * @model

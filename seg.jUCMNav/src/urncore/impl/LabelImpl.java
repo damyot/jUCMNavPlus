@@ -139,8 +139,9 @@ public abstract class LabelImpl extends MinimalEObjectImpl.Container implements 
 				return new Integer(getDeltaX());
 			case UrncorePackage.LABEL__DELTA_Y:
 				return new Integer(getDeltaY());
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -156,8 +157,10 @@ public abstract class LabelImpl extends MinimalEObjectImpl.Container implements 
 			case UrncorePackage.LABEL__DELTA_Y:
 				setDeltaY(((Integer)newValue).intValue());
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -173,8 +176,10 @@ public abstract class LabelImpl extends MinimalEObjectImpl.Container implements 
 			case UrncorePackage.LABEL__DELTA_Y:
 				setDeltaY(DELTA_Y_EDEFAULT);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -188,8 +193,9 @@ public abstract class LabelImpl extends MinimalEObjectImpl.Container implements 
 				return deltaX != DELTA_X_EDEFAULT;
 			case UrncorePackage.LABEL__DELTA_Y:
 				return deltaY != DELTA_Y_EDEFAULT;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
     /**

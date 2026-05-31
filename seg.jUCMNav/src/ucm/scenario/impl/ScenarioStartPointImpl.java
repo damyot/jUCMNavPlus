@@ -220,8 +220,9 @@ public class ScenarioStartPointImpl extends MinimalEObjectImpl.Container impleme
 				if (startPoint != null)
 					msgs = ((InternalEObject)startPoint).eInverseRemove(this, MapPackage.START_POINT__SCENARIO_START_POINTS, StartPoint.class, msgs);
 				return basicSetStartPoint((StartPoint)otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -235,8 +236,9 @@ public class ScenarioStartPointImpl extends MinimalEObjectImpl.Container impleme
 				return basicSetScenarioDef(null, msgs);
 			case ScenarioPackage.SCENARIO_START_POINT__START_POINT:
 				return basicSetStartPoint(null, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -248,8 +250,9 @@ public class ScenarioStartPointImpl extends MinimalEObjectImpl.Container impleme
 		switch (eContainerFeatureID()) {
 			case ScenarioPackage.SCENARIO_START_POINT__SCENARIO_DEF:
 				return eInternalContainer().eInverseRemove(this, ScenarioPackage.SCENARIO_DEF__START_POINTS, ScenarioDef.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
     /**
@@ -266,8 +269,9 @@ public class ScenarioStartPointImpl extends MinimalEObjectImpl.Container impleme
 			case ScenarioPackage.SCENARIO_START_POINT__START_POINT:
 				if (resolve) return getStartPoint();
 				return basicGetStartPoint();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -286,8 +290,10 @@ public class ScenarioStartPointImpl extends MinimalEObjectImpl.Container impleme
 			case ScenarioPackage.SCENARIO_START_POINT__START_POINT:
 				setStartPoint((StartPoint)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -306,8 +312,10 @@ public class ScenarioStartPointImpl extends MinimalEObjectImpl.Container impleme
 			case ScenarioPackage.SCENARIO_START_POINT__START_POINT:
 				setStartPoint((StartPoint)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -323,8 +331,9 @@ public class ScenarioStartPointImpl extends MinimalEObjectImpl.Container impleme
 				return getScenarioDef() != null;
 			case ScenarioPackage.SCENARIO_START_POINT__START_POINT:
 				return startPoint != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
     /**

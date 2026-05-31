@@ -237,8 +237,9 @@ public class ContributionImpl extends ElementLinkImpl implements Contribution {
 			case GrlPackage.CONTRIBUTION__CORE_CONTRIBUTION:
 				if (resolve) return getCoreContribution();
 				return basicGetCoreContribution();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -260,8 +261,10 @@ public class ContributionImpl extends ElementLinkImpl implements Contribution {
 			case GrlPackage.CONTRIBUTION__CORE_CONTRIBUTION:
 				setCoreContribution((COREContribution)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -283,8 +286,10 @@ public class ContributionImpl extends ElementLinkImpl implements Contribution {
 			case GrlPackage.CONTRIBUTION__CORE_CONTRIBUTION:
 				setCoreContribution((COREContribution)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -302,8 +307,9 @@ public class ContributionImpl extends ElementLinkImpl implements Contribution {
 				return correlation != CORRELATION_EDEFAULT;
 			case GrlPackage.CONTRIBUTION__CORE_CONTRIBUTION:
 				return coreContribution != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
     /**

@@ -130,8 +130,9 @@ public class PassiveResourceImpl extends GeneralResourceImpl implements PassiveR
 				if (component != null)
 					msgs = ((InternalEObject)component).eInverseRemove(this, UrncorePackage.COMPONENT__RESOURCE, Component.class, msgs);
 				return basicSetComponent((Component)otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -143,8 +144,9 @@ public class PassiveResourceImpl extends GeneralResourceImpl implements PassiveR
 		switch (featureID) {
 			case PerformancePackage.PASSIVE_RESOURCE__COMPONENT:
 				return basicSetComponent(null, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -157,8 +159,9 @@ public class PassiveResourceImpl extends GeneralResourceImpl implements PassiveR
 			case PerformancePackage.PASSIVE_RESOURCE__COMPONENT:
 				if (resolve) return getComponent();
 				return basicGetComponent();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -171,8 +174,10 @@ public class PassiveResourceImpl extends GeneralResourceImpl implements PassiveR
 			case PerformancePackage.PASSIVE_RESOURCE__COMPONENT:
 				setComponent((Component)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -185,8 +190,10 @@ public class PassiveResourceImpl extends GeneralResourceImpl implements PassiveR
 			case PerformancePackage.PASSIVE_RESOURCE__COMPONENT:
 				setComponent((Component)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -198,8 +205,9 @@ public class PassiveResourceImpl extends GeneralResourceImpl implements PassiveR
 		switch (featureID) {
 			case PerformancePackage.PASSIVE_RESOURCE__COMPONENT:
 				return component != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //PassiveResourceImpl

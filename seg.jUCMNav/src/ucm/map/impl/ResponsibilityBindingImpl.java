@@ -254,8 +254,9 @@ public class ResponsibilityBindingImpl extends MinimalEObjectImpl.Container impl
 				if (parentResp != null)
 					msgs = ((InternalEObject)parentResp).eInverseRemove(this, UrncorePackage.RESPONSIBILITY__PARENT_BINDINGS, Responsibility.class, msgs);
 				return basicSetParentResp((Responsibility)otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -271,8 +272,9 @@ public class ResponsibilityBindingImpl extends MinimalEObjectImpl.Container impl
 				return basicSetPluginResp(null, msgs);
 			case MapPackage.RESPONSIBILITY_BINDING__PARENT_RESP:
 				return basicSetParentResp(null, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -284,8 +286,9 @@ public class ResponsibilityBindingImpl extends MinimalEObjectImpl.Container impl
 		switch (eContainerFeatureID()) {
 			case MapPackage.RESPONSIBILITY_BINDING__BINDING:
 				return eInternalContainer().eInverseRemove(this, MapPackage.PLUGIN_BINDING__RESPONSIBILITIES, PluginBinding.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
     /**
@@ -303,8 +306,9 @@ public class ResponsibilityBindingImpl extends MinimalEObjectImpl.Container impl
 			case MapPackage.RESPONSIBILITY_BINDING__PARENT_RESP:
 				if (resolve) return getParentResp();
 				return basicGetParentResp();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -323,8 +327,10 @@ public class ResponsibilityBindingImpl extends MinimalEObjectImpl.Container impl
 			case MapPackage.RESPONSIBILITY_BINDING__PARENT_RESP:
 				setParentResp((Responsibility)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -343,8 +349,10 @@ public class ResponsibilityBindingImpl extends MinimalEObjectImpl.Container impl
 			case MapPackage.RESPONSIBILITY_BINDING__PARENT_RESP:
 				setParentResp((Responsibility)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -360,8 +368,9 @@ public class ResponsibilityBindingImpl extends MinimalEObjectImpl.Container impl
 				return pluginResp != null;
 			case MapPackage.RESPONSIBILITY_BINDING__PARENT_RESP:
 				return parentResp != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //ResponsibilityBindingImpl

@@ -245,8 +245,9 @@ public class RespRefImpl extends PathNodeImpl implements RespRef {
 				return basicSetRespDef((Responsibility)otherEnd, msgs);
 			case MapPackage.RESP_REF__PLUGIN_BINDINGS:
 				return ((InternalEList)getPluginBindings()).basicAdd(otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -260,8 +261,9 @@ public class RespRefImpl extends PathNodeImpl implements RespRef {
 				return basicSetRespDef(null, msgs);
 			case MapPackage.RESP_REF__PLUGIN_BINDINGS:
 				return ((InternalEList)getPluginBindings()).basicRemove(otherEnd, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -280,8 +282,9 @@ public class RespRefImpl extends PathNodeImpl implements RespRef {
 				return basicGetRespDef();
 			case MapPackage.RESP_REF__PLUGIN_BINDINGS:
 				return getPluginBindings();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -304,8 +307,10 @@ public class RespRefImpl extends PathNodeImpl implements RespRef {
 				getPluginBindings().clear();
 				getPluginBindings().addAll((Collection)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -327,8 +332,10 @@ public class RespRefImpl extends PathNodeImpl implements RespRef {
 			case MapPackage.RESP_REF__PLUGIN_BINDINGS:
 				getPluginBindings().clear();
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -346,8 +353,9 @@ public class RespRefImpl extends PathNodeImpl implements RespRef {
 				return respDef != null;
 			case MapPackage.RESP_REF__PLUGIN_BINDINGS:
 				return pluginBindings != null && !pluginBindings.isEmpty();
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
     /**

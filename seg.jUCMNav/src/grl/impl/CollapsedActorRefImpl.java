@@ -129,8 +129,9 @@ public class CollapsedActorRefImpl extends GRLNodeImpl implements CollapsedActor
 				if (actor != null)
 					msgs = ((InternalEObject)actor).eInverseRemove(this, GrlPackage.ACTOR__COLLAPSED_REFS, Actor.class, msgs);
 				return basicSetActor((Actor)otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -142,8 +143,9 @@ public class CollapsedActorRefImpl extends GRLNodeImpl implements CollapsedActor
 		switch (featureID) {
 			case GrlPackage.COLLAPSED_ACTOR_REF__ACTOR:
 				return basicSetActor(null, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -156,8 +158,9 @@ public class CollapsedActorRefImpl extends GRLNodeImpl implements CollapsedActor
 			case GrlPackage.COLLAPSED_ACTOR_REF__ACTOR:
 				if (resolve) return getActor();
 				return basicGetActor();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -170,8 +173,10 @@ public class CollapsedActorRefImpl extends GRLNodeImpl implements CollapsedActor
 			case GrlPackage.COLLAPSED_ACTOR_REF__ACTOR:
 				setActor((Actor)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -184,8 +189,10 @@ public class CollapsedActorRefImpl extends GRLNodeImpl implements CollapsedActor
 			case GrlPackage.COLLAPSED_ACTOR_REF__ACTOR:
 				setActor((Actor)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -197,8 +204,9 @@ public class CollapsedActorRefImpl extends GRLNodeImpl implements CollapsedActor
 		switch (featureID) {
 			case GrlPackage.COLLAPSED_ACTOR_REF__ACTOR:
 				return actor != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //CollapsedActorRefImpl

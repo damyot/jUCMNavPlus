@@ -104,8 +104,9 @@ public class ReuseLinkImpl extends ContributionImpl implements ReuseLink {
 			case FmPackage.REUSE_LINK__REUSE_LINK_IN_FM:
 				if (resolve) return getReuseLinkInFM();
 				return basicGetReuseLinkInFM();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -118,8 +119,10 @@ public class ReuseLinkImpl extends ContributionImpl implements ReuseLink {
 			case FmPackage.REUSE_LINK__REUSE_LINK_IN_FM:
 				setReuseLinkInFM((ReuseLink)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -132,8 +135,10 @@ public class ReuseLinkImpl extends ContributionImpl implements ReuseLink {
 			case FmPackage.REUSE_LINK__REUSE_LINK_IN_FM:
 				setReuseLinkInFM((ReuseLink)null);
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
 	/**
@@ -145,8 +150,9 @@ public class ReuseLinkImpl extends ContributionImpl implements ReuseLink {
 		switch (featureID) {
 			case FmPackage.REUSE_LINK__REUSE_LINK_IN_FM:
 				return reuseLinkInFM != null;
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //ReuseLinkImpl

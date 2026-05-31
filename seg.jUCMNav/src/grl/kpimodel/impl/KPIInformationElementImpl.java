@@ -161,8 +161,9 @@ public class KPIInformationElementImpl extends GRLmodelElementImpl implements KP
 				return basicSetGrlspec((GRLspec)otherEnd, msgs);
 			case KpimodelPackage.KPI_INFORMATION_ELEMENT__KPI_MODEL_LINKS_SRC:
 				return ((InternalEList)getKpiModelLinksSrc()).basicAdd(otherEnd, msgs);
+			default:
+				return super.eInverseAdd(otherEnd, featureID, msgs);
 		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -178,8 +179,9 @@ public class KPIInformationElementImpl extends GRLmodelElementImpl implements KP
 				return basicSetGrlspec(null, msgs);
 			case KpimodelPackage.KPI_INFORMATION_ELEMENT__KPI_MODEL_LINKS_SRC:
 				return ((InternalEList)getKpiModelLinksSrc()).basicRemove(otherEnd, msgs);
+			default:
+				return super.eInverseRemove(otherEnd, featureID, msgs);
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
     /**
@@ -191,8 +193,9 @@ public class KPIInformationElementImpl extends GRLmodelElementImpl implements KP
 		switch (eContainerFeatureID()) {
 			case KpimodelPackage.KPI_INFORMATION_ELEMENT__GRLSPEC:
 				return eInternalContainer().eInverseRemove(this, GrlPackage.GR_LSPEC__KPI_INFORMATION_ELEMENTS, GRLspec.class, msgs);
+			default:
+				return super.eBasicRemoveFromContainerFeature(msgs);
 		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
     /**
@@ -208,8 +211,9 @@ public class KPIInformationElementImpl extends GRLmodelElementImpl implements KP
 				return getGrlspec();
 			case KpimodelPackage.KPI_INFORMATION_ELEMENT__KPI_MODEL_LINKS_SRC:
 				return getKpiModelLinksSrc();
+			default:
+				return super.eGet(featureID, resolve, coreType);
 		}
-		return super.eGet(featureID, resolve, coreType);
 	}
 
     /**
@@ -230,8 +234,10 @@ public class KPIInformationElementImpl extends GRLmodelElementImpl implements KP
 				getKpiModelLinksSrc().clear();
 				getKpiModelLinksSrc().addAll((Collection)newValue);
 				return;
+			default:
+				super.eSet(featureID, newValue);
+				return;
 		}
-		super.eSet(featureID, newValue);
 	}
 
     /**
@@ -250,8 +256,10 @@ public class KPIInformationElementImpl extends GRLmodelElementImpl implements KP
 			case KpimodelPackage.KPI_INFORMATION_ELEMENT__KPI_MODEL_LINKS_SRC:
 				getKpiModelLinksSrc().clear();
 				return;
+			default:
+				super.eUnset(featureID);
+				return;
 		}
-		super.eUnset(featureID);
 	}
 
     /**
@@ -267,8 +275,9 @@ public class KPIInformationElementImpl extends GRLmodelElementImpl implements KP
 				return getGrlspec() != null;
 			case KpimodelPackage.KPI_INFORMATION_ELEMENT__KPI_MODEL_LINKS_SRC:
 				return kpiModelLinksSrc != null && !kpiModelLinksSrc.isEmpty();
+			default:
+				return super.eIsSet(featureID);
 		}
-		return super.eIsSet(featureID);
 	}
 
 } //KPIInformationElementImpl

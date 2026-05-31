@@ -774,6 +774,8 @@ public class EvaluationStrategyManager {
     }
 
     protected synchronized HashMap getRecursiveKPIInformationConfig(EvaluationStrategy strategy, HashMap<KPIInformationElement, KPIInformationConfig> v) {
+        if (strategy == null)
+            return v;
         for (Iterator iterator = strategy.getIncludedStrategies().iterator(); iterator.hasNext();) {
             EvaluationStrategy ev = (EvaluationStrategy) iterator.next();
             getRecursiveKPIInformationConfig(ev, v);
@@ -2042,6 +2044,8 @@ public class EvaluationStrategyManager {
     protected synchronized void getRecursiveKPIEvalValueSetList(EvaluationStrategy strategy, Vector<KPIEvalValueSet> list) {
         if (list == null)
             throw new NullPointerException();
+        if (strategy == null)
+            return;
         for (Iterator iterator = strategy.getEvaluations().iterator(); iterator.hasNext();) {
             Evaluation ev = (Evaluation) iterator.next();
             if (ev.getKpiEvalValueSet() != null) {
@@ -2061,6 +2065,10 @@ public class EvaluationStrategyManager {
      * @return
      */
     protected synchronized KPIEvalValueSet getRecursiveKPIEvalValueSet(IntentionalElement elem, EvaluationStrategy strategy) {
+        // Close-time refresh paths (StrategiesView.partClosed -> setStrategy(null)) reach here with a null strategy;
+        // the old code NPE'd on getEvaluations().
+        if (strategy == null)
+            return null;
         for (Iterator iterator = strategy.getEvaluations().iterator(); iterator.hasNext();) {
             Evaluation ev = (Evaluation) iterator.next();
             if (ev.getKpiEvalValueSet() != null && ev.getIntElement() == elem)
@@ -2080,6 +2088,8 @@ public class EvaluationStrategyManager {
      * @return
      */
     protected synchronized KPINewEvalValue getRecursiveKPINewEvalValue(IntentionalElement elem, EvaluationStrategy strategy) {
+        if (strategy == null)
+            return null;
         for (Iterator iterator = strategy.getEvaluations().iterator(); iterator.hasNext();) {
             Evaluation ev = (Evaluation) iterator.next();
             if (ev.getKpiNewEvalValue() != null && ev.getIntElement() == elem)

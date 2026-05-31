@@ -3,7 +3,6 @@ package seg.jUCMNav.actions.cutcopypaste;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.LayeredPane;
 import org.eclipse.draw2d.SWTGraphics;
-import org.eclipse.draw2d.ScalableLayeredPane;
 import org.eclipse.gef.internal.GEFMessages;
 import org.eclipse.gef.ui.actions.SelectionAction;
 import org.eclipse.swt.SWT;
@@ -64,33 +63,24 @@ public class CopyAction extends SelectionAction {
                 Image image = new Image(Display.getDefault(), w, h);
                 GC gc = null;
                 SWTGraphics graphics = null;
-                // At zoom exactly 1.0, ScalableFreeformLayeredPane.paintClientArea takes the
-                // `if (scale == 1.0)` fast path and skips its internal ScaledGraphics wrap.
-                // Children then paint straight through SWTGraphics.fillPolygon, which on an
-                // off-screen GC drops every UCM antialiased polygon fill (stubs, endpoints,
-                // forks/joins, direction arrows). At any other zoom the pane allocates its own
-                // ScaledGraphics, which routes polygon draws via gc.fillPath and renders fine.
-                // Nudge the pane's scale by 1e-4 -- imperceptible on a multi-hundred-pixel
-                // diagram -- so the working branch is taken, then restore the original scale.
-                // Only applied when scale is exactly 1.0; non-identity zooms already work.
-                final ScalableLayeredPane scalablePane = (pane instanceof ScalableLayeredPane)
-                        ? (ScalableLayeredPane) pane : null;
-                final double originalScale = scalablePane != null ? scalablePane.getScale() : 1.0;
-                final boolean needsNudge = scalablePane != null && originalScale == 1.0;
                 try {
                     gc = new GC(image);
+                    // Force GDI+ on Windows so antialiased Polygon/Polyline fills (used by every
+                    // UCM PathNode -- stubs, endpoints, forks/joins, direction arrows, the actor
+                    // stickman) actually render off-screen. Without this, SWTGraphics calls
+                    // gc.setAntialias(SWT.ON) on a non-advanced GC and the subsequent
+                    // fillPolygon/drawPolygon silently no-op, so those shapes vanish from the
+                    // bitmap while GrlNodeFigure's plain rectangle/ellipse Shape paths still work.
                     gc.setAdvanced(true);
                     gc.setAntialias(SWT.ON);
                     gc.setTextAntialias(SWT.ON);
                     graphics = new SWTGraphics(gc);
                     graphics.translate(-pane.getBounds().x, -pane.getBounds().y);
-                    if (needsNudge) scalablePane.setScale(1.0001);
                     figure.paint(graphics);
 
                     // TODO: Improve crop to make use of current selection.
                     screenshot = ReportUtils.cropImage(image.getImageData());
                 } finally {
-                    if (needsNudge && scalablePane != null) scalablePane.setScale(originalScale);
                     if (graphics != null) graphics.dispose();
                     if (gc != null) gc.dispose();
                     image.dispose();

@@ -3,7 +3,12 @@ package seg.jUCMNav.views.elements;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -23,11 +28,31 @@ import seg.jUCMNav.views.compositeList.CompositeListItem;
  */
 public class ElementListItem extends CompositeListItem {
 
+    private static final String DESC_FONT_KEY = "seg.jUCMNav.views.elements.ElementListItem.descFont"; //$NON-NLS-1$
+    private static final String NAME_FONT_KEY = "seg.jUCMNav.views.elements.ElementListItem.nameFont"; //$NON-NLS-1$
+
     private Label lblDesc = null;
 
     private Composite composite = null;
     private Label lblIcon = null;
     private Label lblName = null;
+
+    // Tracked so the per-item Image allocated for the icon is disposed when the widget itself is disposed.
+    private Image currentIconImage = null;
+
+    private static Font getCachedFont(String key, int style) {
+        if (!JFaceResources.getFontRegistry().hasValueFor(key)) {
+            JFaceResources.getFontRegistry().put(key, new FontData[] { new FontData("Tahoma", 8, style) }); //$NON-NLS-1$
+        }
+        return JFaceResources.getFontRegistry().get(key);
+    }
+
+    private void replaceIconImage(Image next) {
+        if (currentIconImage != null && !currentIconImage.isDisposed())
+            currentIconImage.dispose();
+        currentIconImage = next;
+        lblIcon.setImage(next);
+    }
 
     /**
      * @param parent
@@ -53,7 +78,7 @@ public class ElementListItem extends CompositeListItem {
         lblDesc = new Label(this, SWT.WRAP);
         lblDesc.setLayoutData(data);
         lblDesc.setText(""); //$NON-NLS-1$
-        lblDesc.setFont(new org.eclipse.swt.graphics.Font(org.eclipse.swt.widgets.Display.getDefault(), "Tahoma", 8, org.eclipse.swt.SWT.ITALIC)); //$NON-NLS-1$
+        lblDesc.setFont(getCachedFont(DESC_FONT_KEY, SWT.ITALIC));
         lblDesc.setBackground(org.eclipse.swt.widgets.Display.getDefault().getSystemColor(org.eclipse.swt.SWT.COLOR_WHITE));
         this.setBackground(org.eclipse.swt.widgets.Display.getDefault().getSystemColor(org.eclipse.swt.SWT.COLOR_WHITE));
         layout.marginWidth = 3;
@@ -123,7 +148,7 @@ public class ElementListItem extends CompositeListItem {
      */
     public void setElementImg(String path) {
         InputStream stream = ElementListItem.class.getResourceAsStream(path);
-        lblIcon.setImage(new Image(Display.getCurrent(), stream));
+        replaceIconImage(new Image(Display.getCurrent(), stream));
         lblIcon.setBackground(ColorManager.WHITE);
         try {
             stream.close();
@@ -146,16 +171,23 @@ public class ElementListItem extends CompositeListItem {
         lblName.setBackground(org.eclipse.swt.widgets.Display.getDefault().getSystemColor(org.eclipse.swt.SWT.COLOR_WHITE));
         lblIcon.setText(""); //$NON-NLS-1$
         InputStream stream = getClass().getResourceAsStream("/seg/jUCMNav/icons/Resp16.gif");//$NON-NLS-1$
-        lblIcon.setImage(new Image(Display.getCurrent(), stream));
+        replaceIconImage(new Image(Display.getCurrent(), stream));
         try {
             stream.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+        addDisposeListener(new DisposeListener() {
+            public void widgetDisposed(DisposeEvent e) {
+                if (currentIconImage != null && !currentIconImage.isDisposed())
+                    currentIconImage.dispose();
+            }
+        });
+
         lblName.setText(""); //$NON-NLS-1$
         lblName.setLayoutData(gridData3);
-        lblName.setFont(new org.eclipse.swt.graphics.Font(org.eclipse.swt.widgets.Display.getDefault(), "Tahoma", 8, org.eclipse.swt.SWT.BOLD)); //$NON-NLS-1$
+        lblName.setFont(getCachedFont(NAME_FONT_KEY, SWT.BOLD));
         composite.setBackground(org.eclipse.swt.widgets.Display.getDefault().getSystemColor(org.eclipse.swt.SWT.COLOR_WHITE));
         composite.setLayoutData(gridData1);
         composite.setLayout(gridLayout2);

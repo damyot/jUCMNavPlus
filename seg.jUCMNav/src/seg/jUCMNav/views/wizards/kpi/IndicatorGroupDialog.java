@@ -11,9 +11,11 @@ import java.util.Set;
 
 import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.gef.commands.CompoundCommand;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Button;
@@ -35,6 +37,16 @@ import seg.jUCMNav.model.util.URNElementFinder;
  * @author pchen
  */
 public class IndicatorGroupDialog {
+    private static final String LABEL_FONT_KEY = "seg.jUCMNav.views.wizards.kpi.IndicatorGroupDialog.labelFont"; //$NON-NLS-1$
+
+    private static Font getLabelFont() {
+        if (!JFaceResources.getFontRegistry().hasValueFor(LABEL_FONT_KEY)) {
+            JFaceResources.getFontRegistry().put(LABEL_FONT_KEY,
+                    new FontData[] { new FontData("Tahoma", 8, SWT.BOLD) }); //$NON-NLS-1$
+        }
+        return JFaceResources.getFontRegistry().get(LABEL_FONT_KEY);
+    }
+
     private Shell shell = null;
     private Group group = null;
     private CLabel lblName = null;
@@ -176,14 +188,14 @@ public class IndicatorGroupDialog {
         group.setBounds(new org.eclipse.swt.graphics.Rectangle(3, 2, 419, 75));
         lblName = new CLabel(group, SWT.NONE);
         lblName.setText(Messages.getString("IndicatorGroupDialog.name")); //$NON-NLS-1$
-        lblName.setFont(new Font(Display.getDefault(), "Tahoma", 8, SWT.BOLD)); //$NON-NLS-1$
+        lblName.setFont(getLabelFont()); //$NON-NLS-1$
         lblName.setBounds(new Rectangle(8, 15, 44, 22));
         lblId = new CLabel(group, SWT.NONE);
         lblId.setText(Messages.getString("IndicatorGroupDialog.id")); //$NON-NLS-1$
-        lblId.setFont(new Font(Display.getDefault(), "Tahoma", 8, SWT.BOLD)); //$NON-NLS-1$
+        lblId.setFont(getLabelFont()); //$NON-NLS-1$
         lblId.setBounds(new Rectangle(263, 17, 37, 19));
         lblDescription = new CLabel(group, SWT.NONE);
-        lblDescription.setFont(new Font(Display.getDefault(), "Tahoma", 8, SWT.BOLD)); //$NON-NLS-1$
+        lblDescription.setFont(getLabelFont()); //$NON-NLS-1$
         lblDescription.setLocation(new org.eclipse.swt.graphics.Point(8, 41));
         lblDescription.setText(Messages.getString("IndicatorGroupDialog.description")); //$NON-NLS-1$
         lblDescription.setSize(new org.eclipse.swt.graphics.Point(80, 22));

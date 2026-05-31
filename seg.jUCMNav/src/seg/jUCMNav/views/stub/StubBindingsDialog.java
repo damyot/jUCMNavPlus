@@ -13,6 +13,7 @@ import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
@@ -109,6 +110,15 @@ import urncore.Responsibility;
  * @author Etienne Tremblay
  */
 public class StubBindingsDialog extends Dialog implements Adapter {
+    private static final String BOLD_LABEL_FONT_KEY = "seg.jUCMNav.views.stub.StubBindingsDialog.boldLabelFont"; //$NON-NLS-1$
+
+    private static Font getBoldLabelFont() {
+        if (!JFaceResources.getFontRegistry().hasValueFor(BOLD_LABEL_FONT_KEY)) {
+            JFaceResources.getFontRegistry().put(BOLD_LABEL_FONT_KEY,
+                    new FontData[] { new FontData("", 8, SWT.BOLD) }); //$NON-NLS-1$
+        }
+        return JFaceResources.getFontRegistry().get(BOLD_LABEL_FONT_KEY);
+    }
     // The toolkit for eclipse forms
     private FormToolkit toolkit;
     // The main form where all the controls will be
@@ -230,7 +240,7 @@ public class StubBindingsDialog extends Dialog implements Adapter {
 
     protected Control createDialogArea(Composite parent) {
         Composite area = (Composite) super.createDialogArea(parent);
-        area.setBackground(new Color(null, 255, 255, 255));
+        area.setBackground(ColorManager.WHITE);
         GridLayout l = (GridLayout) area.getLayout();
         l.marginWidth = 0;
         l.marginHeight = 0;
@@ -351,13 +361,13 @@ public class StubBindingsDialog extends Dialog implements Adapter {
         t.grabExcessHorizontalSpace = false;
         lb.setLayoutData(t);
         lb = toolkit.createLabel(lb1, Messages.getString("StubBindingsDialog.pluginTree")); //$NON-NLS-1$
-        lb.setFont(new Font(null, new FontData("", 8, SWT.BOLD))); //$NON-NLS-1$
+        lb.setFont(getBoldLabelFont()); //$NON-NLS-1$
         t = new GridData(GridData.FILL_HORIZONTAL);
         t.grabExcessHorizontalSpace = false;
         lb.setLayoutData(t);
 
         ToolBar toolBar = new ToolBar(lb1, SWT.FLAT | SWT.RIGHT);
-        toolBar.setBackground(new Color(null, 255, 255, 255));
+        toolBar.setBackground(ColorManager.WHITE);
 
         d = new GridData(GridData.FILL_BOTH);
         d.grabExcessHorizontalSpace = true;
@@ -421,7 +431,7 @@ public class StubBindingsDialog extends Dialog implements Adapter {
         t.grabExcessHorizontalSpace = false;
         lb.setLayoutData(t);
         lb = toolkit.createLabel(lb2, Messages.getString("StubBindingsDialog.addBindingsFor")); //$NON-NLS-1$
-        lb.setFont(new Font(null, new FontData("", 8, SWT.BOLD))); //$NON-NLS-1$
+        lb.setFont(getBoldLabelFont()); //$NON-NLS-1$
         t = new GridData(GridData.FILL_HORIZONTAL);
         t.grabExcessHorizontalSpace = false;
         lb.setLayoutData(t);
@@ -1935,10 +1945,14 @@ public class StubBindingsDialog extends Dialog implements Adapter {
      * Called before closing this dialog. Dispose all images and remove this dialog as a listener of the stub.
      */
     protected void dispose() {
-        // for (Iterator i = images.iterator(); i.hasNext();) {
-        // Image image = (Image) i.next();
-        // image.dispose();
-        // }
+        // The `images` list mixes registry-owned Images (via JUCMNavPlugin.getImage) with dialog-owned
+        // ones; disposing them all uniformly crashes the next caller of the registry image. Leaving
+        // that loop commented until the image sources are sorted out. FormToolkit is unambiguously
+        // dialog-owned and must be disposed here -- otherwise its cached colors/fonts leak per dialog.
+        if (toolkit != null) {
+            toolkit.dispose();
+            toolkit = null;
+        }
         stub.eAdapters().remove(this);
     }
 
@@ -2185,7 +2199,7 @@ public class StubBindingsDialog extends Dialog implements Adapter {
             selectedPluginLabel
             .setText(selectedPlugin.getStub().getName()
                     + " <-> " + selectedPlugin.getPlugin().getName() + Messages.getString("StubBindingsDialog.CommaIDColon") + selectedPlugin.getPlugin().getId()); //$NON-NLS-1$ //$NON-NLS-2$
-            selectedPluginLabel.setFont(new Font(null, new FontData("", 8, SWT.BOLD))); //$NON-NLS-1$
+            selectedPluginLabel.setFont(getBoldLabelFont()); //$NON-NLS-1$
             selectedPluginLabel.setData(selectedPlugin);
             addPluginClient.setVisible(true);
 
@@ -2306,7 +2320,7 @@ public class StubBindingsDialog extends Dialog implements Adapter {
             refreshReplicationFactor();
         } else {
             selectedPluginLabel.setText(Messages.getString("StubBindingsDialog.noPluginSelected")); //$NON-NLS-1$
-            selectedPluginLabel.setFont(new Font(null, new FontData("", 8, SWT.BOLD))); //$NON-NLS-1$
+            selectedPluginLabel.setFont(getBoldLabelFont()); //$NON-NLS-1$
             addPluginClient.setVisible(false);
         }
     }

@@ -13,7 +13,7 @@ import seg.jUCMNav.editors.UCMNavMultiPageEditor;
 /**
  * Implementation of the URNRootEditPart for GRL editor
  * 
- * @author Jean-François Roy
+ * @author Jean-Franï¿½ois Roy
  * 
  */
 public class GrlConnectionOnBottomRootEditPart extends URNRootEditPart {
@@ -50,9 +50,12 @@ public class GrlConnectionOnBottomRootEditPart extends URNRootEditPart {
      * @see seg.jUCMNav.editparts.URNRootEditPart#setMode(int)
      */
     public void setMode(int mode) {
+        // getChildren() is typed List<? extends EditPart> on modern GEF; not every child is
+        // necessarily a URNDiagramEditPart (e.g. helper / decoration parts inserted by GEF).
         for (Iterator iter = getChildren().iterator(); iter.hasNext();) {
-            URNDiagramEditPart element = (URNDiagramEditPart) iter.next();
-            element.refreshVisuals();
+            Object element = iter.next();
+            if (element instanceof URNDiagramEditPart)
+                ((URNDiagramEditPart) element).refreshVisuals();
         }
     }
 }

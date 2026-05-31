@@ -130,10 +130,10 @@ public class ConcernsLabelTreeEditPart extends LabelTreeEditPart {
             // then the returned list will be empty and the updated tree will not contain any
             // recursive maps.)
             if (model != null && (!(model instanceof String) || !model.equals(Messages.getString("ConcernsLabelTreeEditPart.RecursiveMaps")))) { //$NON-NLS-1$
-                List children = editPart.getChildren();
+                List<? extends EditPart> children = editPart.getChildren();
                 if (children != null) {
-                    for (Iterator iter = children.iterator(); iter.hasNext();) {
-                        EditPart element = (EditPart) iter.next();
+                    for (Iterator<? extends EditPart> iter = children.iterator(); iter.hasNext();) {
+                        EditPart element = iter.next();
                         removeMaps(element, list);
                     }
                 }

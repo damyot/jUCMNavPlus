@@ -1,9 +1,12 @@
 package seg.jUCMNav.editparts.dynamicContextTreeEditparts;
 
+import java.util.List;
+
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.impl.EAttributeImpl;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.RootEditPart;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.ui.views.properties.IPropertySource;
@@ -77,7 +80,11 @@ public class DynamicContextUrnModelElementTreeEditPart extends UrnModelElementTr
                 // seems to happen in very complex models after very quick changes.
                 // probably during the quick moment where the model is inconsistent.
                 System.out.println("quick ugly hack; trying to prevent weird happenings in UI "); //$NON-NLS-1$
-                getChildren().clear();
+                // getChildren() is now List<? extends EditPart> -- not assignable to a mutable
+                // List<EditPart>. Same erasure trick used in URNDiagramEditPart.reorderChild.
+                @SuppressWarnings({"rawtypes","unchecked"})
+                List<EditPart> mutableChildren = (List) getChildren();
+                mutableChildren.clear();
                 try {
                     refreshChildren();
                 } catch (Exception ex2) {

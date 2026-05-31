@@ -371,7 +371,8 @@ public class URNlinkTypeSelectionDialog extends Dialog {
 			message = Messages.getString("URNlinkTypeSelectionDialog.PleaseRenameLinkType"); //$NON-NLS-1$
 		}
 
-		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+		org.eclipse.ui.IWorkbenchWindow win = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		Shell shell = win != null ? win.getShell() : null;
 		InputDialog typeInput = new InputDialog( shell, title, message, linkType, null);
     	
 		if( typeInput.open() == SWT.CANCEL )

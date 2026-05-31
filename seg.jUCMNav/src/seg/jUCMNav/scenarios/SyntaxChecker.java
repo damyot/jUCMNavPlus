@@ -243,9 +243,11 @@ public class SyntaxChecker {
      *            a vector of {@link TraversalWarning}s to be pushed to the problems view.
      */
     public static void refreshProblemsView(Vector warnings) {
-        if (PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null
-                && PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor() instanceof UCMNavMultiPageEditor) {
-            UCMNavMultiPageEditor editor = (UCMNavMultiPageEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+        org.eclipse.ui.IWorkbenchWindow win = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+        org.eclipse.ui.IWorkbenchPage page = win != null ? win.getActivePage() : null;
+        org.eclipse.ui.IEditorPart activeEditor = page != null ? page.getActiveEditor() : null;
+        if (activeEditor instanceof UCMNavMultiPageEditor) {
+            UCMNavMultiPageEditor editor = (UCMNavMultiPageEditor) activeEditor;
             IFile resource = ((FileEditorInput) editor.getEditorInput()).getFile();
             try {
 

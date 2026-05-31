@@ -736,7 +736,8 @@ public class UCMScenarioViewer extends GraphicalEditor {
         if (!(input instanceof IFileEditorInput)) {
             // File -> Open gives us a JavaFileEditorInput
             // we don't want to open it because our scenario warnings are associated to the IFile...
-            MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+            org.eclipse.ui.IWorkbenchWindow win739 = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+            MessageDialog.openError(win739 != null ? win739.getShell() : null,
                     "Error", "You cannot use File -> Open to open a *.jucmscenarios file; please use File -> Import -> File System instead.");
             try {
                 this.closeUCMViewer(false);

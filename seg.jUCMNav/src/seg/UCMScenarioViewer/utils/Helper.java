@@ -198,8 +198,12 @@ public class Helper {
         if (workbench == null) {
             return null;
         }
-        
-        IEditorPart editor = workbench.getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+
+        org.eclipse.ui.IWorkbenchWindow win = workbench.getActiveWorkbenchWindow();
+        if (win == null) return null;
+        org.eclipse.ui.IWorkbenchPage page = win.getActivePage();
+        if (page == null) return null;
+        IEditorPart editor = page.getActiveEditor();
         return editor instanceof UCMScenarioViewer ? (UCMScenarioViewer) editor : null;
     }
 

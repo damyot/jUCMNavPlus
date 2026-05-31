@@ -47,7 +47,9 @@ public class ImportWizardFirstPage extends WizardPage {
 
 		browse.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				FileDialog fileDialog = new FileDialog(workbench.getActiveWorkbenchWindow().getShell(), SWT.OPEN);
+				org.eclipse.ui.IWorkbenchWindow win = workbench.getActiveWorkbenchWindow();
+				if (win == null) return;
+				FileDialog fileDialog = new FileDialog(win.getShell(), SWT.OPEN);
 				fileDialog.setFileName(fileField.getText());
 				String file = fileDialog.open();
 				if (file != null) {

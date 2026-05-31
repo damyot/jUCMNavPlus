@@ -1109,7 +1109,8 @@ public class ScenarioUtils {
             e.printStackTrace();
             return (Vector)null;
         } catch (TraversalException e) {
-            MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Error", e.getMessage()); //$NON-NLS-1$
+            org.eclipse.ui.IWorkbenchWindow win = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+            MessageDialog.openError(win != null ? win.getShell() : null, "Error", e.getMessage()); //$NON-NLS-1$
             return (Vector)null;
         }
     }

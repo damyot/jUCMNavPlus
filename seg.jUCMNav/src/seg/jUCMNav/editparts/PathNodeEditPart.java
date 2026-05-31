@@ -407,7 +407,12 @@ public class PathNodeEditPart extends ModelElementEditPart implements NodeEditPa
                     dlg.open();
                 }
             } else if (getNode() instanceof OrFork || getNode() instanceof WaitingPlace || getNode() instanceof FailurePoint) {
-                Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+                org.eclipse.ui.IWorkbenchWindow win = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+                if (win == null || getNode().getSucc().isEmpty()) {
+                    super.performRequest(req);
+                    return;
+                }
+                Shell shell = win.getShell();
                 CodeEditor wizard = new CodeEditor();
 
                 // TODO: create conditions if non-existent.

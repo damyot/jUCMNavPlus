@@ -11,8 +11,10 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.draw2d.text.FlowPage;
 import org.eclipse.draw2d.text.SimpleTextLayout;
 import org.eclipse.draw2d.text.TextFlow;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 
 import seg.jUCMNav.Messages;
 import seg.jUCMNav.figures.util.TransformationHelper;
@@ -27,6 +29,18 @@ public class StubFigure extends PathNodeFigure implements IRotateable {
     // is of a larger size.
     private static final int DEFAULT_HEIGHT = 34;
     private static final int DEFAULT_WIDTH = 34;
+
+    /**
+     * Looks up (or registers) a JFace-owned font so SWT disposal is centralized — replaces the
+     * historical {@code new Font(null, ...)} per figure that leaked on every Stub creation.
+     */
+    private static Font getCachedFont(String family, int size, int style) {
+        String key = "seg.jUCMNav.figures.StubFigure." + family + "." + size + "." + style; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        if (!JFaceResources.getFontRegistry().hasValueFor(key)) {
+            JFaceResources.getFontRegistry().put(key, new FontData[] { new FontData(family, size, style) });
+        }
+        return JFaceResources.getFontRegistry().get(key);
+    }
 
     /**
      * Overriden to allow automatic label placement.
@@ -198,8 +212,7 @@ public class StubFigure extends PathNodeFigure implements IRotateable {
         flowPage = new FlowPage();
         stubTypeText = new TextFlow();
         stubTypeText.setLayoutManager(new SimpleTextLayout(stubTypeText));
-        // TODO CONCERNS: should use default font?
-        stubTypeText.setFont(new Font(null, "Verdana", 15, 0)); //$NON-NLS-1$
+        stubTypeText.setFont(getCachedFont("Verdana", 15, 0)); //$NON-NLS-1$
         stubTypeText.setText(""); //$NON-NLS-1$
         flowPage.add(stubTypeText);
         // TODO CONCERNS: depends on font size!
@@ -210,8 +223,7 @@ public class StubFigure extends PathNodeFigure implements IRotateable {
         blockPage = new FlowPage();
         TextFlow stubSubTypeText = new TextFlow();
         stubSubTypeText.setLayoutManager(new SimpleTextLayout(stubSubTypeText));
-        // TODO CONCERNS: should use default font?
-        stubSubTypeText.setFont(new Font(null, "Verdana", 6, 0)); //$NON-NLS-1$
+        stubSubTypeText.setFont(getCachedFont("Verdana", 6, 0)); //$NON-NLS-1$
         stubSubTypeText.setText("B"); //$NON-NLS-1$
         blockPage.add(stubSubTypeText);
         // TODO CONCERNS: depends on font size!
@@ -223,8 +235,7 @@ public class StubFigure extends PathNodeFigure implements IRotateable {
         replicationPage = new FlowPage();
         TextFlow stubRepText = new TextFlow();
         stubRepText.setLayoutManager(new SimpleTextLayout(stubRepText));
-        // TODO CONCERNS: should use default font?
-        stubRepText.setFont(new Font(null, "Verdana", 6, 0)); //$NON-NLS-1$
+        stubRepText.setFont(getCachedFont("Verdana", 6, 0)); //$NON-NLS-1$
         stubRepText.setText("X"); //$NON-NLS-1$
         replicationPage.add(stubRepText);
         // TODO CONCERNS: depends on font size!
@@ -315,11 +326,11 @@ public class StubFigure extends PathNodeFigure implements IRotateable {
                 Integer repCount =  Integer.valueOf(repetitionCount);
 
                 if (blocking || repCount.intValue() > 1) {
-                    stubTypeText.setFont(new Font(null, "Verdana", 14, 0)); //$NON-NLS-1$
+                    stubTypeText.setFont(getCachedFont("Verdana", 14, 0)); //$NON-NLS-1$
                     flowPage.setBounds(new Rectangle(DEFAULT_WIDTH / 2 - 10, DEFAULT_HEIGHT / 2 - 13, 25, 25));
 
                 } else {
-                    stubTypeText.setFont(new Font(null, "Verdana", 15, 0)); //$NON-NLS-1$
+                    stubTypeText.setFont(getCachedFont("Verdana", 15, 0)); //$NON-NLS-1$
                     flowPage.setBounds(new Rectangle(DEFAULT_WIDTH / 2 - 7, DEFAULT_HEIGHT / 2 - 14, 25, 25));
                 }
 

@@ -10,9 +10,10 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.draw2d.text.FlowPage;
 import org.eclipse.draw2d.text.SimpleTextLayout;
 import org.eclipse.draw2d.text.TextFlow;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 
 import seg.jUCMNav.views.preferences.GeneralPreferencePage;
 
@@ -22,6 +23,8 @@ import seg.jUCMNav.views.preferences.GeneralPreferencePage;
  * @author Etienne Tremblay, jkealey, gunterm
  */
 public class StartPointFigure extends PathNodeFigure {
+    private static final String FAILURE_LABEL_FONT_KEY = "seg.jUCMNav.figures.StartPointFigure.failureLabelFont"; //$NON-NLS-1$
+
     private Ellipse ellipse;
     private FlowPage flowPage;
     private TextFlow stubTypeText;
@@ -52,8 +55,12 @@ public class StartPointFigure extends PathNodeFigure {
         flowPage = new FlowPage();
         stubTypeText = new TextFlow();
         stubTypeText.setLayoutManager(new SimpleTextLayout(stubTypeText));
-        // TODO CONCERNS: should use default font?
-        stubTypeText.setFont(new Font(null, "Verdana", 12, SWT.BOLD)); //$NON-NLS-1$
+        // JFace FontRegistry owns disposal — see GrlNodeFigure for the matching pattern.
+        if (!JFaceResources.getFontRegistry().hasValueFor(FAILURE_LABEL_FONT_KEY)) {
+            JFaceResources.getFontRegistry().put(FAILURE_LABEL_FONT_KEY,
+                    new FontData[] { new FontData("Verdana", 12, SWT.BOLD) }); //$NON-NLS-1$
+        }
+        stubTypeText.setFont(JFaceResources.getFontRegistry().get(FAILURE_LABEL_FONT_KEY));
         stubTypeText.setText("F"); //$NON-NLS-1$
         stubTypeText.setForegroundColor(ColorManager.WHITE);
         flowPage.add(stubTypeText);

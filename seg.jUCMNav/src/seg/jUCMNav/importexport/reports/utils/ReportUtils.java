@@ -133,6 +133,7 @@ public class ReportUtils {
             org.eclipse.swt.graphics.Image image = new org.eclipse.swt.graphics.Image(Display.getCurrent(), paneWidth, paneHeight);
 
             GC gc = new GC(image);
+            seg.jUCMNav.importexport.ExportImage.enableAdvancedRendering(gc);
             SWTGraphics graphics = new SWTGraphics(gc);
             pane.paint(graphics);
 

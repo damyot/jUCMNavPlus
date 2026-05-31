@@ -110,6 +110,11 @@ public class SelectExportFilePage extends WizardPage implements SelectionListene
             // create image from root figure
             img = new Image(null, f.getSize().width, f.getSize().height);
             gc = new GC(img);
+            // See CopyAction.buildScreenshot -- without GDI+ mode, antialiased Polygon/Polyline
+            // fills used by UCM path-node figures silently no-op off-screen.
+            gc.setAdvanced(true);
+            gc.setAntialias(SWT.ON);
+            gc.setTextAntialias(SWT.ON);
             graphics = new SWTGraphics(gc);
             graphics.translate(f.getBounds().getLocation());
             f.paint(graphics);

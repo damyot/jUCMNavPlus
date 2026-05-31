@@ -38,6 +38,7 @@ public class ExportImageGIF extends ExportImage {
         Image image = new Image(Display.getCurrent(), pane.getSize().width, pane.getSize().height);
 
         GC gc = new GC(image);
+        ExportImage.enableAdvancedRendering(gc);
         SWTGraphics graphics = new SWTGraphics(gc);
         // if the bounds are in the negative x/y, we don't see them without a
         // translation

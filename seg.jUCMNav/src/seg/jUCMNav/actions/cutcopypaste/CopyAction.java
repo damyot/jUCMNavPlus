@@ -5,6 +5,7 @@ import org.eclipse.draw2d.LayeredPane;
 import org.eclipse.draw2d.SWTGraphics;
 import org.eclipse.gef.internal.GEFMessages;
 import org.eclipse.gef.ui.actions.SelectionAction;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
@@ -64,6 +65,15 @@ public class CopyAction extends SelectionAction {
                 SWTGraphics graphics = null;
                 try {
                     gc = new GC(image);
+                    // Force GDI+ on Windows so antialiased Polygon/Polyline fills (used by every
+                    // UCM PathNode -- stubs, endpoints, forks/joins, direction arrows, the actor
+                    // stickman) actually render off-screen. Without this, SWTGraphics calls
+                    // gc.setAntialias(SWT.ON) on a non-advanced GC and the subsequent
+                    // fillPolygon/drawPolygon silently no-op, so those shapes vanish from the
+                    // bitmap while GrlNodeFigure's plain rectangle/ellipse Shape paths still work.
+                    gc.setAdvanced(true);
+                    gc.setAntialias(SWT.ON);
+                    gc.setTextAntialias(SWT.ON);
                     graphics = new SWTGraphics(gc);
                     graphics.translate(-pane.getBounds().x, -pane.getBounds().y);
                     figure.paint(graphics);

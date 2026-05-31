@@ -175,6 +175,7 @@ public class RTFReportDiagram extends PDFReport {
             Image image = new Image(Display.getCurrent(), paneWidth, paneHeight);
 
             GC gc = new GC(image);
+            seg.jUCMNav.importexport.ExportImage.enableAdvancedRendering(gc);
             SWTGraphics graphics = new SWTGraphics(gc);
 
             // zoom for better resolution

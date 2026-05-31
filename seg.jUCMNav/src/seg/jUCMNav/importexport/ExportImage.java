@@ -31,14 +31,27 @@ import urncore.IURNDiagram;
 public abstract class ExportImage implements IUseCaseMapExport {
 
     /**
+     * Force GDI+ on Windows for an off-screen GC so antialiased Polygon/Polyline fills used by UCM
+     * path-node figures (stubs, endpoints, forks/joins, direction arrows, actor stickman) render to
+     * the bitmap. Without this, SWTGraphics's setAntialias(SWT.ON) on a non-advanced GC silently
+     * skips the fill and the shapes vanish from exported / copied images.
+     */
+    public static void enableAdvancedRendering(GC gc) {
+        gc.setAdvanced(true);
+        gc.setAntialias(SWT.ON);
+        gc.setTextAntialias(SWT.ON);
+    }
+
+    /**
      * Given the IFigure, save it to a file.
-     * 
+     *
      * @see seg.jUCMNav.extensionpoints.IUseCaseMapExport#export(org.eclipse.draw2d.IFigure, java.io.FileOutputStream)
      */
     public void export(IFigure pane, FileOutputStream fos) {
         // generate image
         Image image = new Image(Display.getCurrent(), pane.getSize().width, pane.getSize().height);
         GC gc = new GC(image);
+        enableAdvancedRendering(gc);
         SWTGraphics graphics = new SWTGraphics(gc);
         // if the bounds are in the negative x/y, we don't see them without a translation
         graphics.translate(-pane.getBounds().x, -pane.getBounds().y);

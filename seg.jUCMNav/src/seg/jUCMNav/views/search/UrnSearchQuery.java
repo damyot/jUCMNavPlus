@@ -96,7 +96,11 @@ public class UrnSearchQuery implements ISearchQuery {
     }
 
     public IStatus run(IProgressMonitor monitor) throws OperationCanceledException {
-        monitor.beginTask("", 1000); //$NON-NLS-1$
+        // worked() ticks emitted below have no fixed relationship to the declared total work
+        // units (one per container plus one per match), so the progress bar would top out
+        // arbitrarily on large workspaces. UNKNOWN switches the bar to an indeterminate
+        // animation, which matches what the search loop can actually promise.
+        monitor.beginTask("", IProgressMonitor.UNKNOWN); //$NON-NLS-1$
 
         UrnSearchResult res = (UrnSearchResult) getSearchResult();
         res.removeAll();

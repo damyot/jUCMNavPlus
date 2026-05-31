@@ -186,7 +186,9 @@ public abstract class UrnEditor extends GraphicalEditorWithFlyoutPalette impleme
         for (Iterator i = menuExtenders.iterator(); i.hasNext();) {
             Object o = (Object) i.next();
             if (o instanceof PopupMenuExtender) {
-                PopupMenuExtender menu = (PopupMenuExtender) menuExtenders.get(0);
+                // Was menuExtenders.get(0) -- disposed index 0 on every iteration,
+                // leaving the rest dangling. Use the current element.
+                PopupMenuExtender menu = (PopupMenuExtender) o;
                 menu.getManager().dispose();
                 menu.dispose();
             }
@@ -498,9 +500,8 @@ public abstract class UrnEditor extends GraphicalEditorWithFlyoutPalette impleme
                 	// DB: Fix for internal API removed from E4.2.
                 this, site.getContext(), menuExtenders); 
         // bug 531
-        if (menuExtenders.get(0) != null) {
+        if (!menuExtenders.isEmpty() && menuExtenders.get(0) instanceof IMenuListener) {
             provider.removeMenuListener((IMenuListener) menuExtenders.get(0));
-
         }
     }
 

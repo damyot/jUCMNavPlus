@@ -936,15 +936,17 @@ public class UCMNavMultiPageEditor extends MultiPageEditorPart implements Adapte
 
 				UrnOutlinePage outline;
 				// if (getPageCount() == 0)
-				outline = (UrnOutlinePage) getAdapter(IContentOutlinePage.class);
+				Object adapter = getAdapter(IContentOutlinePage.class);
+				outline = adapter instanceof UrnOutlinePage ? (UrnOutlinePage) adapter : null;
 				// else
 				// outline = (UrnOutlinePage)
 				// getEditor(0).getAdapter(IContentOutlinePage.class);
 
 				Object element = URNElementFinder.find(getModel(), o.toString());
-				if (element != null) {
+				if (element != null && outline != null) {
 
-					EditPart part = (EditPart) outline.getViewer().getEditPartRegistry().get(element);
+					Object registryEntry = outline.getViewer().getEditPartRegistry().get(element);
+					EditPart part = registryEntry instanceof EditPart ? (EditPart) registryEntry : null;
 
 					selectInOutline(part);
 				}
@@ -969,7 +971,8 @@ public class UCMNavMultiPageEditor extends MultiPageEditorPart implements Adapte
 	}
 
 	public void selectInOutline(EditPart part) {
-		UrnOutlinePage outline = (UrnOutlinePage) getAdapter(IContentOutlinePage.class);
+		Object adapter = getAdapter(IContentOutlinePage.class);
+		UrnOutlinePage outline = adapter instanceof UrnOutlinePage ? (UrnOutlinePage) adapter : null;
 		if (part != null && outline != null) {
 			getMultiPageTabManager().getSelectionListener().selectionChanged(this, new StructuredSelection(part));
 			outline.getViewer().select(part);
@@ -988,14 +991,14 @@ public class UCMNavMultiPageEditor extends MultiPageEditorPart implements Adapte
 	 * Return's the outline's property source.
 	 */
 	public IPropertySource getPropertySource(Object object) {
-		UrnOutlinePage outline;
-		if (getPageCount() == 0)
-			outline = (UrnOutlinePage) getAdapter(IContentOutlinePage.class);
-		else
-			outline = (UrnOutlinePage) getEditor(0).getAdapter(IContentOutlinePage.class);
+		Object adapter = getPageCount() == 0
+				? getAdapter(IContentOutlinePage.class)
+				: getEditor(0).getAdapter(IContentOutlinePage.class);
+		UrnOutlinePage outline = adapter instanceof UrnOutlinePage ? (UrnOutlinePage) adapter : null;
 
 		if (outline != null) {
-			EditPart part = (EditPart) outline.getViewer().getEditPartRegistry().get(object);
+			Object registryEntry = outline.getViewer().getEditPartRegistry().get(object);
+			EditPart part = registryEntry instanceof EditPart ? (EditPart) registryEntry : null;
 			if (part != null)
 				return (IPropertySource) part.getAdapter(IPropertySource.class);
 		}

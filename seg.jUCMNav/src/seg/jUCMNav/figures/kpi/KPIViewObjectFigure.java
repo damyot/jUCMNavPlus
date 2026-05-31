@@ -194,7 +194,7 @@ public class KPIViewObjectFigure extends Figure {
         evalBarCopy.x = evalBarCopy.x + getBounds().x;
         evalBarCopy.y = evalBarCopy.y + getBounds().y;
 
-        Color evalColor = new Color(Display.getCurrent(), StringConverter.asRGB(evalColorStr));
+        Color evalColor = ColorManager.getColor(StringConverter.asRGB(evalColorStr));
         graphics.setBackgroundColor(evalColor);
         graphics.fillRectangle(evalBarCopy);
 

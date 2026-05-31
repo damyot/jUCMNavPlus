@@ -20,7 +20,7 @@ import seg.jUCMNav.views.preferences.GeneralPreferencePage;
 /**
  * This figure represent the connection between 2 GRL Node. It could be a contribution, decomposition, or dependency.
  * 
- * @author Jean-François Roy
+ * @author Jean-Franï¿½ois Roy
  * 
  */
 public class LinkRefConnection extends PolylineConnection {
@@ -198,7 +198,7 @@ public class LinkRefConnection extends PolylineConnection {
         if (lineColor == null || lineColor.length() == 0) {
             setForegroundColor(ColorManager.LINE);
         } else
-            setForegroundColor(new Color(Display.getCurrent(), StringConverter.asRGB(lineColor)));
+            setForegroundColor(ColorManager.getColor(StringConverter.asRGB(lineColor)));
     }
 
     /**

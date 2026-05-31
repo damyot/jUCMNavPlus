@@ -104,11 +104,11 @@ public class CommentFigure extends GrlNodeFigure {
             setFill(true);
             setBackgroundColor(ColorManager.FILL_COMMENTS);
         } else
-            setBackgroundColor(new Color(Display.getCurrent(), StringConverter.asRGB(fillColor)));
+            setBackgroundColor(ColorManager.getColor(StringConverter.asRGB(fillColor)));
 
         if (lineColor == null || lineColor.length() == 0) {
             setForegroundColor(ColorManager.LINE);
         } else
-            setForegroundColor(new Color(Display.getCurrent(), StringConverter.asRGB(lineColor)));
+            setForegroundColor(ColorManager.getColor(StringConverter.asRGB(lineColor)));
     }
 }

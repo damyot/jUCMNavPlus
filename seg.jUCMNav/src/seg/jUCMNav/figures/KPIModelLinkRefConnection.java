@@ -96,7 +96,7 @@ public class KPIModelLinkRefConnection extends PolylineConnection {
         if (lineColor == null || lineColor.length() == 0) {
             setForegroundColor(ColorManager.LINE);
         } else
-            setForegroundColor(new Color(Display.getCurrent(), StringConverter.asRGB(lineColor)));
+            setForegroundColor(ColorManager.getColor(StringConverter.asRGB(lineColor)));
     }
 
     /**

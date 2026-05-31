@@ -1,5 +1,8 @@
 package seg.jUCMNav.figures;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
@@ -43,6 +46,25 @@ public class ColorManager {
     public static Color KPIMODELLINKREFLABEL;
     public static Color CONDITIONLABEL;
     public static Color FAILUREPOINT = RED;
+
+    private static final Map<RGB, Color> RGB_CACHE = new HashMap<>();
+
+    /**
+     * Returns a shared {@link Color} for the given RGB, allocating it on first request and reusing
+     * thereafter. Replaces the historical pattern of allocating
+     * {@code new Color(Display.getCurrent(), ...)} per figure or per paint, which leaked native
+     * handles and triggered SWT not-properly-disposed Errors at GC time on modern platforms.
+     * The shared instances live for the lifetime of the workbench, matching the existing palette
+     * constants above (BLACK, BLUE, ...).
+     */
+    public static synchronized Color getColor(RGB rgb) {
+        Color c = RGB_CACHE.get(rgb);
+        if (c == null) {
+            c = new Color(null, rgb);
+            RGB_CACHE.put(rgb, c);
+        }
+        return c;
+    }
 
     static {
         refresh();

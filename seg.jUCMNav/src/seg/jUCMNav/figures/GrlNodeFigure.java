@@ -184,14 +184,13 @@ public abstract class GrlNodeFigure extends Shape implements LabelElementFigure 
         if (fillColor == null || fillColor.length() == 0) {
             setBackgroundColor(ColorManager.FILL);
         } else {
-//        	if( JUCMNavPlugin.isInDebug() ) System.out.println( "fillColor: " + fillColor );
-            setBackgroundColor(new Color(Display.getCurrent(), StringConverter.asRGB(fillColor)));
+            setBackgroundColor(ColorManager.getColor(StringConverter.asRGB(fillColor)));
         }
         
         if (lineColor == null || lineColor.length() == 0) {
             setForegroundColor(ColorManager.LINE);
         } else
-            setForegroundColor(new Color(Display.getCurrent(), StringConverter.asRGB(lineColor)));
+            setForegroundColor(ColorManager.getColor(StringConverter.asRGB(lineColor)));
     }
 
     /**

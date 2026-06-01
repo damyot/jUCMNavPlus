@@ -43,117 +43,163 @@
          <attribute name="location"/>
          <attribute name="severity"/>
    </extension>   
-   <extension
-   
-         point="org.eclipse.ui.editorActions">
-      <editorContribution
-            targetID="seg.jUCMNav.MainEditor"
-            id="seg.jUCMNav.editorContribution1">
-         <action
-               toolbarPath="jUCMNav"
-               label="%autoLayout"
-               class="seg.jUCMNav.actions.AutoLayoutActionDelegate"
-               tooltip="%autoLayout"
-               icon="icons/autolayout.gif"
-               style="push"
-               menubarPath="seg.jUCMNav/ext"
-               id="seg.jUCMNav.AutoLayout"
-               actionID="seg.jUCMNav.actions.AutoLayoutActionDelegate">
-         </action>
+   <!--
+      jUCMNav main-editor menu / toolbar contributions.
+      Migrated from the deprecated `org.eclipse.ui.editorActions` extension point to
+      the modern `org.eclipse.ui.commands` + `org.eclipse.ui.handlers` + `org.eclipse.ui.menus`
+      triple. Each handler in seg.jUCMNav.actions.handlers either bridges to a legacy
+      IEditorActionDelegate (LegacyDelegateHandler) or runs an editor-registered action
+      directly (RunRegisteredEditorActionHandler) -- behaviour preserved verbatim;
+      only the registration mechanism has changed.
+   -->
+   <extension point="org.eclipse.ui.commands">
+      <category
+            id="seg.jUCMNav.commands.category"
+            name="jUCMNav"/>
+      <command
+            id="seg.jUCMNav.commands.AutoLayout"
+            name="%autoLayout"
+            description="%autoLayout"
+            categoryId="seg.jUCMNav.commands.category"/>
+      <command
+            id="seg.jUCMNav.commands.SwitchModelLanguage"
+            name="%SwitchModelLanguage"
+            description="%SwitchLanguage"
+            categoryId="seg.jUCMNav.commands.category"/>
+      <command
+            id="seg.jUCMNav.commands.AdvancedMode"
+            name="jUCMNav Advanced Mode"
+            description="Toggle jUCMNav's advanced mode."
+            categoryId="seg.jUCMNav.commands.category">
+         <state
+               id="org.eclipse.ui.commands.toggleState"
+               class="org.eclipse.jface.commands.ToggleState"/>
+      </command>
+      <command
+            id="seg.jUCMNav.commands.AddStereotypeDefinitions"
+            name="%AddStereotypeDefinitions"
+            description="%AddStereotypeDefinitions"
+            categoryId="seg.jUCMNav.commands.category"/>
+      <command
+            id="seg.jUCMNav.commands.VerifySyntax"
+            name="%VerifyPseudoCodeSyntax"
+            description="%VerifySyntax"
+            categoryId="seg.jUCMNav.commands.category"/>
+      <command
+            id="seg.jUCMNav.commands.VerifyStaticSemantic"
+            name="%VerifyStaticSemantics"
+            description="%VerifyStaticSemantics"
+            categoryId="seg.jUCMNav.commands.category"/>
+      <command
+            id="seg.jUCMNav.commands.CalculateMetrics"
+            name="%CalculateMetrics"
+            description="%CalculateMetrics"
+            categoryId="seg.jUCMNav.commands.category"/>
+      <command
+            id="seg.jUCMNav.commands.AddMap"
+            name="%AddUseCaseMap"
+            description="%AddUseCaseMap"
+            categoryId="seg.jUCMNav.commands.category"/>
+      <command
+            id="seg.jUCMNav.commands.AddGrlGraph"
+            name="%AddGrlDiagram"
+            description="%AddGrlDiagram"
+            categoryId="seg.jUCMNav.commands.category"/>
+      <command
+            id="seg.jUCMNav.commands.GeneralPreferences"
+            name="Edit jUCMNav Preferences"
+            description="Edit jUCMNav's preferences."
+            categoryId="seg.jUCMNav.commands.category"/>
+   </extension>
+
+   <extension point="org.eclipse.ui.handlers">
+      <handler
+            commandId="seg.jUCMNav.commands.AutoLayout"
+            class="seg.jUCMNav.actions.handlers.AutoLayoutHandler">
+         <activeWhen><with variable="activeEditorId"><equals value="seg.jUCMNav.MainEditor"/></with></activeWhen>
+      </handler>
+      <handler
+            commandId="seg.jUCMNav.commands.SwitchModelLanguage"
+            class="seg.jUCMNav.actions.handlers.SwitchModelLanguageHandler">
+         <activeWhen><with variable="activeEditorId"><equals value="seg.jUCMNav.MainEditor"/></with></activeWhen>
+      </handler>
+      <handler
+            commandId="seg.jUCMNav.commands.AdvancedMode"
+            class="seg.jUCMNav.actions.handlers.AdvancedModeHandler">
+         <activeWhen><with variable="activeEditorId"><equals value="seg.jUCMNav.MainEditor"/></with></activeWhen>
+      </handler>
+      <handler
+            commandId="seg.jUCMNav.commands.AddStereotypeDefinitions"
+            class="seg.jUCMNav.actions.handlers.AddStereotypeDefinitionsHandler">
+         <activeWhen><with variable="activeEditorId"><equals value="seg.jUCMNav.MainEditor"/></with></activeWhen>
+      </handler>
+      <handler
+            commandId="seg.jUCMNav.commands.VerifySyntax"
+            class="seg.jUCMNav.actions.handlers.VerifySyntaxHandler">
+         <activeWhen><with variable="activeEditorId"><equals value="seg.jUCMNav.MainEditor"/></with></activeWhen>
+      </handler>
+      <handler
+            commandId="seg.jUCMNav.commands.VerifyStaticSemantic"
+            class="seg.jUCMNav.actions.handlers.VerifyStaticSemanticHandler">
+         <activeWhen><with variable="activeEditorId"><equals value="seg.jUCMNav.MainEditor"/></with></activeWhen>
+      </handler>
+      <handler
+            commandId="seg.jUCMNav.commands.CalculateMetrics"
+            class="seg.jUCMNav.actions.handlers.CalculateMetricsHandler">
+         <activeWhen><with variable="activeEditorId"><equals value="seg.jUCMNav.MainEditor"/></with></activeWhen>
+      </handler>
+      <handler
+            commandId="seg.jUCMNav.commands.AddMap"
+            class="seg.jUCMNav.actions.handlers.AddMapHandler">
+         <activeWhen><with variable="activeEditorId"><equals value="seg.jUCMNav.MainEditor"/></with></activeWhen>
+      </handler>
+      <handler
+            commandId="seg.jUCMNav.commands.AddGrlGraph"
+            class="seg.jUCMNav.actions.handlers.AddGrlGraphHandler">
+         <activeWhen><with variable="activeEditorId"><equals value="seg.jUCMNav.MainEditor"/></with></activeWhen>
+      </handler>
+      <handler
+            commandId="seg.jUCMNav.commands.GeneralPreferences"
+            class="seg.jUCMNav.actions.handlers.GeneralPreferencesHandler">
+         <activeWhen><with variable="activeEditorId"><equals value="seg.jUCMNav.MainEditor"/></with></activeWhen>
+      </handler>
+   </extension>
+
+   <extension point="org.eclipse.ui.menus">
+      <!-- Top-level menu: appears in the workbench menu bar whenever the jUCMNav editor is active. -->
+      <menuContribution
+            locationURI="menu:org.eclipse.ui.main.menu?after=additions">
          <menu
-               label="jUCMNav"
-               id="seg.jUCMNav">
-            <separator name="ext"/>
+               id="seg.jUCMNav"
+               label="jUCMNav">
+            <visibleWhen checkEnabled="false">
+               <with variable="activeEditorId"><equals value="seg.jUCMNav.MainEditor"/></with>
+            </visibleWhen>
+            <command commandId="seg.jUCMNav.commands.AutoLayout"            icon="icons/autolayout.gif"        tooltip="%autoLayout"               style="push"/>
+            <command commandId="seg.jUCMNav.commands.SwitchModelLanguage"   icon="icons/SwitchModelLanguage.gif" tooltip="%SwitchLanguage"         style="push"/>
+            <command commandId="seg.jUCMNav.commands.AdvancedMode"          icon="icons/advanced.gif"          tooltip="Toggle jUCMNav's advanced mode." style="toggle"/>
+            <command commandId="seg.jUCMNav.commands.AddStereotypeDefinitions" icon="src/seg/jUCMNav/icons/Metadata.gif" tooltip="%AddStereotypeDefinitions" style="push"/>
+            <command commandId="seg.jUCMNav.commands.VerifySyntax"          icon="icons/syntax.gif"            tooltip="%VerifySyntax"             style="push"/>
+            <command commandId="seg.jUCMNav.commands.VerifyStaticSemantic"  icon="icons/ocl.gif"               tooltip="%VerifyStaticSemantics"    style="push"/>
+            <command commandId="seg.jUCMNav.commands.CalculateMetrics"      icon="icons/metrics.gif"           tooltip="%CalculateMetrics"         style="push"/>
+            <command commandId="seg.jUCMNav.commands.AddMap"                icon="icons/ucm16.gif"             tooltip="%AddUseCaseMap"            style="push"/>
+            <command commandId="seg.jUCMNav.commands.AddGrlGraph"           icon="icons/grl16.gif"             tooltip="%AddGrlDiagram"            style="push"/>
+            <command commandId="seg.jUCMNav.commands.GeneralPreferences"    icon="icons/icon16.gif"            tooltip="Edit jUCMNav's preferences." style="push"/>
          </menu>
-         <action
-               actionID="seg.jUCMNav.actions.SwitchModelLanguageDelegate"
-               class="seg.jUCMNav.actions.SwitchModelLanguageDelegate"
-               id="seg.jUCMNav.actions.SwitchModelLanguageDelegate"
-               icon="icons/SwitchModelLanguage.gif"
-               label="%SwitchModelLanguage"
-               menubarPath="seg.jUCMNav/ext"
-               style="push"
-               tooltip="%SwitchLanguage">
-         </action>
-   <action
-         actionID="seg.jUCMNav.actions.AdvancedModeActionDelegate"
-         class="seg.jUCMNav.actions.AdvancedModeActionDelegate"
-         icon="icons/advanced.gif"
-         id="seg.jUCMNav.AdvancedMode"
-         label="jUCMNav Advanced Mode"
-         menubarPath="seg.jUCMNav/ext"
-         style="toggle"
-         toolbarPath="jUCMNav"
-         tooltip="Toggle jUCMNav&apos;s advanced mode. ">
-   </action>   
-         <action
-               actionID="seg.jUCMNav.actions.AddStereotypeDefinitionsAction"
-               class="seg.jUCMNav.actions.UCMActionDelegate"
-               icon="src/seg/jUCMNav/icons/Metadata.gif"
-               id="seg.jUCMNav.AddStereotypeDefinitions"
-               label="%AddStereotypeDefinitions"
-               menubarPath="seg.jUCMNav/ext"
-               style="push"
-               tooltip="%AddStereotypeDefinitions"/>
-         <action
-               actionID="seg.jUCMNav.actions.scenarios.VerifySyntaxActionDelegate"
-               class="seg.jUCMNav.actions.scenarios.VerifySyntaxActionDelegate"
-               icon="icons/syntax.gif"
-               id="seg.jUCMNav.actions.scenarios.VerifySyntaxActionDelegate"
-               label="%VerifyPseudoCodeSyntax"
-               menubarPath="seg.jUCMNav/ext"
-               style="push"
-               tooltip="%VerifySyntax"/>
-		 <action
-               actionID="seg.jUCMNav.actions.staticSemantic.VerifyStaticSemanticDelegate"
-               class="seg.jUCMNav.actions.staticSemantic.VerifyStaticSemanticDelegate"
-               icon="icons/ocl.gif"
-               id="seg.jUCMNav.actions.staticAnalysis.VerifyStaticSemanticDelegate"
-               label="%VerifyStaticSemantics"
-               menubarPath="seg.jUCMNav/ext"
-               style="push"
-               tooltip="%VerifyStaticSemantics"/>
-   <action
-         actionID="seg.jUCMNav.actions.matrics.CalculateMatricsActionDelegate"
-         class="seg.jUCMNav.actions.metrics.CalculateMetricsActionDelegate"
-         icon="icons/metrics.gif"
-         id="seg.jUCMNav.actions.matrics.CalculateMatricsActionDelegate"
-         label="%CalculateMetrics"
-         menubarPath="seg.jUCMNav/ext"
-         style="push"
-         tooltip="%CalculateMetrics">
-   </action>
-         <action
-               actionID="seg.jUCMNav.actions.AddMapAction"
-               class="seg.jUCMNav.actions.UCMActionDelegate"
-               icon="icons/ucm16.gif"
-               id="seg.jUCMNav.AddMap"
-               label="%AddUseCaseMap"
-               menubarPath="seg.jUCMNav/ext"
-               style="push"
-               tooltip="%AddUseCaseMap"/>
-         <action
-               actionID="seg.jUCMNav.actions.AddGrlGraphAction"
-               class="seg.jUCMNav.actions.UCMActionDelegate"
-               icon="icons/grl16.gif"
-               id="seg.jUCMNav.AddGrlGraph"
-               label="%AddGrlDiagram"
-               menubarPath="seg.jUCMNav/ext"
-               style="push"
-               tooltip="%AddGrlDiagram"/>
-   <action
-         actionID="seg.jUCMNav.actions.GeneralPreferencesActionDelegate"
-         class="seg.jUCMNav.actions.GeneralPreferencesActionDelegate"
-         icon="icons/icon16.gif"
-         id="seg.jUCMNav.GeneralPreferences"
-         label="Edit jUCMNav Preferences"
-         menubarPath="seg.jUCMNav/ext"
-         style="push"
-         toolbarPath="jUCMNav"
-         tooltip="Edit jUCMNav&apos;s preferences. ">
-   </action>
-               
-      </editorContribution>
+      </menuContribution>
+
+      <!-- Workbench toolbar: matches the four toolbar items the editorActions block used to contribute. -->
+      <menuContribution
+            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+         <toolbar id="seg.jUCMNav.toolbar">
+            <visibleWhen checkEnabled="false">
+               <with variable="activeEditorId"><equals value="seg.jUCMNav.MainEditor"/></with>
+            </visibleWhen>
+            <command commandId="seg.jUCMNav.commands.AutoLayout"         icon="icons/autolayout.gif" tooltip="%autoLayout"                 style="push"/>
+            <command commandId="seg.jUCMNav.commands.AdvancedMode"       icon="icons/advanced.gif"   tooltip="Toggle jUCMNav's advanced mode." style="toggle"/>
+            <command commandId="seg.jUCMNav.commands.GeneralPreferences" icon="icons/icon16.gif"     tooltip="Edit jUCMNav's preferences." style="push"/>
+         </toolbar>
+      </menuContribution>
    </extension>
    <extension
          point="org.eclipse.ui.perspectives">

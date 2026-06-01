@@ -98,6 +98,13 @@ public abstract class UrnEditor extends GraphicalEditorWithFlyoutPalette impleme
     public void commandStackChanged(EventObject event) {
         // Note: some actions go directly to this command stack and others go to our parents.
 
+        // After dispose() nulls parent and clears the command stack, late-firing
+        // listeners (e.g. doSave -> markSaveLocations on a sibling tab) still call
+        // back here. Skip the whole sequence in that state.
+        if (parent == null || getCommandStack() == null) {
+            return;
+        }
+
         super.commandStackChanged(event);
         if (isDirty() && !saveAlreadyRequested) {
             saveAlreadyRequested = true;
@@ -274,6 +281,12 @@ public abstract class UrnEditor extends GraphicalEditorWithFlyoutPalette impleme
      * Returns a reference to the multi page action registry.
      */
     protected ActionRegistry getActionRegistry() {
+        // After dispose() nulls `parent`, command-stack listeners can still fire briefly
+        // (e.g. doSave -> markSaveLocations -> stackChanged on each tab). Return an empty
+        // registry instead of NPE-ing so GraphicalEditor.updateActions iterates harmlessly.
+        if (parent == null) {
+            return new ActionRegistry();
+        }
         // one action registry for all editors
         return parent.getActionRegistry();
     }

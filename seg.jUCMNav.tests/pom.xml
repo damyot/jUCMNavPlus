@@ -30,12 +30,6 @@
         <configuration>
           <useUIHarness>true</useUIHarness>
           <useUIThread>true</useUIThread>
-          <!-- Phase 2 wires the suite; Phase 3 will fix the failing tests one
-               cluster at a time. testFailureIgnore=true surfaces failure counts
-               in the build log without failing the reactor, so CI stays green
-               while the burn-down proceeds. Flip back to false (default) at the
-               end of Phase 3 when the suite is clean. -->
-          <testFailureIgnore>true</testFailureIgnore>
         </configuration>
       </plugin>
     </plugins>

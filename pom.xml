@@ -27,6 +27,7 @@
        wiring up JUnit plug-in tests. -->
   <modules>
     <module>seg.jUCMNav</module>
+    <module>seg.jUCMNav.tests</module>
     <module>seg.jUCMNav.feature</module>
     <module>seg.jUCMNav.repository</module>
   </modules>

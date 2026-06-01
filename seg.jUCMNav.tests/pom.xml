@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Tycho pomless polyglot only knows three packagings (eclipse-plugin,
+  eclipse-feature, eclipse-repository); it has no rule that infers
+  eclipse-test-plugin from MANIFEST.MF or directory naming. This pom
+  forces the packaging so tycho-surefire-plugin runs the JUnit suite
+  inside an OSGi runtime. Everything else (bundle metadata, source
+  layout, build properties) is still derived from MANIFEST.MF /
+  build.properties.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.jucmnav</groupId>
+    <artifactId>seg.jUCMNav.parent</artifactId>
+    <version>10.0.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>seg.jUCMNav.tests</artifactId>
+  <version>10.0.0-SNAPSHOT</version>
+  <packaging>eclipse-test-plugin</packaging>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-surefire-plugin</artifactId>
+        <version>${tycho.version}</version>
+        <configuration>
+          <useUIHarness>true</useUIHarness>
+          <useUIThread>true</useUIThread>
+          <!-- Phase 1 ships the empty fragment; Phase 2 will move tests in and
+               this can flip back to the default (true) once tests exist. -->
+          <failIfNoTests>false</failIfNoTests>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

@@ -285,7 +285,13 @@ public class DelegatingCommandStack extends CommandStack implements CommandStack
      * @see org.eclipse.gef.commands.CommandStack#markSaveLocation()
      */
     public void markSaveLocation() {
-        stkUrnSpec.flush();
+        // GEF CommandStack.flush() empties BOTH the undo AND redo stacks, so the
+        // previous `stkUrnSpec.flush()` here destroyed redo capability on every
+        // save. canRedo() returned false immediately after doSave(), regardless
+        // of whether anything was actually flushed -- which is what the test
+        // suite's undo-save-redo-save round-trip in tearDown is checking. Marking
+        // a save location should only record the position; explicit flushing is
+        // available via flushURNspecStack() when truly needed.
         unsavedChanges = false;
 
         if (null != currentCommandStack)

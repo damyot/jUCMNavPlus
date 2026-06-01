@@ -49,7 +49,7 @@
       the modern `org.eclipse.ui.commands` + `org.eclipse.ui.handlers` + `org.eclipse.ui.menus`
       triple. Each handler in seg.jUCMNav.actions.handlers either bridges to a legacy
       IEditorActionDelegate (LegacyDelegateHandler) or runs an editor-registered action
-      directly (RunRegisteredEditorActionHandler) -- behaviour preserved verbatim;
+      directly (RunRegisteredEditorActionHandler). Behaviour preserved verbatim;
       only the registration mechanism has changed.
    -->
    <extension point="org.eclipse.ui.commands">

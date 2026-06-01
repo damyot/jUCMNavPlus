@@ -50,19 +50,30 @@ mvn -B clean verify
 #   seg.jUCMNav.repository/target/repository
 ```
 
-In the IDE: import as existing projects, set the target platform to
-`seg.jUCMNav.target/seg.jUCMNav.target`, then Run As → Eclipse Application to
-launch a runtime workbench with the plug-in. Run As → JUnit Plug-in Test for tests.
+`verify` runs the JUnit suite under `seg.jUCMNav.tests/` (an
+`eclipse-test-plugin` fragment of `seg.jUCMNav`) inside a headless Eclipse UI
+harness. **Test failures fail the build.** On Linux the workbench needs a
+display, so CI wraps `mvn` in `xvfb-run`. Pass `-DskipTests` to skip tests
+locally if you only want the update site.
+
+In the IDE: import all four (now five) Maven modules as existing projects,
+set the target platform to `seg.jUCMNav.target/seg.jUCMNav.target`, then
+Run As → Eclipse Application to launch a runtime workbench. For tests,
+right-click any class under `seg.jUCMNav.tests/src/` (or the `src/` folder
+itself) → Run As → JUnit Plug-in Test.
 
 ## Repo layout (after scaffolding)
 
 - `seg.jUCMNav/` — the plug-in (existing code). Pomless: built from its MANIFEST.MF.
+- `seg.jUCMNav.tests/` — JUnit 3 test fragment (Fragment-Host: seg.jUCMNav).
+  `eclipse-test-plugin` packaging; needs a `pom.xml` since pomless does not
+  infer that packaging type.
 - `seg.jUCMNav.feature/` — the installable feature (what users select).
 - `seg.jUCMNav.repository/` — produces the p2 update site (`category.xml`).
 - `seg.jUCMNav.target/` — target platform definition (pinned to 2026-03).
 - `pom.xml` — Tycho parent/aggregator.
 - `.mvn/extensions.xml` — enables Tycho pomless builds.
-- `.github/workflows/` — CI build + publish update site to GitHub Pages.
+- `.github/workflows/` — CI build + tests + publish update site to GitHub Pages.
 
 ## Known migration hotspots (verify each against real errors)
 

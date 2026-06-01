@@ -1,26 +1,22 @@
 name: Build and publish update site
 
-# Builds the Tycho update site on every push/PR. On pushes to the default
-# branch (master) and on version tags (v*), also publishes it to GitHub Pages.
+# Builds the Tycho update site on every push/PR, runs the test fragment
+# under a virtual display via xvfb, and on pushes to master / v* tags also
+# publishes the update site to GitHub Pages.
+#
 # On every successful build, uploads the update site as a downloadable
 # GitHub Actions artifact so PRs from feature branches can be installed
 # locally for testing without waiting for a release.
+#
+# Tests: seg.jUCMNav.tests/ is an eclipse-test-plugin fragment of
+# seg.jUCMNav. `mvn -B clean verify` runs the JUnit suite inside a headless
+# Eclipse UI harness; failures fail this workflow. See `seg.jUCMNav.tests/pom.xml`
+# for surefire configuration (useUIHarness + useUIThread).
 #
 # After the first successful Pages deploy, enable Pages in the repo settings:
 #   Settings > Pages > Build and deployment > Source: "GitHub Actions".
 # Users then install jUCMNav by adding the Pages URL as an update site:
 #   https://<org-or-user>.github.io/<repo>/
-#
-# Note on tests: src/seg/jUCMNav/tests/ contains a JUnit 3 suite
-# (TestAllTestSuite) that is NOT executed by this build — Tycho's surefire
-# only runs tests in eclipse-test-plugin fragments, which jUCMNav does not
-# yet have. The xvfb-run wrapper below is kept so adding a test fragment
-# later "just works" without rewiring CI. To enable test execution:
-#   1. Extract src/seg/jUCMNav/tests/ into a sibling module
-#      seg.jUCMNav.tests/ with eclipse-test-plugin packaging.
-#   2. Modernize the JUnit 3 TestCase/TestSuite to JUnit 4 (@Test) — the
-#      org.junit Require-Bundle is already in place.
-#   3. Add the module to <modules> in pom.xml.
 
 on:
   push:
@@ -54,12 +50,13 @@ jobs:
           java-version: '21'
           cache: maven
 
-      # UI / plug-in tests need a display; provide a virtual one. Kept
-      # even though no test fragment exists yet — see header comment.
+      # UI / plug-in tests need a display; provide a virtual one. The
+      # eclipse-test-plugin fragment boots a headless workbench during
+      # `verify`, which needs a Display.
       - name: Install Xvfb
         run: sudo apt-get update && sudo apt-get install -y xvfb
 
-      - name: Build (Tycho)
+      - name: Build + test (Tycho)
         run: xvfb-run -a mvn -B clean verify
 
       # Always: downloadable artifact from the Actions UI. Lets reviewers of

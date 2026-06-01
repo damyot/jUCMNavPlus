@@ -16,3 +16,8 @@ seg.jUCMNav/jUCMNav.jar
 # Build log produced by mvn invocations during migration.
 build-output.log
 build-debug.log
+
+# Scratch commit-message file used when piping multi-line messages through
+# `git commit -F`. Always meant to be deleted by the same shell command that
+# created it; pinned here as a backstop.
+.commit-msg.tmp

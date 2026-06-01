@@ -303,6 +303,17 @@ public abstract class RuleManagementDefinitionManager {
     public void load() {
         loadRules();
         loadGroups();
+        // First-launch reconciliation: when no preferences have been persisted yet,
+        // loadRules() returns the deprecated, empty getDefaultDefinitions() list while
+        // loadGroups() correctly builds the default groups from the packaged XML rule
+        // files (ConsistencyGRL.xml, library.ocl utilities, etc.). Mirror loadDefault()
+        // so `rules` is populated from the "All" group -- otherwise the static-semantic
+        // checker sees no rules on first run, and the user has to click "Restore
+        // Defaults" in the Static Semantics Checking Preferences page once before
+        // anything is checked.
+        if ((rules == null || rules.isEmpty()) && groups != null && !groups.isEmpty()) {
+            rules = ((RuleGroup) groups.get(0)).getRules();
+        }
         loadOthers();
     }
 

@@ -1,11 +1,22 @@
 package seg.jUCMNav.model.commands.Slicing;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Parsing {
+
+	/**
+	 * Identifier pattern used by {@link #getVariables(String)}. Compiled once and
+	 * reused -- the slicing algorithm recurses through analizeCondition ->
+	 * analizeStatement -> getVariables thousands of times for non-trivial models,
+	 * and Pattern.compile rebuilds character-class union predicates each call
+	 * (modern JDK shows up as nested Pattern.lambda$union$3 frames under
+	 * BmpCharPropertyGreedy.match). Caching the Pattern makes the per-call cost
+	 * proportional to the number of matches, not the pattern's character class size.
+	 */
+	private static final Pattern IDENTIFIER_PATTERN = Pattern.compile("[a-zA-Z_$][a-zA-Z_$0-9]*"); //$NON-NLS-1$
 	
 	/**
 	 * This method extracts a code statement from code <em>only</em> when the code starts with a code statement  
@@ -70,19 +81,17 @@ public static ArrayList<String> extractCondition(String expression)
  */
 public static ArrayList<String> getVariables(String expression)
 {
-	 Pattern mypattern = Pattern.compile("[a-zA-Z_$][a-zA-Z_$0-9]*");
-	 ArrayList<String> Variables=new ArrayList<String>();
-	 Matcher mymatcher = mypattern.matcher(expression);
+	 // Use a LinkedHashSet to dedup in insertion order in O(n) instead of the
+	 // ArrayList.contains() O(n^2) scan -- the original outer Variables loop was
+	 // a hot path under deep slicing recursion.
+	 LinkedHashSet<String> unique = new LinkedHashSet<String>();
+	 Matcher mymatcher = IDENTIFIER_PATTERN.matcher(expression);
 	 while (mymatcher.find()) {
-		      //  To avoid repeated variables
-		      if(!Variables.contains(mymatcher.group(0)))
-               Variables.add( mymatcher.group(0)) ;
-		  
-		}
-	 Variables.removeAll(Collections.singleton("true"));
-	 Variables.removeAll(Collections.singleton("false"));
-	 return Variables;
-
+		 unique.add(mymatcher.group(0));
+	 }
+	 unique.remove("true"); //$NON-NLS-1$
+	 unique.remove("false"); //$NON-NLS-1$
+	 return new ArrayList<String>(unique);
 }
 
 

@@ -8,11 +8,8 @@ import grl.ActorRef;
 //import grl.ElementLink; // Never Used
 import grl.QualitativeLabel;
 
-import org.eclipse.draw2d.FreeformLayeredPane;
-import org.eclipse.draw2d.FreeformViewport;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
-import org.eclipse.draw2d.ScalableFigure;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -20,6 +17,7 @@ import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPolicy;
+import org.eclipse.gef.LayerConstants;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.views.properties.IPropertySource;
 
@@ -96,12 +94,14 @@ public class ActorRefEditPart extends ModelElementEditPart implements Adapter {
         evaluationLabel.setIcon(evaluationImg);
         evaluationLabel.setText(""); //$NON-NLS-1$
         evaluationLabel.setVisible(true);
+        // See IntentionalElementEditPart.createFigure for the full rationale: the legacy 3-level
+        // cast no longer holds on modern GEF Classic, so the label silently ended up on the root
+        // (unscaled) figure. Route through getLayer(PRIMARY_LAYER) -- the scaled primary layer --
+        // so the stickman icon and the quantitative-evaluation text scale with the zoom factor.
         try {
-            ((ScalableFigure) ((FreeformLayeredPane) ((FreeformViewport) ((GrlConnectionOnBottomRootEditPart) getRoot()).getFigure()).getChildren().get(0))
-                    .getChildren().get(0)).add(evaluationLabel);
+            ((URNRootEditPart) getRoot()).getLayer(LayerConstants.PRIMARY_LAYER).add(evaluationLabel);
         } catch (Exception ex) {
-            System.out.println("problem with scaling grl evaluation label"); //$NON-NLS-1$
-            // bug 435: old code.. hoping new code is more robust.
+            System.out.println("problem attaching grl evaluation label to scaled layer"); //$NON-NLS-1$
             ((GrlConnectionOnBottomRootEditPart) getRoot()).getFigure().add(evaluationLabel);
         }
 

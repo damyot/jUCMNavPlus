@@ -21,6 +21,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.EditPolicy;
+import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.NodeEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.editparts.AbstractConnectionEditPart;
@@ -149,16 +150,25 @@ public class IntentionalElementEditPart extends GrlNodeEditPart implements NodeE
         changeLabel.setVisible(false);
         changeLabel.setSize(50, 16);
 
+        // The evaluation/KPI/change labels need to live on a layer that scales with the zoom
+        // factor, otherwise their position is computed in model coordinates but rendered against
+        // an unscaled coordinate system -- so the labels stay at fixed screen pixels while the
+        // diagram resizes around them.
+        //
+        // The original 3-level cast tried to reach into the ScalableFreeformLayeredPane's first
+        // inner child and cast it to ScalableFigure; on modern GEF Classic (3.25.x / draw2d
+        // 3.22.x on the 2026-03 platform) that cast no longer holds, the catch block fired
+        // silently, and the labels ended up on the root (unscaled) figure. Use the canonical
+        // getLayer(PRIMARY_LAYER) accessor instead -- the primary layer is inside the scaled
+        // wrapper, so adding children there scales them correctly. The catch is kept as a last-
+        // resort fallback that matches the original defensive style.
         try {
-            ((ScalableFigure) ((FreeformLayeredPane) ((FreeformViewport) ((GrlConnectionOnBottomRootEditPart) getRoot()).getFigure()).getChildren().get(0))
-                    .getChildren().get(0)).add(evaluationLabel);
-            ((ScalableFigure) ((FreeformLayeredPane) ((FreeformViewport) ((GrlConnectionOnBottomRootEditPart) getRoot()).getFigure()).getChildren().get(0))
-                    .getChildren().get(0)).add(kpiEvaluationValueLabel);
-            ((ScalableFigure) ((FreeformLayeredPane) ((FreeformViewport) ((GrlConnectionOnBottomRootEditPart) getRoot()).getFigure()).getChildren().get(0))
-                    .getChildren().get(0)).add(changeLabel);
+            IFigure scaledPrimary = ((URNRootEditPart) getRoot()).getLayer(LayerConstants.PRIMARY_LAYER);
+            scaledPrimary.add(evaluationLabel);
+            scaledPrimary.add(kpiEvaluationValueLabel);
+            scaledPrimary.add(changeLabel);
         } catch (Exception ex) {
-            System.out.println("problem with scaling grl evaluation label"); //$NON-NLS-1$
-            // bug 435: old code.. hoping new code is more robust
+            System.out.println("problem attaching grl evaluation label to scaled layer"); //$NON-NLS-1$
             ((GrlConnectionOnBottomRootEditPart) getRoot()).getFigure().add(evaluationLabel);
             ((GrlConnectionOnBottomRootEditPart) getRoot()).getFigure().add(kpiEvaluationValueLabel);
             ((GrlConnectionOnBottomRootEditPart) getRoot()).getFigure().add(changeLabel);

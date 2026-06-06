@@ -188,6 +188,14 @@ public class CommentEditPart extends GrlNodeEditPart implements NodeEditPart {
     public void notifyChanged(Notification notification) {
         if (getParent() == null)
             return;
+        // Late notifications can fire during tab close: a sibling edit part's
+        // ModelElementEditPart.deactivate removes itself from an EMF eAdapter list,
+        // which fires a notification we hear here. By then the GraphicalViewer's SWT
+        // control (and the GC behind the FlowFigure text layout) may already be
+        // disposed, so the refreshVisuals -> figure.validate -> FlowFigureLayout ->
+        // GC.textExtent path raises SWTException: Graphic is disposed.
+        if (getViewer() == null || getViewer().getControl() == null || getViewer().getControl().isDisposed())
+            return;
         refreshTargetConnections();
         refreshSourceConnections();
         refreshVisuals();

@@ -18,6 +18,8 @@ import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.requests.DirectEditRequest;
 import org.eclipse.gef.tools.DirectEditManager;
 import org.eclipse.jface.viewers.ICellEditorValidator;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.SWTException;
 import org.eclipse.ui.views.properties.IPropertySource;
 
 import seg.jUCMNav.editpolicies.directEditPolicy.CommentDirectEditPolicy;
@@ -256,7 +258,25 @@ public class CommentEditPart extends GrlNodeEditPart implements NodeEditPart {
         ((CommentFigure) figure).setColors(null, getNode().getFillColor(), getNode().getFillColor() != null);
 
         // Make the label recenter itself.
-        figure.validate();
+        //
+        // figure.validate() walks the FlowFigure layout, which measures text via
+        // SWT.GC.textExtent/setFont. During a tab-close cascade the SWT control's
+        // backing GC is being disposed even while the deactivate path is still
+        // firing EMF notifications that bring us here. The notifyChanged guard
+        // above (getViewer().getControl().isDisposed()) does NOT catch this case
+        // because SWT only flips the disposed flag AFTER the SWT.Dispose
+        // listeners return -- and we're inside one of those listeners by then.
+        // Swallow the two specific dispose-related SWT error codes; surface
+        // anything else.
+        try {
+            figure.validate();
+        } catch (SWTException ex) {
+            if (ex.code != SWT.ERROR_GRAPHIC_DISPOSED && ex.code != SWT.ERROR_DEVICE_DISPOSED) {
+                throw ex;
+            }
+            // tearing down anyway; nothing useful to render
+            return;
+        }
 
         // notify parent container of changed position & location
         // if this line is removed, the XYLayoutManager used by the parent container

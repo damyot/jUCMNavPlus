@@ -12,9 +12,21 @@ Requirements Language (GRL). It is built on **EMF** (model) and **GEF Classic**
 plug-in: `MANIFEST.MF`, `plugin.xml`, an EMF model under `model/`
 (`.ecore` + `.genmodel`), and editor code under `src/`.
 
-The project last built reliably in 2018, had a partial fix attempt in 2020, and
-is currently broken: compile errors against modern Java/Eclipse, behind on
-versions, and no working deployment (the old update site is gone).
+The project last built reliably on the legacy
+[`JUCMNAV/projetseg-update`](https://github.com/JUCMNAV/projetseg-update)
+repo in 2018, had a partial fix attempt in 2020, then sat broken for years
+against modern Java/Eclipse with no working deployment. **Phase A
+(compile-clean) and Phase B (QA bug hunt) of the modernization are now
+complete** and shipping from `master` against Java 21 / Eclipse 2026-03,
+with the p2 update site published continuously to
+`https://jucmnav.github.io/jUCMNavPlus/` via GitHub Pages. The 319-test
+JUnit suite gates every push.
+
+When you arrive in a fresh session, expect a working build, not a rescue
+project. The targets and golden rules below still apply — they're what
+kept the modernization from drifting into a rewrite — but the "predicted
+compile errors" framing in MIGRATION_ERRORS.md is now historical record,
+not a TODO list.
 
 ## Targets (do not change without asking)
 
@@ -95,10 +107,22 @@ itself) → Run As → JUnit Plug-in Test.
 
 ## Workflow expectation
 
-First task in a fresh session: produce/refresh `MIGRATION_ERRORS.md` — a
-burn-down list of all current compile errors grouped by root cause. Work the
-list cluster by cluster, committing after each clears. Don't declare Phase A done
-until `mvn clean verify` reaches zero compile errors.
+Phase A (the burn-down captured in `MIGRATION_ERRORS.md`) is complete.
+Phase B (the static bug-hunt captured in `QA_FINDINGS.md`) is complete.
+Ongoing work is one-off bug fixes, UI polish, and triage of issues
+inherited from `JUCMNAV/projetseg-update` (see
+`docs/legacy-issue-triage.md`).
+
+In a fresh session, work the same way the modernization did:
+- Small, single-purpose commits. One root cause per commit.
+- Run `mvn -B clean verify` before any push to `master` — it's a hard
+  gate, not advisory. 319/0/0 must hold.
+- If the user says "test suite is irrelevant for this change" you can
+  build with `mvn -B clean package -DskipTests` to iterate faster; re-run
+  the full gate before pushing.
+- Push to `modernization` first; `master` is a fast-follow only when the
+  user explicitly asks for it. CI on `master` triggers the Pages deploy,
+  so be deliberate.
 
 ## Do not
 

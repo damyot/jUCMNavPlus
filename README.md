@@ -1,6 +1,6 @@
 # jUCMNav
 
-[![Build and publish update site](https://github.com/damyot/jUCMNavPlus/actions/workflows/build-and-deploy.yml/badge.svg?branch=modernization)](https://github.com/damyot/jUCMNavPlus/actions/workflows/build-and-deploy.yml)
+[![Build and publish update site](https://github.com/JUCMNAV/jUCMNavPlus/actions/workflows/build-and-deploy.yml/badge.svg?branch=master)](https://github.com/JUCMNAV/jUCMNavPlus/actions/workflows/build-and-deploy.yml)
 
 Eclipse plug-in for the **User Requirements Notation (URN)** — a graphical
 editor and analysis tool combining **Use Case Maps (UCM)** and the
@@ -9,28 +9,78 @@ Classic (diagram editors), and MDT/OCL (constraints).
 
 ## Status
 
-Modernization branch for Java 21 / Eclipse 2026-03. The CI badge above
-tracks the `modernization` branch; once Phase A merges to `master`, switch
-the badge to `?branch=master`.
+**Modernization complete and shipping from `master`.** jUCMNav now builds,
+tests, and runs on Java 21 LTS + Eclipse 2026-03 (4.39). The full Phase A
+(compile-clean, Tycho build, p2 update site) and Phase B (QA bug hunt:
+SWT leaks, dispose races, thread-affinity issues, GEF generics fallout,
+JDK 21 API drift) are merged. Every push to `master` runs the 319-test
+JUnit suite under a headless Eclipse UI harness as a hard CI gate.
 
-See [CLAUDE.md](CLAUDE.md) for the orientation document every contributor
-(and AI tool) should read first, and [MIGRATION_ERRORS.md](MIGRATION_ERRORS.md)
-for the burn-down of issues addressed during modernization.
+The installable update site is published continuously to GitHub Pages at
+[`https://jucmnav.github.io/jUCMNavPlus/`](https://jucmnav.github.io/jUCMNavPlus/) —
+see [Install](#install) below. The repository lives in the `JUCMNAV/`
+organization for continuity with the historical project.
+
+**Reference docs**
+- [CLAUDE.md](CLAUDE.md) — orientation for contributors (and AI tools).
+  Read first.
+- [MIGRATION_ERRORS.md](MIGRATION_ERRORS.md) — Phase A burn-down of every
+  compile error and how it was resolved.
+- [QA_FINDINGS.md](QA_FINDINGS.md) — Phase B static bug-hunt report
+  (110 candidates, 78 verified findings across 7 categories).
+- [docs/legacy-issue-triage.md](docs/legacy-issue-triage.md) — classification
+  of the 107 open issues on the legacy
+  [`JUCMNAV/projetseg-update`](https://github.com/JUCMNAV/projetseg-update)
+  repo, with notes on which are likely fixed by the modernization.
+
+## What's new
+
+Quick tour of the changes since the modernization started, focused on what
+they mean in practice when you actually use jUCMNav. For the full commit
+trail, see [`git log master`](https://github.com/JUCMNAV/jUCMNavPlus/commits/master).
+
+| Area | Change | What it means for you |
+|---|---|---|
+| **Platform** | Java 21 LTS + Eclipse 2026-03 (4.39), built with Tycho 5.0.3 | Runs on current machines; "won't install" against modern Eclipse is gone |
+| **Distribution** | One-click p2 update site from GitHub Pages | Paste `https://jucmnav.github.io/jUCMNavPlus/` into Eclipse's Install New Software and you're done — automatic updates via Help → Check for Updates |
+| **Quality gate** | 319 JUnit tests under a headless Eclipse harness, gating every push | Regressions get caught in CI instead of by you mid-presentation |
+| **HTML report — modern browsers** | Replaced frameset + browser-side XSLT pipeline with a self-contained `index.html` (flexbox sidebar + content iframe) | Reports open correctly in current Chrome/Edge/Firefox — the old XSLT silently failed on `file://` and Chrome announced removal of `XSLTProcessor` in 2024 |
+| **HTML report — UCM hierarchy** | Sidebar shows real model structure: Map → Stub → bound submap, recursively | You navigate the report the way the model is actually shaped, not as one flat list of every diagram |
+| **HTML report — diagram names** | Full model name in the menu and HTML titles | "GRL-Adequate Follow-up" stays "GRL-Adequate Follow-up" instead of getting truncated to "up" |
+| **HTML report — stub icons** | Static vs dynamic stubs shown with distinct icons | Dynamic stubs (multi-binding) are visually distinct from static ones at a glance |
+| **HTML report — sort order** | UCM / GRL / FM diagrams listed alphabetically; sub-maps under each stub sorted | Predictable, scannable; no more HashMap iteration order |
+| **HTML report — robustness** | One failing diagram no longer aborts the whole report; the rest still generate with a named log entry | A complex 56-diagram model with one bad figure produces 55 good pages plus an actionable error, instead of a half-finished folder with no index |
+| **PDF / RTF reports** | SWT `Transform` and `SWTGraphics` resources disposed on every page | Long export runs no longer exhaust GDI handles or crash with "no more handles" mid-document |
+| **Reports — date format** | `urn.getCreated()` / `getModified()` parse against the locale-specific JDK-21 LONG format | Generation no longer dies with `Unparseable date` on any locale where the format changed between JDK 8 and JDK 21 |
+| **Reports — UI threading** | Image export wrapped in `Display.syncExec`; error dialog threads through workbench shell | "Invalid thread access" during HTML/PDF report generation is gone |
+| **Editor — Save As** | Auto-appends `.jucm` if you forget it; pinned reopen editor id | Typing `model` saves as `model.jucm`. No more silent reopen in the text editor followed by a confusing `IllegalStateException` |
+| **Editor — undo** | `PathNodeEditPart.notifyChanged` guards against null viewer / disposed control | Complex undo across `SplitLinkCommand` and similar structural commands no longer NPEs |
+| **Editor — close** | Comment and path-node editparts no longer hit a disposed shared draw2d GC during the dispose cascade | Closing a dirty editor or deleting a populated map runs cleanly, without "Graphic is disposed" dialogs |
+| **Diagrams — antialiasing** | Off-screen GCs enable GDI+ before painting | Copied / exported diagrams render the same antialiased curves as on-screen, not pixelated approximations |
+| **Diagrams — label scaling** | GRL evaluation labels, KPI labels, change markers, actor stickman painted via the scaled primary layer | Decorations stay attached to their elements and shrink/grow correctly with zoom |
+| **MSC scenario viewer** | Default font seeded from the platform system font (was empty-string + `SWT.CANCEL` style) | The viewer actually opens — every paint used to throw `IllegalArgumentException` from `GC.setFont` |
+| **Add Stereotype Definitions** | Icon resolved against both classloader and bundle-root paths | Menu item shows the correct icon instead of a red-square missing-image placeholder |
+| **Performance — static slicing** | Cached regex `Pattern` + `LinkedHashSet` for dedup in `Parsing.getVariables` | Slicing large GRL models is meaningfully faster (was hot enough to look hung) |
+| **Resource hygiene** | Per-instance `Color`/`Font`/`Image` allocations routed through `ColorManager` cache and `JFaceResources` registries | No SWT-resource warnings in the Error Log during a long modeling session |
+| **CI / distribution** | GitHub Actions builds + tests + publishes update site on every push to `master`; downloadable artifact on every PR | You can install a PR build locally without waiting for it to merge |
+| **Project home** | Repo moved into the `JUCMNAV/` organization for continuity and multi-maintainer support | Install URL is `jucmnav.github.io/jUCMNavPlus/`; the historical `damyot/jUCMNavPlus` URL auto-redirects but the old Pages host does not — update your Eclipse update site list |
 
 ## Install
 
-Once GitHub Pages is enabled on the repository, install from:
+Add this URL to Eclipse → Help → Install New Software… → Add → Location:
 
 ```
-https://damyot.github.io/jUCMNavPlus/
+https://jucmnav.github.io/jUCMNavPlus/
 ```
 
-via Eclipse → Help → Install New Software… → Add → Location: the URL above.
+Then select **jUCMNav** under "URN: UCM + GRL" and finish the wizard.
+Subsequent updates come via Help → Check for Updates.
 
-To install from a build that has NOT yet been published to Pages (typical
-for PRs from feature branches): download the `jucmnav-update-site` artifact
-from the workflow run, unzip it locally, and point Install New Software at
-the unzipped folder via the **Local…** button.
+**To install a PR / feature-branch build that hasn't been published to
+Pages yet:** download the `jucmnav-update-site` artifact from the relevant
+[workflow run](https://github.com/JUCMNAV/jUCMNavPlus/actions), unzip it
+locally, and point Install New Software at the unzipped folder via the
+**Local…** button.
 
 ## Build
 
@@ -43,9 +93,9 @@ The installable p2 update site lands at
 Temurin recommended).
 
 `verify` also runs the JUnit suite under `seg.jUCMNav.tests/` inside a
-headless Eclipse UI harness. On Linux this needs a display — the CI
-workflow wraps `mvn` in `xvfb-run`. Locally, pass `-DskipTests` to skip
-tests if you only want the update site.
+headless Eclipse UI harness. On Linux this needs a display — CI wraps
+`mvn` in `xvfb-run`. Locally, pass `-DskipTests` to skip tests if you
+only want the update site.
 
 ## Test
 
@@ -62,8 +112,8 @@ Three ways to run the suite:
   reports results in the JUnit view.
 
 Six tests are intentionally disabled (`disabled_test*` prefix). See
-[issue #6](https://github.com/damyot/jUCMNavPlus/issues/6) and
-[issue #7](https://github.com/damyot/jUCMNavPlus/issues/7) for the
+[issue #6](https://github.com/JUCMNAV/jUCMNavPlus/issues/6) and
+[issue #7](https://github.com/JUCMNAV/jUCMNavPlus/issues/7) for the
 context and re-enable plan.
 
 On Windows, if `mvn` fails with a PKIX TLS-handshake error fetching from
@@ -82,6 +132,18 @@ repository. Set the target platform via
 `seg.jUCMNav.target/seg.jUCMNav.target` (open it, click "Set as Active
 Target Platform"). Run As → Eclipse Application launches a child workbench
 with the plug-in.
+
+## Historical project
+
+This repository is the modernized successor to
+[`JUCMNAV/projetseg-update`](https://github.com/JUCMNAV/projetseg-update),
+which holds the pre-modernization codebase and the legacy issue/wiki
+archive (943 issues, 107 still open at the time of transfer). The wiki
+content has been imported into [this repository's
+wiki](https://github.com/JUCMNAV/jUCMNavPlus/wiki); the legacy issue
+archive remains on `projetseg-update` for reference, and surviving bugs
+are being transferred selectively — see
+[`docs/legacy-issue-triage.md`](docs/legacy-issue-triage.md).
 
 ## License
 

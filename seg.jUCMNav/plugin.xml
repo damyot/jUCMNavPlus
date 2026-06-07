@@ -178,7 +178,7 @@
             <command commandId="seg.jUCMNav.commands.AutoLayout"            icon="icons/autolayout.gif"        tooltip="%autoLayout"               style="push"/>
             <command commandId="seg.jUCMNav.commands.SwitchModelLanguage"   icon="icons/SwitchModelLanguage.gif" tooltip="%SwitchLanguage"         style="push"/>
             <command commandId="seg.jUCMNav.commands.AdvancedMode"          icon="icons/advanced.gif"          tooltip="Toggle jUCMNav's advanced mode." style="toggle"/>
-            <command commandId="seg.jUCMNav.commands.AddStereotypeDefinitions" icon="src/seg/jUCMNav/icons/Metadata.gif" tooltip="%AddStereotypeDefinitions" style="push"/>
+            <command commandId="seg.jUCMNav.commands.AddStereotypeDefinitions" icon="icons/Metadata.gif" tooltip="%AddStereotypeDefinitions" style="push"/>
             <command commandId="seg.jUCMNav.commands.VerifySyntax"          icon="icons/syntax.gif"            tooltip="%VerifySyntax"             style="push"/>
             <command commandId="seg.jUCMNav.commands.VerifyStaticSemantic"  icon="icons/ocl.gif"               tooltip="%VerifyStaticSemantics"    style="push"/>
             <command commandId="seg.jUCMNav.commands.CalculateMetrics"      icon="icons/metrics.gif"           tooltip="%CalculateMetrics"         style="push"/>

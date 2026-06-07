@@ -79,6 +79,8 @@ import org.eclipse.ui.part.IPageSite;
 import org.eclipse.ui.part.PageBook;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
+import seg.UCMScenarioViewer.actions.MSCCopyAction;
+import seg.UCMScenarioViewer.actions.MSCExportAction;
 import seg.UCMScenarioViewer.actions.SetFontAction;
 import seg.UCMScenarioViewer.actions.UCMScenarioViewerContextMenuProvider;
 import seg.UCMScenarioViewer.dnd.MSCTransferDropTargetListener;
@@ -794,6 +796,19 @@ public class UCMScenarioViewer extends GraphicalEditor {
 	protected void createActions() {
 		super.createActions();
 		getActionRegistry().registerAction(new SetFontAction(this));
+		// MSC-specific Copy + Export actions, also shown in the right-click
+		// context menu (see UCMScenarioViewerContextMenuProvider). Copy is
+		// further bound to the workbench's Edit -> Copy command so Ctrl+C
+		// works when this editor is the active part.
+		MSCCopyAction copyAction = new MSCCopyAction(this);
+		MSCExportAction exportAction = new MSCExportAction(this);
+		getActionRegistry().registerAction(copyAction);
+		getActionRegistry().registerAction(exportAction);
+		IHandlerService handler = (IHandlerService) getSite().getService(IHandlerService.class);
+		if (handler != null && copyAction.getActionDefinitionId() != null) {
+			handler.activateHandler(copyAction.getActionDefinitionId(),
+					new ActionHandler(copyAction));
+		}
 	}
 }
 

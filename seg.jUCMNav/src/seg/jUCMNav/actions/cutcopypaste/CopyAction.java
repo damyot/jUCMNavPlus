@@ -2,6 +2,7 @@ package seg.jUCMNav.actions.cutcopypaste;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.LayeredPane;
+import org.eclipse.draw2d.ScalableLayeredPane;
 import org.eclipse.draw2d.SWTGraphics;
 import org.eclipse.gef.internal.GEFMessages;
 import org.eclipse.gef.ui.actions.SelectionAction;
@@ -63,6 +64,23 @@ public class CopyAction extends SelectionAction {
                 Image image = new Image(Display.getDefault(), w, h);
                 GC gc = null;
                 SWTGraphics graphics = null;
+                // Workaround for issue #4: at zoom EXACTLY 1.0, the live
+                // ScalableFreeformLayeredPane.paintClientArea takes its
+                // `if (scale == 1.0)` fast path and skips the internal
+                // ScaledGraphics wrap; children then paint straight through
+                // SWTGraphics.fillPolygon, which on an off-screen GC silently
+                // drops every UCM antialiased polygon fill (stubs, endpoints,
+                // AND/OR forks/joins, direction arrows). Nudging the scale
+                // by 1e-5 for just this paint forces the working code path.
+                // The shift is sub-pixel on any diagram up to 100k px wide
+                // and the live editor coalesces the two repaint requests
+                // (nudge + restore) within this UI tick, so no flicker.
+                // This is a tactical workaround pending the real fix at
+                // the GEF paint level; see #4 for that work.
+                final ScalableLayeredPane scalablePane = (pane instanceof ScalableLayeredPane)
+                        ? (ScalableLayeredPane) pane : null;
+                final double originalScale = (scalablePane != null) ? scalablePane.getScale() : 1.0;
+                final boolean needsNudge = (scalablePane != null) && originalScale == 1.0;
                 try {
                     gc = new GC(image);
                     // Force GDI+ on Windows so antialiased Polygon/Polyline fills (used by every
@@ -76,11 +94,13 @@ public class CopyAction extends SelectionAction {
                     gc.setTextAntialias(SWT.ON);
                     graphics = new SWTGraphics(gc);
                     graphics.translate(-pane.getBounds().x, -pane.getBounds().y);
+                    if (needsNudge) scalablePane.setScale(1.00001);
                     figure.paint(graphics);
 
                     // TODO: Improve crop to make use of current selection.
                     screenshot = ReportUtils.cropImage(image.getImageData());
                 } finally {
+                    if (needsNudge) scalablePane.setScale(originalScale);
                     if (graphics != null) graphics.dispose();
                     if (gc != null) gc.dispose();
                     image.dispose();

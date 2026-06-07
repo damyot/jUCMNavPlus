@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.ScalableLayeredPane;
 import org.eclipse.draw2d.SWTGraphics;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
@@ -43,6 +44,20 @@ public class ExportImageGIF extends ExportImage {
                 Image image = null;
                 GC gc = null;
                 SWTGraphics graphics = null;
+                // Same scale-nudge workaround as CopyAction.buildScreenshot --
+                // see issue #4. At zoom EXACTLY 1.0 the live
+                // ScalableFreeformLayeredPane.paintClientArea skips its
+                // internal ScaledGraphics wrap, and on the off-screen GC every
+                // antialiased polygon fill (stubs, endpoints, forks/joins,
+                // direction arrows) silently drops. Nudging by 1e-5 forces
+                // the working code path; the shift is sub-pixel and the
+                // restore happens within this UI tick so no on-screen flicker.
+                // Without this, the HTML report's pages/img/*.gif inherits
+                // the same dropout for every UCM map at default zoom.
+                final ScalableLayeredPane scalablePane = (pane instanceof ScalableLayeredPane)
+                        ? (ScalableLayeredPane) pane : null;
+                final double originalScale = (scalablePane != null) ? scalablePane.getScale() : 1.0;
+                final boolean needsNudge = (scalablePane != null) && originalScale == 1.0;
                 try {
                     image = new Image(Display.getDefault(), pane.getSize().width, pane.getSize().height);
                     gc = new GC(image);
@@ -50,12 +65,14 @@ public class ExportImageGIF extends ExportImage {
                     graphics = new SWTGraphics(gc);
                     // if the bounds are in the negative x/y, we don't see them without a translation
                     graphics.translate(-pane.getBounds().x, -pane.getBounds().y);
+                    if (needsNudge) scalablePane.setScale(1.00001);
                     pane.paint(graphics);
 
                     ImageLoader loader = new ImageLoader();
                     loader.data = new ImageData[] { downSample(image) };
                     loader.save(fos, getType());
                 } finally {
+                    if (needsNudge) scalablePane.setScale(originalScale);
                     // SWTGraphics lazily allocates an SWT Transform on scale(); dispose it too.
                     if (graphics != null) graphics.dispose();
                     if (gc != null) gc.dispose();

@@ -10,7 +10,6 @@ import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.IScalablePane;
 import org.eclipse.draw2d.SWTGraphics;
-import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
@@ -29,7 +28,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 
 import seg.UCMScenarioViewer.UCMScenarioViewer;
-import seg.UCMScenarioViewer.utils.Helper;
 
 /**
  * Copy the currently displayed MSC scenario diagram to the system clipboard
@@ -73,8 +71,18 @@ public class MSCCopyAction extends Action {
         if (gv == null) return;
 
         ScalableFreeformRootEditPart root = (ScalableFreeformRootEditPart) gv.getRootEditPart();
-        IFigure pane = root.getLayer(LayerConstants.PRINTABLE_LAYERS);
-        if (pane == null) return;
+        // Paint the SCALED layered pane (parent of PRINTABLE_LAYERS), not
+        // PRINTABLE_LAYERS itself. The scaled pane is what applies the
+        // ZoomManager's scale transform during paintClientArea -- painting
+        // the printable child directly bypasses it, so the clipboard image
+        // came out at 100% regardless of the on-screen zoom. The scaled
+        // pane's own bounds also reflect the scaled extent, which fixes
+        // the symbol-truncation issues seen with the previous extent walk
+        // (that approach was reverted; it computed bigger-than-needed
+        // bounds in scaled coordinates and made captures look worse).
+        IFigure printable = root.getLayer(LayerConstants.PRINTABLE_LAYERS);
+        if (printable == null) return;
+        IFigure pane = (printable.getParent() != null) ? printable.getParent() : printable;
 
         // Issue #4 workaround: at zoom exactly 1.0 the ScalableFreeformLayeredPane
         // skips its ScaledGraphics wrap and antialiased Polygon/Polyline fills
@@ -92,20 +100,15 @@ public class MSCCopyAction extends Action {
         try {
             if (needsNudge) scalable.setScale(originalScale + 0.001);
 
-            // Use the union extent of every descendant figure instead of
-            // pane.getSize(): the MSC layer's own getBounds() doesn't include
-            // children that paint outside (condition shapes, loop messages on
-            // a single lifeline, etc.) so the previous code truncated them.
-            Rectangle extent = Helper.computePaintExtent(pane);
-
-            image = new Image(Display.getCurrent(), extent.width, extent.height);
+            image = new Image(Display.getCurrent(),
+                    pane.getSize().width, pane.getSize().height);
             gc = new GC(image);
             // Force GDI+ on Windows so antialiased fills render off-screen.
             gc.setAdvanced(true);
             gc.setAntialias(SWT.ON);
             gc.setTextAntialias(SWT.ON);
             graphics = new SWTGraphics(gc);
-            graphics.translate(-extent.x, -extent.y);
+            graphics.translate(-pane.getBounds().x, -pane.getBounds().y);
             pane.paint(graphics);
 
             ImageData data = image.getImageData();

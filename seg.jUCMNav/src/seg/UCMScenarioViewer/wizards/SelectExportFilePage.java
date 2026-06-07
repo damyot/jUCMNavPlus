@@ -9,7 +9,6 @@ import java.lang.reflect.InvocationTargetException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
@@ -252,25 +251,21 @@ public class SelectExportFilePage extends WizardPage implements SelectionListene
         GC gc = null;
         Graphics graphics = null;
         try {
-            IFigure f = ((ScalableFreeformRootEditPart) gv.getRootEditPart()).getLayer(LayerConstants.PRINTABLE_LAYERS);
+            // Paint the SCALED layered pane (parent of PRINTABLE_LAYERS),
+            // not PRINTABLE_LAYERS itself. The scaled pane is what applies
+            // the ZoomManager's scale transform during paintClientArea;
+            // painting the printable child directly bypasses it, which both
+            // made the wizard's zoom selector a no-op AND made the bounds
+            // wrong (extent walking was tried in a previous revision and
+            // reverted -- it produced worse images by sizing the canvas in
+            // unscaled child coordinates).
+            IFigure printable = ((ScalableFreeformRootEditPart) gv.getRootEditPart())
+                    .getLayer(LayerConstants.PRINTABLE_LAYERS);
+            IFigure f = (printable != null && printable.getParent() != null)
+                    ? printable.getParent() : printable;
+            if (f == null) return null;
 
-            // Use the union extent of every descendant figure: the MSC
-            // printable layer's own getBounds() doesn't include children
-            // that paint outside (condition shapes, loop messages on a
-            // single lifeline, etc.), and using getSize() truncated them
-            // on all four sides. See Helper.computePaintExtent for the
-            // rationale and the safety pad.
-            //
-            // Translation must be NEGATIVE of the extent's origin: shifting
-            // the coordinate system by -extent.x / -extent.y maps the
-            // figure's (possibly negative) coordinates into the image's
-            // (0,0)-anchored canvas. The pre-existing positive-offset
-            // version (translate(f.getBounds().getLocation())) only happened
-            // to work when figure bounds started at (0,0); for non-zero-
-            // origin layers it was double-offset in the wrong direction.
-            Rectangle extent = Helper.computePaintExtent(f);
-
-            img = new Image(null, extent.width, extent.height);
+            img = new Image(null, f.getSize().width, f.getSize().height);
             gc = new GC(img);
             // See CopyAction.buildScreenshot -- without GDI+ mode, antialiased
             // Polygon/Polyline fills used by UCM path-node figures silently
@@ -279,7 +274,7 @@ public class SelectExportFilePage extends WizardPage implements SelectionListene
             gc.setAntialias(SWT.ON);
             gc.setTextAntialias(SWT.ON);
             graphics = new SWTGraphics(gc);
-            graphics.translate(-extent.x, -extent.y);
+            graphics.translate(-f.getBounds().x, -f.getBounds().y);
             f.paint(graphics);
             return img.getImageData();
         } finally {

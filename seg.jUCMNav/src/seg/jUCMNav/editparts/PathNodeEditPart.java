@@ -303,28 +303,32 @@ public class PathNodeEditPart extends ModelElementEditPart implements NodeEditPa
     public void notifyChanged(Notification notification) {
         if (getParent() == null)
             return;
-        // Two scenarios where notifyChanged fires on a detached/disposing editpart:
-        //  1. Editor close cascade: ModelElementEditPart.deactivate removes the EMF
-        //     adapter BEFORE super.deactivate(), so isActive() is still true; the
-        //     resulting REMOVE notification reaches us, refreshVisuals -> Label
-        //     paint runs against a disposed shared GC ("Graphic is disposed").
-        //  2. Undo of a structural command (e.g. SplitLinkCommand) fires a
-        //     notification on a PathNodeEditPart whose viewer chain is null,
-        //     and refreshTargetConnections -> createOrFindConnection NPEs on
-        //     getViewer().getEditPartForModel(...).
-        // Bail out when the viewer side is gone in either form.
-        org.eclipse.gef.EditPartViewer v = getViewer();
-        if (v == null || v.getControl() == null || v.getControl().isDisposed())
-            return;
+        // Narrowly guard only the operations that crash when the viewer chain
+        // is gone or the editor's SWT side is mid-teardown. Don't bail out of
+        // the whole method -- legitimate notifications that drive parent
+        // refresh / undo cascades still need to flow through.
+        //
+        //  - refreshTargetConnections / refreshSourceConnections walk into
+        //    AbstractGraphicalEditPart.createOrFindConnection, which calls
+        //    getViewer().getEditPartForModel(...) and NPEs when the editpart
+        //    is detached (observed during undo of SplitLinkCommand).
+        //  - The trailing refreshVisuals() ends in draw2d Label paint /
+        //    DrawableFigureUtilities.setFont on the shared static GC, which
+        //    throws SWT "Graphic is disposed" during the editor-close
+        //    cascade (ModelElementEditPart.deactivate removes the EMF adapter
+        //    before super.deactivate(), so isActive() is still true while the
+        //    SWT control is already being released).
+        boolean viewerLive = hasLiveViewer();
+
         int featureId = notification.getFeatureID(UcmPackage.class);
         switch (featureId) {
         case MapPackage.PATH_NODE__PRED:
-            refreshTargetConnections();
+            if (viewerLive) refreshTargetConnections();
             if (getParent() != null)
                 ((URNDiagramEditPart) getParent()).notifyChanged(notification);
             break;
         case MapPackage.PATH_NODE__SUCC:
-            refreshSourceConnections();
+            if (viewerLive) refreshSourceConnections();
             if (getParent() != null)
                 ((URNDiagramEditPart) getParent()).notifyChanged(notification);
             break;
@@ -339,7 +343,23 @@ public class PathNodeEditPart extends ModelElementEditPart implements NodeEditPa
             break;
         }
 
-        refreshVisuals();
+        if (viewerLive) {
+            try {
+                refreshVisuals();
+            } catch (org.eclipse.swt.SWTException ex) {
+                if (ex.code != org.eclipse.swt.SWT.ERROR_GRAPHIC_DISPOSED)
+                    throw ex;
+                // Editor's GC went away between the live-viewer check and the
+                // actual paint. Safe to swallow during dispose cascade.
+            }
+        }
+    }
+
+    private boolean hasLiveViewer() {
+        org.eclipse.gef.EditPartViewer v = getViewer();
+        if (v == null) return false;
+        org.eclipse.swt.widgets.Control c = v.getControl();
+        return c != null && !c.isDisposed();
     }
 
     /**

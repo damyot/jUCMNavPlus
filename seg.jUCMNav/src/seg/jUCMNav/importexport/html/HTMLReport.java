@@ -423,8 +423,13 @@ public class HTMLReport extends URNReport {
 			srcFile = "htmltemplates/grldef16.gif"; //$NON-NLS-1$
 			desFile = htmlPath + PAGES_LOCATION + "grldef16.gif"; //$NON-NLS-1$
 			copy(srcFile, desFile);
-			// Generate the feature16.gif (the FMDEF symbol) file
-						srcFile = "htmltemplates/feature16.gif"; //$NON-NLS-1$
+			// Generate the feature16.gif (the FMDEF symbol) file -- source file
+			// on disk is "Feature16.gif" (capital F); JAR classloader lookup is
+			// case-sensitive, so the wrong case here was returning null from
+			// getResourceAsStream and leaving an empty, JVM-locked output file
+			// at pages/feature16.gif. Destination stays lowercase because
+			// xmlTree.xsl references <img src="feature16.gif"/>.
+						srcFile = "htmltemplates/Feature16.gif"; //$NON-NLS-1$
 						desFile = htmlPath + PAGES_LOCATION + "feature16.gif"; //$NON-NLS-1$
 						copy(srcFile, desFile);
 
@@ -561,21 +566,30 @@ public class HTMLReport extends URNReport {
 	 * @throws IOException
 	 */
 	protected static void copy(String srcPath, String dstPath) throws IOException {
-		Class location = HTMLReport.class;
-
-		InputStream in = location.getResourceAsStream(srcPath);
-		OutputStream out = new FileOutputStream(new File(dstPath));
-
-		// Transfer bytes from in to out
-		int bufLen = 1024 * 8;
-		byte[] buf = new byte[bufLen];
-		int len;
-		while ((len = in.read(buf)) > 0) {
-			out.write(buf, 0, len);
+		// Opening the FileOutputStream BEFORE checking the InputStream and copying
+		// without a finally block had two failure modes: (1) if the classpath
+		// resource was missing, in.read() NPE'd while out was already open, leaving
+		// an empty file locked by the JVM (Windows refuses to delete it); (2) any
+		// IOException mid-copy leaked the same way. Check the source first; then
+		// guarantee both streams close via finally.
+		InputStream in = HTMLReport.class.getResourceAsStream(srcPath);
+		if (in == null) {
+			throw new IOException("HTMLReport: classpath resource not found: " + srcPath); //$NON-NLS-1$
 		}
-
-		in.close();
-		out.close();
+		OutputStream out = null;
+		try {
+			out = new FileOutputStream(new File(dstPath));
+			byte[] buf = new byte[1024 * 8];
+			int len;
+			while ((len = in.read(buf)) > 0) {
+				out.write(buf, 0, len);
+			}
+		} finally {
+			try { in.close(); } catch (IOException ignore) {}
+			if (out != null) {
+				try { out.close(); } catch (IOException ignore) {}
+			}
+		}
 	}
 
 	/**

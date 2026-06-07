@@ -130,24 +130,32 @@ public class ReportUtils {
         	document.add(Chunk.NEWLINE);
             int paneWidth = Math.round(pane.getSize().width * ReportUtils.ZOOMFACTOR);
             int paneHeight = Math.round(pane.getSize().height * ReportUtils.ZOOMFACTOR);
-            org.eclipse.swt.graphics.Image image = new org.eclipse.swt.graphics.Image(Display.getCurrent(), paneWidth, paneHeight);
+            org.eclipse.swt.graphics.Image image = null;
+            GC gc = null;
+            SWTGraphics graphics = null;
+            Image rtfImage;
+            try {
+                image = new org.eclipse.swt.graphics.Image(Display.getCurrent(), paneWidth, paneHeight);
+                gc = new GC(image);
+                seg.jUCMNav.importexport.ExportImage.enableAdvancedRendering(gc);
+                graphics = new SWTGraphics(gc);
+                pane.paint(graphics);
 
-            GC gc = new GC(image);
-            seg.jUCMNav.importexport.ExportImage.enableAdvancedRendering(gc);
-            SWTGraphics graphics = new SWTGraphics(gc);
-            pane.paint(graphics);
+                ImageData ideaImageData = ExportImageGIF.downSample(image);
+                ImageData croppedImage = ReportUtils.cropImage(ideaImageData);
 
-            ImageData ideaImageData = ExportImageGIF.downSample(image);
-            ImageData croppedImage = ReportUtils.cropImage(ideaImageData);
-            
-            ImageLoader loader = new ImageLoader();
-            loader.data = new ImageData[] { croppedImage };
-            loader.save("tmpfile.gif", SWT.IMAGE_GIF); //$NON-NLS-1$
+                ImageLoader loader = new ImageLoader();
+                loader.data = new ImageData[] { croppedImage };
+                loader.save("tmpfile.gif", SWT.IMAGE_GIF); //$NON-NLS-1$
 
-            Image rtfImage = Image.getInstance("tmpfile.gif"); //$NON-NLS-1$
-
-            gc.dispose();
-            image.dispose();
+                rtfImage = Image.getInstance("tmpfile.gif"); //$NON-NLS-1$
+            } finally {
+                // SWTGraphics never got its own dispose() in the original code, leaking any
+                // Transform it allocated for later state pushes; see PDFReportDiagram.
+                if (graphics != null) graphics.dispose();
+                if (gc != null) gc.dispose();
+                if (image != null) image.dispose();
+            }
 
             imageSmartScale(pagesize, imageWidth, imageHeight, rtfImage);
             document.add(rtfImage);

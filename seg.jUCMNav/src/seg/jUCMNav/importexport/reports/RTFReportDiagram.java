@@ -172,34 +172,42 @@ public class RTFReportDiagram extends PDFReport {
             //int paneHeight = Math.round(pane.getSize().height * ReportUtils.ZOOMFACTOR);
             int paneWidth = Math.round(pane.getSize().width * ReportUtils.ZOOMFACTOR);
             int paneHeight = Math.round(pane.getSize().height * ReportUtils.ZOOMFACTOR);
-            Image image = new Image(Display.getCurrent(), paneWidth, paneHeight);
+            Image image = null;
+            GC gc = null;
+            SWTGraphics graphics = null;
+            try {
+                image = new Image(Display.getCurrent(), paneWidth, paneHeight);
+                gc = new GC(image);
+                seg.jUCMNav.importexport.ExportImage.enableAdvancedRendering(gc);
+                graphics = new SWTGraphics(gc);
 
-            GC gc = new GC(image);
-            seg.jUCMNav.importexport.ExportImage.enableAdvancedRendering(gc);
-            SWTGraphics graphics = new SWTGraphics(gc);
+                // zoom for better resolution
+                graphics.scale(ReportUtils.ZOOMFACTOR); // temporary
 
-            // zoom for better resolution
-            graphics.scale(ReportUtils.ZOOMFACTOR); // temporary
+                // if the bounds are in the negative x/y, we don't see them without a translation
+                graphics.translate(-pane.getBounds().x, -pane.getBounds().y);
+                pane.paint(graphics);
 
-            // if the bounds are in the negative x/y, we don't see them without a translation
-            graphics.translate(-pane.getBounds().x, -pane.getBounds().y);
-            pane.paint(graphics);
+                // downSample the image to an 8-bit palette, using the 256 most frequently used color
+                ImageData ideaImageData = ExportImageGIF.downSample(image);
 
-            // downSample the image to an 8-bit palette, using the 256 most frequently used color
-            ImageData ideaImageData = ExportImageGIF.downSample(image);
+                ImageData croppedImage = ReportUtils.cropImage(ideaImageData);
+                java.awt.Image awtImage = ReportUtils.SWTimageToAWTImage(croppedImage);
 
-            ImageData croppedImage = ReportUtils.cropImage(ideaImageData);
-            java.awt.Image awtImage = ReportUtils.SWTimageToAWTImage(croppedImage);
+                BufferedImage bufferedImage = (BufferedImage) awtImage;
+                int imageHeight = bufferedImage.getHeight();
+                int imageWidth = bufferedImage.getWidth();
 
-            BufferedImage bufferedImage = (BufferedImage) awtImage;
-            int imageHeight = bufferedImage.getHeight();
-            int imageWidth = bufferedImage.getWidth();
+                ReportUtils.insertRTFImage(document, pane, pagesize, imageWidth, imageHeight);
 
-            ReportUtils.insertRTFImage(document, pane, pagesize, imageWidth, imageHeight);
-
-            gc.dispose();
-            image.dispose();
-            awtImage.flush();
+                awtImage.flush();
+            } finally {
+                // SWTGraphics.scale() lazily allocates an SWT Transform that must be disposed
+                // with the graphics; see PDFReportDiagram for the same pattern.
+                if (graphics != null) graphics.dispose();
+                if (gc != null) gc.dispose();
+                if (image != null) image.dispose();
+            }
 
             //boolean isLast = i == mapDiagrams.size() - 1;
 

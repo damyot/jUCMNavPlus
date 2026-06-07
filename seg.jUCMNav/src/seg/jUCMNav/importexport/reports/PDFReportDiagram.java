@@ -180,38 +180,43 @@ public class PDFReportDiagram extends PDFReport {
             
     		Display.getDefault().syncExec(new Runnable() {
     			public void run() {
+            Image image = null;
+            GC gc = null;
+            SWTGraphics graphics = null;
+            try {
+                image = new Image(Display.getDefault(), paneWidth, paneHeight);
+                gc = new GC(image);
+                seg.jUCMNav.importexport.ExportImage.enableAdvancedRendering(gc);
+                graphics = new SWTGraphics(gc);
 
-            
-//            Image image = new Image(Display.getCurrent(), paneWidth, paneHeight);
-            Image image = new Image(Display.getDefault(), paneWidth, paneHeight);
+                // zoom for better resolution
+                graphics.scale(ReportUtils.ZOOMFACTOR);
 
-            GC gc = new GC(image);
-            seg.jUCMNav.importexport.ExportImage.enableAdvancedRendering(gc);
-            SWTGraphics graphics = new SWTGraphics(gc);
+                // if the bounds are in the negative x/y, we don't see them without a translation
+                graphics.translate(-pane.getBounds().x, -pane.getBounds().y);
+                pane.paint(graphics);
 
-            // zoom for better resolution
-            graphics.scale(ReportUtils.ZOOMFACTOR);
+                // downSample the image to an 8-bit palette, using the 256 most frequently used color
+                ImageData ideaImageData = ExportImageGIF.downSample(image);
 
-            // if the bounds are in the negative x/y, we don't see them without a translation
-            graphics.translate(-pane.getBounds().x, -pane.getBounds().y);
-            pane.paint(graphics);
+                ImageData croppedImage = ReportUtils.cropImage(ideaImageData);
+                java.awt.Image awtImage = ReportUtils.SWTimageToAWTImage(croppedImage);
 
-            // downSample the image to an 8-bit palette, using the 256 most frequently used color
-            ImageData ideaImageData = ExportImageGIF.downSample(image);
+                BufferedImage bufferedImage = (BufferedImage) awtImage;
+                int imageHeight = bufferedImage.getHeight();
+                int imageWidth = bufferedImage.getWidth();
 
-            ImageData croppedImage = ReportUtils.cropImage(ideaImageData);
-            java.awt.Image awtImage = ReportUtils.SWTimageToAWTImage(croppedImage);
+                ReportUtils.insertImage(document, awtImage, pagesize, imageWidth, imageHeight);
 
-            BufferedImage bufferedImage = (BufferedImage) awtImage;
-            int imageHeight = bufferedImage.getHeight();
-            int imageWidth = bufferedImage.getWidth();
-
-            ReportUtils.insertImage(document, awtImage, pagesize, imageWidth, imageHeight);
-
-            gc.dispose();
-            image.dispose();
-            awtImage.flush();
-
+                awtImage.flush();
+            } finally {
+                // SWTGraphics.scale() lazily allocates an SWT Transform that lives until the
+                // graphics is disposed -- without this dispose, modern SWT logs one
+                // "SWT Resource was not properly disposed" Error per diagram in the report.
+                if (graphics != null) graphics.dispose();
+                if (gc != null) gc.dispose();
+                if (image != null) image.dispose();
+            }
     			}
     		});
 

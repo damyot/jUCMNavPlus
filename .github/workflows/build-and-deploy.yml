@@ -69,7 +69,42 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
-      # Only on master / tags: prepare the Pages artifact for deploy.
+      # Only on master / tags: drop a landing page into the update site so
+      # the Pages root URL doesn't 404 (the p2 repo itself has no index.html),
+      # then prepare the Pages artifact for deploy.
+      - name: Generate landing page
+        if: github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v')
+        run: |
+          cat > seg.jUCMNav.repository/target/repository/index.html <<'EOF'
+          <!doctype html>
+          <html lang="en">
+          <head>
+            <meta charset="utf-8">
+            <title>jUCMNav update site</title>
+            <style>
+              body { font-family: -apple-system, Segoe UI, Helvetica, Arial, sans-serif;
+                     max-width: 720px; margin: 4em auto; padding: 0 1em; color: #222; }
+              code { background: #f4f4f4; padding: 2px 6px; border-radius: 4px; }
+              pre  { background: #f4f4f4; padding: 1em; border-radius: 6px; overflow-x: auto; }
+              a    { color: #0366d6; }
+            </style>
+          </head>
+          <body>
+            <h1>jUCMNav update site</h1>
+            <p>This URL is an Eclipse p2 update site, not a regular web page.</p>
+            <h2>Install in Eclipse</h2>
+            <ol>
+              <li>In Eclipse: <em>Help &rarr; Install New Software&hellip;</em></li>
+              <li>Paste this URL into the <em>Work with</em> field:
+                  <pre>https://damyot.github.io/jUCMNavPlus/</pre></li>
+              <li>Select <em>jUCMNav</em> and finish the wizard.</li>
+            </ol>
+            <p>To check for updates later: <em>Help &rarr; Check for Updates</em>.</p>
+            <p>Source: <a href="https://github.com/damyot/jUCMNavPlus">github.com/damyot/jUCMNavPlus</a></p>
+          </body>
+          </html>
+          EOF
+
       - name: Upload update site (Pages artifact)
         if: github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v')
         uses: actions/upload-pages-artifact@v5

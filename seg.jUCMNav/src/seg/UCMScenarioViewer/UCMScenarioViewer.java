@@ -123,18 +123,36 @@ public class UCMScenarioViewer extends GraphicalEditor {
         }
         return largerApplicationFont;
     }
-    public static void setApplicationFont(FontData newFont) 
+    public static void setApplicationFont(FontData newFont)
     {
-        if (applicationFont!=null)
-        	if (!applicationFont.isDisposed())
-        		applicationFont.dispose();
-        applicationFont = new Font(null, newFont.getName(), newFont.getHeight(), newFont.getStyle());
+        // Validate every FontData field before constructing SWT Fonts. The
+        // FontDialog can return values that make `new Font(...)` build an
+        // invalid handle on modern SWT -- specifically height == 0 (Windows
+        // platform fonts), unusual style bits (some platforms set extras
+        // beyond NORMAL/BOLD/ITALIC), or an empty family name. Any of those
+        // produces a Font that crashes the very next GC.setFont() with
+        // ERROR_INVALID_ARGUMENT, which then surfaces during a paint of
+        // LifeLineFigure / DiagramFigureBorder / etc. Earlier fix
+        // (a332d434) hardened the default getter; this hardens the setter.
+        FontData defaults = baseFontData();
+        String name = (newFont != null && newFont.getName() != null && !newFont.getName().isEmpty())
+                ? newFont.getName()
+                : defaults.getName();
+        int height = (newFont != null) ? newFont.getHeight() : 0;
+        if (height <= 0 || height > 144) height = defaults.getHeight();
+        int style = (newFont != null) ? newFont.getStyle() : SWT.NORMAL;
+        // Mask to the three style bits SWT Font actually understands; any
+        // other bits leak through to native font construction and may be
+        // rejected on Win32.
+        style &= (SWT.NORMAL | SWT.BOLD | SWT.ITALIC);
 
-        if (largerApplicationFont!=null)
-        	if(!largerApplicationFont.isDisposed())
-        		largerApplicationFont.dispose();
-        largerApplicationFont = new Font(null, newFont.getName(), newFont.getHeight()+ 2, newFont.getStyle());
-        
+        if (applicationFont != null && !applicationFont.isDisposed())
+            applicationFont.dispose();
+        applicationFont = new Font(null, name, height, style);
+
+        if (largerApplicationFont != null && !largerApplicationFont.isDisposed())
+            largerApplicationFont.dispose();
+        largerApplicationFont = new Font(null, name, height + 2, style);
     }
     
 	/**

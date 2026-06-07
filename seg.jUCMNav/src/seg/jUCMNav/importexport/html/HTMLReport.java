@@ -233,7 +233,14 @@ public class HTMLReport extends URNReport {
 						htmlMenuItem.setType(HTMLMenuItem.TYPE_UCM);
 					}
 
-					htmlMenuItem.setLeafText(diagramName.substring(diagramName.lastIndexOf("-") + 1)); //$NON-NLS-1$
+					// Display the model's actual name. The previous lastIndexOf("-")
+				// substring lost everything before the last dash, which mangled
+				// diagrams whose own name contains dashes -- e.g.
+				// "GRL-Adequate Follow-up" became "up", and
+				// "GRL-Discharging Process Improvement - Top Level Goals"
+				// became "Top Level Goals". getName() returns the bare model
+				// name straight from the EMF object.
+				htmlMenuItem.setLeafText(((URNmodelElement) diagram).getName());
 					htmlMenuItem.setLink(diagramName + ".html"); //$NON-NLS-1$
 					htmlMenuItem.setBaseX(-pane.getBounds().x);
 					htmlMenuItem.setBaseY(-pane.getBounds().y);

@@ -4,7 +4,10 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -19,10 +22,11 @@ import org.w3c.dom.NodeList;
 import seg.jUCMNav.Messages;
 import seg.jUCMNav.importexport.utils.EscapeUtils;
 import seg.jUCMNav.views.wizards.importexport.ExportWizard;
+import ucm.map.PluginBinding;
+import ucm.map.Stub;
 import ucm.map.UCMmap;
-import ucm.map.impl.PluginBindingImpl;
-import ucm.map.impl.StubImpl;
 import urncore.IURNDiagram;
+import urncore.URNmodelElement;
 
 /**
  * The XML parser used to parse the XML menu file and add new menus to the file
@@ -36,6 +40,12 @@ public class HTMLMenuParser {
 	private String reportRoot = ""; //$NON-NLS-1$  // dir that holds index.html (and pages/)
 	private Document xmlDocument = null;
 	private ArrayList<Element> selectedMaps = new ArrayList<Element>();
+
+	// UCMmaps stashed by addMenu in the order they arrived. The UCM section
+	// of the sidebar is rebuilt from this set at writeToFile time so that the
+	// tree reflects the real model hierarchy (root -> stub -> bound submap)
+	// instead of one branch per arriving diagram. See rebuildUcmBranch().
+	private LinkedHashSet<UCMmap> ucmCollected = new LinkedHashSet<UCMmap>();
 
 	private final static String BRANCH = "branch"; //$NON-NLS-1$
 	private final static String BRANCH_ID = "id"; //$NON-NLS-1$
@@ -74,6 +84,7 @@ public class HTMLMenuParser {
 	public void resetDocument() {
 		xmlDocument = null;
 		selectedMaps = new ArrayList<Element>();
+		ucmCollected = new LinkedHashSet<UCMmap>();
 	}
 
 	/**
@@ -221,191 +232,150 @@ public class HTMLMenuParser {
 				branch.appendChild(leaf);
 				//---------------------------
 			} else if (htmlMenuItem.getType().equals(HTMLMenuItem.TYPE_UCM)) {
-				addUCMMenu(htmlMenuItem, branch);
+				// Stash the UCMmap; the UCM subtree is rebuilt from real
+				// model structure (parentStub-rooted hierarchy with stubs as
+				// intermediate nodes) by rebuildUcmBranch() before rendering.
+				// The previous per-call DOM mutation surfaced every map at
+				// top level because each addMenu invocation independently
+				// added a branch, with iteration order driven by mapDiagrams
+				// (a HashMap) not the model.
+				IURNDiagram d = htmlMenuItem.getDiagram();
+				if (d instanceof UCMmap) {
+					ucmCollected.add((UCMmap) d);
+				}
 			}
 		}
 	}
 
-	
 	/**
-	 * Add new ucm menu to the given node's children
-	 * 
-	 * @param htmlMenuItem
-	 * @param parent
+	 * Wipe the UCM branch's children and rebuild it from {@link #ucmCollected},
+	 * following the real model hierarchy:
+	 *   root UCMmap (no parentStub)
+	 *     -> Stub (one per stub with at least one binding)
+	 *        -> UCMmap (one per PluginBinding)
+	 *           -> Stub ... (recursive)
+	 *
+	 * Cycles and shared submaps: a global visited set ensures each UCMmap is
+	 * fully expanded at most once. Later occurrences render as link-only
+	 * leaves (clickable, no subtree), so cyclic stub/plugin graphs stay
+	 * finite. Any collected map whose ancestors are all outside the export
+	 * (rare; e.g. user filtered them out) is appended at top level after the
+	 * real roots, so nothing collected is silently dropped.
 	 */
-	private void addUCMMenu(HTMLMenuItem htmlMenuItem, Element parent) {
-		NodeList branchList = parent.getElementsByTagName(BRANCH);
-		NodeList leafList = parent.getElementsByTagName(LEAF);
+	private void rebuildUcmBranch() {
+		if (xmlDocument == null) parseMenu();
+		Element ucmBranch = findTopBranch(HTMLMenuItem.TYPE_UCM);
+		if (ucmBranch == null) return;
 
-		boolean isExisting = false;
-		int len = branchList.getLength();
+		// Clear out anything addMenu accidentally added (defensive) AND any
+		// previous rebuild. Keep the BRANCH_TEXT child so organizeMenus can
+		// still localize the section title.
+		List<Node> toRemove = new ArrayList<Node>();
+		NodeList kids = ucmBranch.getChildNodes();
+		for (int i = 0; i < kids.getLength(); i++) {
+			Node k = kids.item(i);
+			if (k.getNodeType() == Node.ELEMENT_NODE) {
+				String tag = ((Element) k).getTagName();
+				if (BRANCH.equals(tag) || LEAF.equals(tag)) toRemove.add(k);
+			}
+		}
+		for (Node n : toRemove) ucmBranch.removeChild(n);
 
-		for (int i = 0; i < len; i++) {
-			Element element = (Element) branchList.item(i);
-			String branchLink = element.getAttribute(BRANCH_LINK);
+		// Real roots: maps with no parentStub. Preserves insertion order.
+		LinkedHashSet<UCMmap> roots = new LinkedHashSet<UCMmap>();
+		for (UCMmap m : ucmCollected) {
+			EList parents = m.getParentStub();
+			if (parents == null || parents.isEmpty()) roots.add(m);
+		}
 
-			if (htmlMenuItem.getLink().equals(branchLink)) {
-				element.setAttribute(BASE_X, String.valueOf(htmlMenuItem.getBaseX()));
-				element.setAttribute(BASE_Y, String.valueOf(htmlMenuItem.getBaseY()));
-				isExisting = true;
-				continue;
+		HashSet<UCMmap> visited = new HashSet<UCMmap>();
+		for (UCMmap root : roots) {
+			Node child = buildUcmMapNode(root, visited);
+			if (child != null) ucmBranch.appendChild(child);
+		}
+		// Orphans: collected maps not reachable from any real root via stub
+		// bindings (e.g. their parents weren't exported). Show as additional
+		// top-level entries so the user can still get to them.
+		for (UCMmap m : ucmCollected) {
+			if (!visited.contains(m)) {
+				Node child = buildUcmMapNode(m, visited);
+				if (child != null) ucmBranch.appendChild(child);
+			}
+		}
+	}
+
+	/**
+	 * Build a DOM node for one UCMmap: a BRANCH with the map's stubs as
+	 * sub-branches (each holding their bound submaps), or a plain LEAF if the
+	 * map has no bound stubs (or has already been visited -- see cycle
+	 * handling in {@link #rebuildUcmBranch}).
+	 */
+	private Element buildUcmMapNode(UCMmap map, HashSet<UCMmap> visited) {
+		if (map == null) return null;
+		String name = ((URNmodelElement) map).getName();
+		if (name == null) name = ""; //$NON-NLS-1$
+		String link = ExportWizard.getDiagramName(map) + ".html"; //$NON-NLS-1$
+
+		// Already-expanded elsewhere (cycle or shared submap) -> link-only.
+		if (visited.contains(map)) {
+			return buildLeaf(name, link, "0", "0"); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		visited.add(map);
+
+		// Collect stubs that actually have plugin bindings; an unbound stub
+		// contributes nothing navigable and would just clutter the tree.
+		List<Stub> stubs = new ArrayList<Stub>();
+		EList nodes = map.getNodes();
+		if (nodes != null) {
+			for (Object o : nodes) {
+				if (o instanceof Stub) {
+					Stub s = (Stub) o;
+					EList bindings = s.getBindings();
+					if (bindings != null && !bindings.isEmpty()) stubs.add(s);
+				}
 			}
 		}
 
-		if (!isExisting) {
-			len = leafList.getLength();
-			for (int i = 0; i < len; i++) {
-				Element element = (Element) leafList.item(i);
-				String link = element.getElementsByTagName(LINK).item(0).getTextContent();
-
-				if (htmlMenuItem.getLink().equals(link)) {
-					element.getElementsByTagName(BASE_X).item(0).setTextContent(String.valueOf(htmlMenuItem.getBaseX()));
-					element.getElementsByTagName(BASE_Y).item(0).setTextContent(String.valueOf(htmlMenuItem.getBaseY()));
-					isExisting = true;
-					continue;
-				}
-			}
+		if (stubs.isEmpty()) {
+			return buildLeaf(name, link, "0", "0"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
-		if (!isExisting) {
-			IURNDiagram diagram = htmlMenuItem.getDiagram();
-			Iterator nodeIter = null;
-			ArrayList<UCMmap> childDiagramList = new ArrayList<UCMmap>();
+		Element mapBranch = xmlDocument.createElement(BRANCH);
+		mapBranch.setAttribute(BRANCH_ID, "ucm-map"); //$NON-NLS-1$
+		mapBranch.setAttribute(BRANCH_LINK, link);
+		mapBranch.setAttribute(BASE_X, "0"); //$NON-NLS-1$
+		mapBranch.setAttribute(BASE_Y, "0"); //$NON-NLS-1$
+		Element mbt = xmlDocument.createElement(BRANCH_TEXT);
+		mbt.setTextContent(name);
+		mapBranch.appendChild(mbt);
 
-			EList nodes = diagram.getNodes();
-			if (!nodes.isEmpty()) {
-				nodeIter = nodes.iterator();
-
-				while (nodeIter.hasNext()) {
-					Object obj = nodeIter.next();
-
-					if (obj instanceof StubImpl) {
-						StubImpl stub = (StubImpl) obj;
-
-						EList bindings = stub.getBindings();
-						Iterator bindIter = null;
-						if (!bindings.isEmpty()) {
-							bindIter = bindings.iterator();
-
-							//int j = 0;
-							//int shift = 18;
-							while (bindIter.hasNext()) {
-								obj = bindIter.next();
-								if (obj instanceof PluginBindingImpl) {
-									PluginBindingImpl pluginBinding = (PluginBindingImpl) obj;
-									UCMmap childMap = pluginBinding.getPlugin();
-
-									childDiagramList.add(childMap);
-								}
-							}
-							// end of while
-						}
-					}
-				}
-				// end of while
+		for (Stub s : stubs) {
+			String stubName = ((URNmodelElement) s).getName();
+			if (stubName == null || stubName.isEmpty()) {
+				stubName = "Stub " + s.getId(); //$NON-NLS-1$
 			}
 
-			if (childDiagramList.size() > 0) {
-				Element branch = xmlDocument.createElement(BRANCH);
-				branch.setAttribute(BRANCH_ID, htmlMenuItem.getLeafText());
-				branch.setAttribute(BRANCH_LINK, htmlMenuItem.getLink());
-				branch.setAttribute(BASE_X, String.valueOf(htmlMenuItem.getBaseX()));
-				branch.setAttribute(BASE_Y, String.valueOf(htmlMenuItem.getBaseY()));
+			Element stubBranch = xmlDocument.createElement(BRANCH);
+			// "ucm-stub" + notRedirect makes the renderer drop the icon and
+			// the clickable link, leaving just an expand/collapse summary.
+			stubBranch.setAttribute(BRANCH_ID, "ucm-stub"); //$NON-NLS-1$
+			stubBranch.setAttribute(BRANCH_LINK, "notRedirect"); //$NON-NLS-1$
+			stubBranch.setAttribute(BASE_X, "0"); //$NON-NLS-1$
+			stubBranch.setAttribute(BASE_Y, "0"); //$NON-NLS-1$
+			Element sbt = xmlDocument.createElement(BRANCH_TEXT);
+			sbt.setTextContent(stubName);
+			stubBranch.appendChild(sbt);
 
-				Element branchText = xmlDocument.createElement(BRANCH_TEXT);
-				branchText.setTextContent(htmlMenuItem.getLeafText());
-
-				branch.appendChild(branchText);
-				parent.appendChild(branch);
-
-				if (parent.getAttribute(BRANCH_ID).equals(HTMLMenuItem.TYPE_UCM)) {
-					selectedMaps.add(branch);
-				} else {
-					for (int n = 0; n < selectedMaps.size(); n++) {
-						Element selectedNode = (Element) selectedMaps.get(n);
-						if (selectedNode.getTagName().equals(BRANCH)) {
-							if (branch.getAttribute(BRANCH_LINK).equals(selectedNode.getAttribute(BRANCH_LINK))) {
-								branch.setAttribute(BASE_X, selectedNode.getAttribute(BASE_X));
-								branch.setAttribute(BASE_Y, selectedNode.getAttribute(BASE_Y));
-								selectedNode.getParentNode().removeChild(selectedNode);
-								break;
-							}
-						} else if (selectedNode.getTagName().equals(LEAF)) {
-							if (branch.getAttribute(BRANCH_LINK).equals(selectedNode.getElementsByTagName(LINK).item(0).getTextContent())) {
-								branch.setAttribute(BASE_X, selectedNode.getElementsByTagName(BASE_X).item(0).getTextContent());
-								branch.setAttribute(BASE_Y, selectedNode.getElementsByTagName(BASE_Y).item(0).getTextContent());
-								selectedNode.getParentNode().removeChild(selectedNode);
-								break;
-							}
-						}
-					}
+			for (Object b : s.getBindings()) {
+				if (b instanceof PluginBinding) {
+					UCMmap childMap = ((PluginBinding) b).getPlugin();
+					Element childNode = buildUcmMapNode(childMap, visited);
+					if (childNode != null) stubBranch.appendChild(childNode);
 				}
-
-				for (int i = 0; i < childDiagramList.size(); i++) {
-					IURNDiagram childDiagram = (IURNDiagram) childDiagramList.get(i);
-
-					// prepare the html menu item
-					htmlMenuItem.reset();
-
-					String childDiagramName = ExportWizard.getDiagramName(childDiagram);
-					htmlMenuItem.setDiagramName(childDiagramName);
-					htmlMenuItem.setType(HTMLMenuItem.TYPE_UCM);
-					htmlMenuItem.setLeafText(childDiagramName.substring(childDiagramName.lastIndexOf("-") + 1)); //$NON-NLS-1$
-					htmlMenuItem.setLink(childDiagramName + ".html"); //$NON-NLS-1$
-					htmlMenuItem.setBaseX(-1);
-					htmlMenuItem.setBaseY(-1);
-					htmlMenuItem.setDiagram(childDiagram);
-
-					addUCMMenu(htmlMenuItem, branch);
-				}
-			} else {
-				Element leaf = xmlDocument.createElement(LEAF);
-
-				Element leafText = xmlDocument.createElement(LEAF_TEXT);
-				leafText.setTextContent(htmlMenuItem.getLeafText());
-
-				Element link = xmlDocument.createElement(LINK);
-				link.setTextContent(htmlMenuItem.getLink());
-
-				Element baseX = xmlDocument.createElement(BASE_X);
-				baseX.setTextContent(String.valueOf(htmlMenuItem.getBaseX()));
-
-				Element baseY = xmlDocument.createElement(BASE_Y);
-				baseY.setTextContent(String.valueOf(htmlMenuItem.getBaseY()));
-
-				leaf.appendChild(leafText);
-				leaf.appendChild(link);
-				leaf.appendChild(baseX);
-				leaf.appendChild(baseY);
-				parent.appendChild(leaf);
-
-				if (parent.getAttribute(BRANCH_ID).equals(HTMLMenuItem.TYPE_UCM)) {
-					selectedMaps.add(leaf);
-				} else {
-					for (int n = 0; n < selectedMaps.size(); n++) {
-						Element selectedNode = (Element) selectedMaps.get(n);
-						if (selectedNode.getTagName().equals(BRANCH)) {
-							if (leaf.getElementsByTagName(LINK).item(0).getTextContent().equals(selectedNode.getAttribute(BRANCH_LINK))) {
-								leaf.getElementsByTagName(BASE_X).item(0).setTextContent(selectedNode.getAttribute(BASE_X));
-								leaf.getElementsByTagName(BASE_Y).item(0).setTextContent(selectedNode.getAttribute(BASE_Y));
-								selectedNode.getParentNode().removeChild(selectedNode);
-								break;
-							}
-						} else if (selectedNode.getTagName().equals(LEAF)) {
-							if (leaf.getElementsByTagName(LINK).item(0).getTextContent().equals(
-									selectedNode.getElementsByTagName(LINK).item(0).getTextContent())) {
-								leaf.getElementsByTagName(BASE_X).item(0).setTextContent(selectedNode.getElementsByTagName(BASE_X).item(0).getTextContent());
-								leaf.getElementsByTagName(BASE_Y).item(0).setTextContent(selectedNode.getElementsByTagName(BASE_Y).item(0).getTextContent());
-								selectedNode.getParentNode().removeChild(selectedNode);
-								break;
-							}
-						}
-					}
-				}
-				// end if parent is the branch "UCM" and else
 			}
+			mapBranch.appendChild(stubBranch);
 		}
-		// end if (!existing)
+		return mapBranch;
 	}
 
 	/**
@@ -419,6 +389,7 @@ public class HTMLMenuParser {
 	 * no jQuery, no frameset.
 	 */
 	public void writeToFile() {
+		rebuildUcmBranch();
 		organizeMenus();
 
 		StringBuilder sb = new StringBuilder(8192);
@@ -505,13 +476,20 @@ public class HTMLMenuParser {
 				sb.append(EscapeUtils.escapeHTML(text));
 				sb.append("</a></li>\n"); //$NON-NLS-1$
 			} else if (BRANCH.equals(tag)) {
-				// Nested UCM hierarchy (stub-binding sub-maps). The branch
-				// itself links to a diagram (branchLink) AND has children.
+				// Branch with children. Two flavours:
+				//   - real UCMmap branch: has a BRANCH_LINK (-> its HTML page),
+				//     gets an icon and a clickable summary.
+				//   - intermediate UCM stub branch (BRANCH_ID="ucm-stub",
+				//     BRANCH_LINK="notRedirect"): pure expand/collapse,
+				//     no icon, no link -- the stub itself has no own page.
+				//     This keeps the visual difference between "a map" and
+				//     "a stub on a map" clear.
 				String text = textOfChild(e, BRANCH_TEXT);
 				String link = e.getAttribute(BRANCH_LINK);
+				boolean hasLink = link != null && link.length() > 0 && !"notRedirect".equals(link); //$NON-NLS-1$
 				sb.append("<li><details><summary>"); //$NON-NLS-1$
-				appendIcon(sb, sectionId, link, pagesPrefix);
-				if (link != null && link.length() > 0 && !"notRedirect".equals(link)) { //$NON-NLS-1$
+				if (hasLink) {
+					appendIcon(sb, sectionId, link, pagesPrefix);
 					sb.append("<a target=\"content\" href=\""); //$NON-NLS-1$
 					sb.append(pagesPrefix).append(escAttr(link));
 					sb.append("\">"); //$NON-NLS-1$

@@ -310,109 +310,37 @@ public class HTMLReport extends URNReport {
 	 */
 	private void createIndexPages(URNspec urn, String htmlPath) {
 		try {
-			// Generate the index page
-			String srcFile = "htmltemplates/index.html"; //$NON-NLS-1$
-			String desFile = htmlPath + "index.html"; //$NON-NLS-1$
-			copy(srcFile, desFile);
+			// NOTE: the report's top-level index.html is no longer copied from a
+			// template here -- HTMLMenuParser.writeToFile() now emits a modern
+			// flexbox+iframe layout with the menu inlined directly. We also no
+			// longer ship the legacy XSLT pipeline (tree.xml / xmlTree.* /
+			// menu.html) or the 2008-era jQuery + chili tooltip stack
+			// (jquery*.{js,css}, chili-1.7.pack.js): XSLTProcessor is being
+			// removed from Chromium and jQuery 1.x has long been unmaintained.
+			// Native <area title="..."> already provides tooltips, and the
+			// sidebar uses <details>/<a target=content> for navigation.
+			// What's still copied below: main.html (the landing page shown in
+			// the content iframe), menu.css/menu.js (the stub-popup feature,
+			// which is jUCMNav-specific and still useful), and the icon GIFs
+			// used by the sidebar and the per-diagram trend tables.
 
-			// Generate the main page
-			srcFile = "htmltemplates/main.html"; //$NON-NLS-1$
-			desFile = htmlPath + PAGES_LOCATION + "main.html"; //$NON-NLS-1$
+			// Generate the main page (loaded into the #content iframe at startup)
+			String srcFile = "htmltemplates/main.html"; //$NON-NLS-1$
+			String desFile = htmlPath + PAGES_LOCATION + "main.html"; //$NON-NLS-1$
 			copy(srcFile, desFile);
 			fillMain(urn, desFile);
 
-			// Generate the menu page
-			srcFile = "htmltemplates/menu.html"; //$NON-NLS-1$
-			desFile = htmlPath + PAGES_LOCATION + "menu.html"; //$NON-NLS-1$
-			copy(srcFile, desFile);
-
-			// Generate the xml tree css file
-			srcFile = "htmltemplates/xmlTree.css"; //$NON-NLS-1$
-			desFile = htmlPath + PAGES_LOCATION + "xmlTree.css"; //$NON-NLS-1$
-			copy(srcFile, desFile);
-
-			// Generate the report css file
-			srcFile = "htmltemplates/report.css"; //$NON-NLS-1$
-			desFile = htmlPath + PAGES_LOCATION + "report.css"; //$NON-NLS-1$
-			copy(srcFile, desFile);
-
-			// Generate the menu css file
+			// Stub-popup menu (used by per-diagram pages, not by the sidebar)
 			srcFile = "htmltemplates/menu.css"; //$NON-NLS-1$
 			desFile = htmlPath + PAGES_LOCATION + "menu.css"; //$NON-NLS-1$
 			copy(srcFile, desFile);
 
-			// Generate the xml tree java script file
-			srcFile = "htmltemplates/xmlTree.js"; //$NON-NLS-1$
-			desFile = htmlPath + PAGES_LOCATION + "xmlTree.js"; //$NON-NLS-1$
-			copy(srcFile, desFile);
-
-			// Generate the menu java script file
 			srcFile = "htmltemplates/menu.js"; //$NON-NLS-1$
 			desFile = htmlPath + PAGES_LOCATION + "menu.js"; //$NON-NLS-1$
 			copy(srcFile, desFile);
 
-			// Generate the tree xsl file
-			srcFile = "htmltemplates/xmlTree.xsl"; //$NON-NLS-1$
-			desFile = htmlPath + PAGES_LOCATION + "xmlTree.xsl"; //$NON-NLS-1$
-			copy(srcFile, desFile);
-
-			// ToolTip files
-			// Generate the tooltip chili-1.7.pack.js file
-			srcFile = "htmltemplates/chili-1.7.pack.js"; //$NON-NLS-1$
-			desFile = htmlPath + PAGES_LOCATION + "chili-1.7.pack.js"; //$NON-NLS-1$
-			copy(srcFile, desFile);
-
-			// Generate the tooltip jquery.bgiframe.js file
-			srcFile = "htmltemplates/jquery.bgiframe.js"; //$NON-NLS-1$
-			desFile = htmlPath + PAGES_LOCATION + "jquery.bgiframe.js"; //$NON-NLS-1$
-			copy(srcFile, desFile);
-
-			// Generate the tooltip jquery.dimensions.js file
-			srcFile = "htmltemplates/jquery.dimensions.js"; //$NON-NLS-1$
-			desFile = htmlPath + PAGES_LOCATION + "jquery.dimensions.js"; //$NON-NLS-1$
-			copy(srcFile, desFile);
-
-			// Generate the tooltip jquery.js file
-			srcFile = "htmltemplates/jquery.js"; //$NON-NLS-1$
-			desFile = htmlPath + PAGES_LOCATION + "jquery.js"; //$NON-NLS-1$
-			copy(srcFile, desFile);
-
-			// Generate the tooltip jquery.tooltip.css
-			srcFile = "htmltemplates/jquery.tooltip.css"; //$NON-NLS-1$
-			desFile = htmlPath + PAGES_LOCATION + "jquery.tooltip.css"; //$NON-NLS-1$
-			copy(srcFile, desFile);
-
-			// Generate the tooltip jquery.tooltip.js file
-			srcFile = "htmltemplates/jquery.tooltip.js"; //$NON-NLS-1$
-			desFile = htmlPath + PAGES_LOCATION + "jquery.tooltip.js"; //$NON-NLS-1$
-			copy(srcFile, desFile);
-
-			// Generate the tooltip jquery.tooltip.min.js file
-			srcFile = "htmltemplates/jquery.tooltip.min.js"; //$NON-NLS-1$
-			desFile = htmlPath + PAGES_LOCATION + "jquery.tooltip.min.js"; //$NON-NLS-1$
-			copy(srcFile, desFile);
-
-			// Generate the tooltip jquery.tooltip.pack.js file
-			srcFile = "htmltemplates/jquery.tooltip.pack.js"; //$NON-NLS-1$
-			desFile = htmlPath + PAGES_LOCATION + "jquery.tooltip.pack.js"; //$NON-NLS-1$
-			copy(srcFile, desFile);
-
-			// GIF files
-			// Generate the closed.gif file
-			srcFile = "htmltemplates/closed.gif"; //$NON-NLS-1$
-			desFile = htmlPath + PAGES_LOCATION + "closed.gif"; //$NON-NLS-1$
-			copy(srcFile, desFile);
-
-			// Generate the doc.gif file
-			srcFile = "htmltemplates/doc.gif"; //$NON-NLS-1$
-			desFile = htmlPath + PAGES_LOCATION + "doc.gif"; //$NON-NLS-1$
-			copy(srcFile, desFile);
-
-			// Generate the open.gif file
-			srcFile = "htmltemplates/open.gif"; //$NON-NLS-1$
-			desFile = htmlPath + PAGES_LOCATION + "open.gif"; //$NON-NLS-1$
-			copy(srcFile, desFile);
-			
+			// Icon GIFs used by the sidebar (UCM/GRL/FM/DEF leaves) and by
+			// per-diagram pages for the GRL trend table arrows below.
 			// Generate the icon16.gif (the jUCMNav logo) file
 			srcFile = "htmltemplates/icon16.gif"; //$NON-NLS-1$
 			desFile = htmlPath + PAGES_LOCATION + "icon16.gif"; //$NON-NLS-1$
@@ -673,24 +601,13 @@ public class HTMLReport extends URNReport {
 			sb.append("<head>\n"); //$NON-NLS-1$
 			sb.append("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\" />\n"); //$NON-NLS-1$
 			sb.append("<title>" + Messages.getString("HTMLReport.URNModel") + "</title>\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			// Dynamic stub menu stuff
-			sb.append("<script language=JavaScript src=\"menu.js\"></script>\n"); //$NON-NLS-1$
-			sb.append("<link href=\"menu.css\" rel=stylesheet>\n"); //$NON-NLS-1$
-			// Library from http://bassistance.de/jquery-plugins/jquery-plugin-tooltip/
-			sb.append("<link rel=\"stylesheet\" href=\"jquery.tooltip.css\" />\n"); //$NON-NLS-1$
-			sb.append("<script src=\"jquery.js\" type=\"text/javascript\"></script>\n"); //$NON-NLS-1$
-			sb.append("<script src=\"jquery.bgiframe.js\" type=\"text/javascript\"></script>\n"); //$NON-NLS-1$
-			sb.append("<script src=\"jquery.dimensions.js\" type=\"text/javascript\"></script>\n"); //$NON-NLS-1$
-			sb.append("<script src=\"chili-1.7.pack.js\" type=\"text/javascript\"></script>\n"); //$NON-NLS-1$
-			sb.append("<script src=\"jquery.tooltip.js\" type=\"text/javascript\"></script>\n"); //$NON-NLS-1$
-			sb.append("<script type=\"text/javascript\">\n"); //$NON-NLS-1$
-			sb.append("$(function() {\n"); //$NON-NLS-1$
-			sb.append("  $(\"map *\").Tooltip({\n"); //$NON-NLS-1$
-			sb.append("    delay: 0,\n"); //$NON-NLS-1$
-			sb.append("    opacity: 0.80\n"); //$NON-NLS-1$
-			sb.append("  });\n"); //$NON-NLS-1$
-			sb.append("});\n"); //$NON-NLS-1$
-			sb.append("</script>\n"); //$NON-NLS-1$
+			// Stub-popup menu (jUCMNav-specific dynamic submenu over stubs).
+			// The jQuery 1.x + bgiframe + dimensions + chili-1.7 + jquery.tooltip
+			// chain that used to live here is gone: jQuery 1 is unmaintained,
+			// and the tooltips it added are already provided natively by the
+			// title="..." attribute on each <area> element below.
+			sb.append("<script src=\"menu.js\"></script>\n"); //$NON-NLS-1$
+			sb.append("<link href=\"menu.css\" rel=\"stylesheet\">\n"); //$NON-NLS-1$
 			// Basic style
 			sb.append("<style>\n"); //$NON-NLS-1$
 			sb.append("body {\n"); //$NON-NLS-1$

@@ -1,8 +1,7 @@
 package seg.jUCMNav.importexport.html;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -10,25 +9,15 @@ import java.util.Iterator;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.TransformerFactoryConfigurationError;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
 import org.eclipse.emf.common.util.EList;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
 import seg.jUCMNav.Messages;
+import seg.jUCMNav.importexport.utils.EscapeUtils;
 import seg.jUCMNav.views.wizards.importexport.ExportWizard;
 import ucm.map.UCMmap;
 import ucm.map.impl.PluginBindingImpl;
@@ -44,12 +33,10 @@ import urncore.IURNDiagram;
 public class HTMLMenuParser {
 	private static HTMLMenuParser parser = null;
 
-	private String xmlFullPath = ""; //$NON-NLS-1$
+	private String reportRoot = ""; //$NON-NLS-1$  // dir that holds index.html (and pages/)
 	private Document xmlDocument = null;
 	private ArrayList<Element> selectedMaps = new ArrayList<Element>();
 
-	private final static String xmlFileName = "tree.xml"; //$NON-NLS-1$
-	//private final static String TREE = "tree"; //$NON-NLS-1$
 	private final static String BRANCH = "branch"; //$NON-NLS-1$
 	private final static String BRANCH_ID = "id"; //$NON-NLS-1$
 	private final static String BRANCH_LINK = "branchLink"; //$NON-NLS-1$
@@ -63,20 +50,20 @@ public class HTMLMenuParser {
 
 	/**
 	 * Initialize HTMLMenuParser
-	 * 
-	 * @param _xmlPath
+	 *
+	 * @param _xmlPath the directory that will hold the generated index.html
+	 *                 (the report root; HTMLReport.PAGES_LOCATION sits underneath)
 	 */
 	private HTMLMenuParser(String _xmlPath) {
-		this.xmlFullPath = _xmlPath + HTMLReport.PAGES_LOCATION + xmlFileName;
+		this.reportRoot = _xmlPath;
 	}
 
 	public static HTMLMenuParser getParser(String _xmlPath) {
 		if (parser == null) {
 			parser = new HTMLMenuParser(_xmlPath);
 		} else {
-			parser.xmlFullPath = _xmlPath + HTMLReport.PAGES_LOCATION + xmlFileName;
+			parser.reportRoot = _xmlPath;
 		}
-
 		return parser;
 	}
 
@@ -90,42 +77,73 @@ public class HTMLMenuParser {
 	}
 
 	/**
-	 * Parse XML menu file
-	 * 
+	 * Bootstrap the in-memory menu DOM. Previously this parsed
+	 * htmltemplates/tree.xml from the classpath and copied it to disk; the
+	 * resulting tree.xml was later rendered by an XSLT in the browser. That
+	 * pipeline is being removed (XSLTProcessor is deprecated in modern
+	 * browsers, and the static file would no longer render). The DOM model
+	 * itself is still useful for organizing the menu hierarchy; we keep it,
+	 * but build it from scratch instead of from a template, and emit HTML
+	 * directly from writeToFile().
 	 */
 	public void parseMenu() {
 		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-			// factory.setValidating(false);
-
-			// Turn on validation, and turn off namespaces
 			factory.setValidating(false);
 			factory.setNamespaceAware(false);
-
-			// Create the menu xml file
-			File xmlFile = new File(xmlFullPath);
-
-			String srcFile = "htmltemplates/" + xmlFileName; //$NON-NLS-1$
-			String desFile = xmlFullPath;
-
-			try {
-				HTMLReport.copy(srcFile, desFile);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-			// Parse the menu xml file
 			DocumentBuilder builder = factory.newDocumentBuilder();
-			xmlDocument = builder.parse(new InputSource(new FileReader(xmlFile)));
+			xmlDocument = builder.newDocument();
+
+			Element tree = xmlDocument.createElement("tree"); //$NON-NLS-1$
+			xmlDocument.appendChild(tree);
+
+			// Top-level diagram-type branches (populated later by addMenu)
+			tree.appendChild(emptyBranch(HTMLMenuItem.TYPE_UCM));
+			tree.appendChild(emptyBranch(HTMLMenuItem.TYPE_GRL));
+			tree.appendChild(emptyBranch(HTMLMenuItem.TYPE_FM));
+
+			// Definitions branch, pre-populated with the five standard pages.
+			// organizeMenus() replaces the leaf text with localized strings;
+			// keep these untranslated keys so that match still works.
+			Element def = xmlDocument.createElement(BRANCH);
+			def.setAttribute(BRANCH_ID, "DEF"); //$NON-NLS-1$
+			def.setAttribute(BRANCH_LINK, "notRedirect"); //$NON-NLS-1$
+			def.setAttribute(BASE_X, "0"); //$NON-NLS-1$
+			def.setAttribute(BASE_Y, "0"); //$NON-NLS-1$
+			Element defText = xmlDocument.createElement(BRANCH_TEXT);
+			defText.setTextContent("Definitions"); //$NON-NLS-1$
+			def.appendChild(defText);
+			def.appendChild(buildLeaf(HTMLMenuItem.TYPE_UCM_DEF,  "UCM_Definitions.html", "215", "2"));    //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			def.appendChild(buildLeaf(HTMLMenuItem.TYPE_GRL_DEF,  "GRL_Definitions.html", "215", "2"));    //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			def.appendChild(buildLeaf(HTMLMenuItem.TYPE_FM_DEF,   "FM_Definitions.html",  "215", "2"));    //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			def.appendChild(buildLeaf(HTMLMenuItem.TYPE_UCM_SCEN, "UCM_Scenarios.html",   "215", "2"));    //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			def.appendChild(buildLeaf("Title Page",               "main.html",            "215", "2"));    //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			tree.appendChild(def);
 		} catch (ParserConfigurationException e) {
 			e.printStackTrace();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (SAXException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
+	}
+
+	private Element emptyBranch(String id) {
+		Element b = xmlDocument.createElement(BRANCH);
+		b.setAttribute(BRANCH_ID, id);
+		b.setAttribute(BRANCH_LINK, "notRedirect"); //$NON-NLS-1$
+		b.setAttribute(BASE_X, "0"); //$NON-NLS-1$
+		b.setAttribute(BASE_Y, "0"); //$NON-NLS-1$
+		Element bt = xmlDocument.createElement(BRANCH_TEXT);
+		bt.setTextContent(id);
+		b.appendChild(bt);
+		return b;
+	}
+
+	private Element buildLeaf(String text, String link, String bx, String by) {
+		Element leaf = xmlDocument.createElement(LEAF);
+		Element lt = xmlDocument.createElement(LEAF_TEXT); lt.setTextContent(text);
+		Element lk = xmlDocument.createElement(LINK);      lk.setTextContent(link);
+		Element x  = xmlDocument.createElement(BASE_X);    x.setTextContent(bx);
+		Element y  = xmlDocument.createElement(BASE_Y);    y.setTextContent(by);
+		leaf.appendChild(lt); leaf.appendChild(lk); leaf.appendChild(x); leaf.appendChild(y);
+		return leaf;
 	}
 
 	/**
@@ -391,48 +409,167 @@ public class HTMLMenuParser {
 	}
 
 	/**
-	 * Write the document to XML file
-	 * 
+	 * Emit a self-contained, modern index.html at the report root, containing
+	 * a flexbox layout with the menu inlined as a sidebar and an iframe named
+	 * "content" for the per-diagram pages. Previously this wrote tree.xml,
+	 * which the browser was supposed to render via xmlTree.xsl -- but
+	 * <?xml-stylesheet?>+XSLTProcessor is deprecated in Chrome/Edge (planned
+	 * removal) and silently fails under file:// security. Emitting plain HTML
+	 * makes the report double-click-openable in any modern browser, no XSLT,
+	 * no jQuery, no frameset.
 	 */
 	public void writeToFile() {
-		// Organize Menus
 		organizeMenus();
 
-		// prepare the DOM document for writing
-		Source source = new DOMSource(xmlDocument);
+		StringBuilder sb = new StringBuilder(8192);
+		sb.append("<!DOCTYPE html>\n"); //$NON-NLS-1$
+		sb.append("<html lang=\"en\">\n<head>\n"); //$NON-NLS-1$
+		sb.append("<meta charset=\"utf-8\">\n"); //$NON-NLS-1$
+		sb.append("<title>URN HTML Report</title>\n"); //$NON-NLS-1$
+		sb.append("<style>\n"); //$NON-NLS-1$
+		sb.append("  html,body{margin:0;height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:13px;}\n"); //$NON-NLS-1$
+		sb.append("  #layout{display:flex;height:100vh;}\n"); //$NON-NLS-1$
+		sb.append("  #sidebar{flex:0 0 280px;overflow:auto;padding:10px 12px;background:#f6f8fa;border-right:1px solid #d0d7de;}\n"); //$NON-NLS-1$
+		sb.append("  #sidebar details{margin:6px 0;}\n"); //$NON-NLS-1$
+		sb.append("  #sidebar summary{cursor:pointer;font-weight:600;padding:2px 0;}\n"); //$NON-NLS-1$
+		sb.append("  #sidebar ul{list-style:none;margin:2px 0 2px 14px;padding:0;}\n"); //$NON-NLS-1$
+		sb.append("  #sidebar li{padding:1px 0;white-space:nowrap;}\n"); //$NON-NLS-1$
+		sb.append("  #sidebar a{color:#0969da;text-decoration:none;}\n"); //$NON-NLS-1$
+		sb.append("  #sidebar a:hover{text-decoration:underline;}\n"); //$NON-NLS-1$
+		sb.append("  #sidebar img{vertical-align:middle;margin-right:4px;width:16px;height:16px;}\n"); //$NON-NLS-1$
+		sb.append("  #content{flex:1 1 auto;border:0;width:100%;height:100%;}\n"); //$NON-NLS-1$
+		sb.append("</style>\n"); //$NON-NLS-1$
+		sb.append("</head>\n<body>\n"); //$NON-NLS-1$
+		sb.append("<div id=\"layout\">\n"); //$NON-NLS-1$
+		sb.append("<nav id=\"sidebar\">\n"); //$NON-NLS-1$
 
-		// prepare the output file
+		// Walk the four top-level branches in the canonical order so the
+		// sidebar reads UCM, GRL, FM, Definitions regardless of insertion order.
+		String pagesPrefix = HTMLReport.PAGES_LOCATION.replace(File.separatorChar, '/');
+		appendSection(sb, HTMLMenuItem.TYPE_UCM, pagesPrefix);
+		appendSection(sb, HTMLMenuItem.TYPE_GRL, pagesPrefix);
+		appendSection(sb, HTMLMenuItem.TYPE_FM,  pagesPrefix);
+		appendSection(sb, "DEF",                 pagesPrefix); //$NON-NLS-1$
+
+		sb.append("</nav>\n"); //$NON-NLS-1$
+		sb.append("<iframe id=\"content\" name=\"content\" src=\""); //$NON-NLS-1$
+		sb.append(pagesPrefix);
+		sb.append("main.html\" title=\"Diagram content\"></iframe>\n"); //$NON-NLS-1$
+		sb.append("</div>\n</body>\n</html>\n"); //$NON-NLS-1$
+
+		File indexFile = new File(reportRoot + "index.html"); //$NON-NLS-1$
+		FileWriter w = null;
 		try {
-//			File file = new File(xmlFullPath+"temp"); //$NON-NLS-1$
-			File file = new File(xmlFullPath);
-			Result result = new StreamResult(file);
-
-			// Write the DOM document to the file
-			Transformer xformer = TransformerFactory.newInstance().newTransformer();
-			xformer.transform(source, result);
-
-			// Insert XML code for the UCM/GRL definitions at the end. This is a hack...
-//			BufferedReader reader = new BufferedReader(new FileReader(file));
-//			String line = "", oldtext = "";  //$NON-NLS-1$  //$NON-NLS-2$
-//			while((line = reader.readLine()) != null)
-//			{
-//				oldtext += line + "\r\n";  //$NON-NLS-1$
-//			}
-//			reader.close();
-//			String newtext = oldtext.replaceAll("</tree>", "\t<branch baseX=\"0\" baseY=\"0\" branchLink=\"notRedirect\" id=\"DEF\">\r\n\t\t<branchText>Definitions</branchText>\r\n\t\t<leaf><leafText>UCM Definitions</leafText><link>UCM_Definitions.html</link><baseX>215</baseX><baseY>2</baseY></leaf>\r\n\t\t<leaf><leafText>GRL Definitions</leafText><link>GRL_Definitions.html</link><baseX>215</baseX><baseY>2</baseY></leaf>\r\n\t\t<leaf><leafText>FM Definitions</leafText><link>FM_Definitions.html</link><baseX>215</baseX><baseY>2</baseY></leaf>\r\n\t</branch>\r\n</tree>");  //$NON-NLS-1$  //$NON-NLS-2$
-//			FileWriter writer = new FileWriter(xmlFullPath);
-//			writer.write(newtext);
-//			writer.close();
-//			file.delete();
-		} catch (TransformerConfigurationException e) {
+			w = new FileWriter(indexFile);
+			w.write(sb.toString());
+		} catch (IOException e) {
 			e.printStackTrace();
-		} catch (TransformerFactoryConfigurationError e) {
-			e.printStackTrace();
-		} catch (TransformerException e) {
-			e.printStackTrace();
-//		} catch (IOException e1) {
-//			e1.printStackTrace();
+		} finally {
+			if (w != null) {
+				try { w.close(); } catch (IOException ignore) {}
+			}
 		}
+	}
+
+	/** Append one top-level branch as a <details> block. */
+	private void appendSection(StringBuilder sb, String branchId, String pagesPrefix) {
+		Element branch = findTopBranch(branchId);
+		if (branch == null) return;
+		String title = textOfChild(branch, BRANCH_TEXT);
+		sb.append("<details open><summary>"); //$NON-NLS-1$
+		sb.append(EscapeUtils.escapeHTML(title));
+		sb.append("</summary>\n<ul>\n"); //$NON-NLS-1$
+		appendChildren(sb, branch, pagesPrefix, branchId);
+		sb.append("</ul>\n</details>\n"); //$NON-NLS-1$
+	}
+
+	/**
+	 * Recursively emit <li> nodes for direct children of the given DOM element.
+	 * sectionId tells us which leaf-icon to use (UCM, GRL, FM, or DEF).
+	 */
+	private void appendChildren(StringBuilder sb, Element parent, String pagesPrefix, String sectionId) {
+		NodeList kids = parent.getChildNodes();
+		for (int i = 0; i < kids.getLength(); i++) {
+			Node k = kids.item(i);
+			if (k.getNodeType() != Node.ELEMENT_NODE) continue;
+			Element e = (Element) k;
+			String tag = e.getTagName();
+			if (LEAF.equals(tag)) {
+				String text = textOfChild(e, LEAF_TEXT);
+				String link = textOfChild(e, LINK);
+				sb.append("<li>"); //$NON-NLS-1$
+				appendIcon(sb, sectionId, link, pagesPrefix);
+				sb.append("<a target=\"content\" href=\""); //$NON-NLS-1$
+				sb.append(pagesPrefix).append(escAttr(link));
+				sb.append("\">"); //$NON-NLS-1$
+				sb.append(EscapeUtils.escapeHTML(text));
+				sb.append("</a></li>\n"); //$NON-NLS-1$
+			} else if (BRANCH.equals(tag)) {
+				// Nested UCM hierarchy (stub-binding sub-maps). The branch
+				// itself links to a diagram (branchLink) AND has children.
+				String text = textOfChild(e, BRANCH_TEXT);
+				String link = e.getAttribute(BRANCH_LINK);
+				sb.append("<li><details><summary>"); //$NON-NLS-1$
+				appendIcon(sb, sectionId, link, pagesPrefix);
+				if (link != null && link.length() > 0 && !"notRedirect".equals(link)) { //$NON-NLS-1$
+					sb.append("<a target=\"content\" href=\""); //$NON-NLS-1$
+					sb.append(pagesPrefix).append(escAttr(link));
+					sb.append("\">"); //$NON-NLS-1$
+					sb.append(EscapeUtils.escapeHTML(text));
+					sb.append("</a>"); //$NON-NLS-1$
+				} else {
+					sb.append(EscapeUtils.escapeHTML(text));
+				}
+				sb.append("</summary>\n<ul>\n"); //$NON-NLS-1$
+				appendChildren(sb, e, pagesPrefix, sectionId);
+				sb.append("</ul>\n</details></li>\n"); //$NON-NLS-1$
+			}
+		}
+	}
+
+	private void appendIcon(StringBuilder sb, String sectionId, String link, String pagesPrefix) {
+		String icon;
+		if ("DEF".equals(sectionId)) { //$NON-NLS-1$
+			if ("UCM_Definitions.html".equals(link)) icon = "ucmdef16.gif"; //$NON-NLS-1$ //$NON-NLS-2$
+			else if ("UCM_Scenarios.html".equals(link)) icon = "ucmscen16.gif"; //$NON-NLS-1$ //$NON-NLS-2$
+			else if ("GRL_Definitions.html".equals(link)) icon = "grldef16.gif"; //$NON-NLS-1$ //$NON-NLS-2$
+			else if ("FM_Definitions.html".equals(link)) icon = "feature16.gif"; //$NON-NLS-1$ //$NON-NLS-2$
+			else if ("main.html".equals(link)) icon = "icon16.gif"; //$NON-NLS-1$ //$NON-NLS-2$
+			else icon = "icon16.gif"; //$NON-NLS-1$
+		} else if (HTMLMenuItem.TYPE_UCM.equals(sectionId)) {
+			icon = "ucm16.gif"; //$NON-NLS-1$
+		} else if (HTMLMenuItem.TYPE_GRL.equals(sectionId)) {
+			icon = "grl16.gif"; //$NON-NLS-1$
+		} else { // FM
+			icon = "fmd16.gif"; //$NON-NLS-1$
+		}
+		sb.append("<img src=\"").append(pagesPrefix).append(icon).append("\" alt=\"\">"); //$NON-NLS-1$ //$NON-NLS-2$
+	}
+
+	private Element findTopBranch(String id) {
+		NodeList kids = xmlDocument.getDocumentElement().getChildNodes();
+		for (int i = 0; i < kids.getLength(); i++) {
+			Node k = kids.item(i);
+			if (k.getNodeType() != Node.ELEMENT_NODE) continue;
+			Element e = (Element) k;
+			if (BRANCH.equals(e.getTagName()) && id.equals(e.getAttribute(BRANCH_ID))) {
+				return e;
+			}
+		}
+		return null;
+	}
+
+	private String textOfChild(Element parent, String tag) {
+		NodeList list = parent.getElementsByTagName(tag);
+		if (list.getLength() == 0) return ""; //$NON-NLS-1$
+		String t = list.item(0).getTextContent();
+		return t == null ? "" : t; //$NON-NLS-1$
+	}
+
+	private String escAttr(String s) {
+		if (s == null) return ""; //$NON-NLS-1$
+		// EscapeUtils.escapeHTML handles &<> and quotes; safe inside attr context.
+		return EscapeUtils.escapeHTML(s);
 	}
 
 	/**

@@ -16,6 +16,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
@@ -33,13 +34,15 @@ import seg.UCMScenarioViewer.utils.Helper;
  */
 public class SelectScenarioPage extends WizardPage {
 
-    public static final String TITLE = "Select Scenario page";
-    public static final String DESCRIPTION = "Select Scenario from Scenario Group that you want to export";
+    public static final String TITLE = "Select Scenarios to export";
+    public static final String DESCRIPTION = "Select one or more scenarios from the scenario group; each will be exported to its own image file.";
 
-    private static final String LABEL = "Select Scenario";
+    private static final String LABEL = "Select scenarios (Ctrl- or Shift-click for multi-select):";
 
     private Label label;
     private List scenarioList;
+    private Button selectAllButton;
+    private Button deselectAllButton;
     private UCMScenarioViewer viewer;
 
     public SelectScenarioPage() {
@@ -55,20 +58,31 @@ public class SelectScenarioPage extends WizardPage {
 
     public UCMScenarioViewer getSelectedDiagram() {
     	return viewer;
-/*        if (viewer == null) {
-            return null;
-        }
-        
-        return viewer.getMSCDiagram().getSelectedScenario();
-*/    }
+    }
+
+    /**
+     * Indices into the scenario group's tree-children list that the user has
+     * checked for export. Returned in the order they appear in the list (not
+     * the order the user clicked). Empty array means nothing selected.
+     */
+    public int[] getSelectedScenarioIndices() {
+        if (scenarioList == null) return new int[0];
+        int[] sel = scenarioList.getSelectionIndices();
+        java.util.Arrays.sort(sel);
+        return sel;
+    }
 
     // Page validation
     protected void validatePage(boolean showErrorMessage) {
         String errorMessage = null;
 
-        errorMessage = scenarioList.getSelectionIndex() == -1 ? "Scenario is not selected" : null;
-        if (scenarioList.getSelectionIndex() != -1) {
-        	viewer.getMSCDiagram().setSelectedScenario(scenarioList.getSelectionIndex());
+        int[] sel = scenarioList.getSelectionIndices();
+        errorMessage = (sel == null || sel.length == 0) ? "At least one scenario must be selected" : null;
+        // Keep the viewer's "current scenario" pointing at the first selection
+        // so existing single-scenario code paths (e.g. default filename based
+        // on the active scenario name) still have something sensible to read.
+        if (sel != null && sel.length > 0) {
+            viewer.getMSCDiagram().setSelectedScenario(sel[0]);
         }
         setErrorMessage(showErrorMessage ? errorMessage : null);
         setPageComplete(errorMessage == null);
@@ -81,9 +95,11 @@ public class SelectScenarioPage extends WizardPage {
         setControl(composite);
 
         createLabel(composite);
+        createSelectionButtons(composite);
         createDiagramsList(composite);
 
         hookDiagramSelection();
+        hookSelectionButtons();
 
         updateScenarioList();
         validatePage(false);
@@ -100,15 +116,50 @@ public class SelectScenarioPage extends WizardPage {
         label.setLayoutData(formData);
     }
 
-    private void createDiagramsList(Composite parent) {
-        scenarioList = new List(parent, SWT.BORDER | SWT.SINGLE);
-        
+    private void createSelectionButtons(Composite parent) {
+        selectAllButton = new Button(parent, SWT.PUSH);
+        selectAllButton.setText("Select All");
         FormData formData = new FormData();
         formData.top = new FormAttachment(label, 5);
+        formData.right = new FormAttachment(100, 0);
+        selectAllButton.setLayoutData(formData);
+
+        deselectAllButton = new Button(parent, SWT.PUSH);
+        deselectAllButton.setText("Deselect All");
+        formData = new FormData();
+        formData.top = new FormAttachment(label, 5);
+        formData.right = new FormAttachment(selectAllButton, -5);
+        deselectAllButton.setLayoutData(formData);
+    }
+
+    private void createDiagramsList(Composite parent) {
+        // Multi-selection (Ctrl/Shift-click) so the user can export several
+        // scenarios in one pass. The export page below ships each selected
+        // scenario as its own image file in a chosen output directory.
+        scenarioList = new List(parent, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
+
+        FormData formData = new FormData();
+        formData.top = new FormAttachment(selectAllButton, 5);
         formData.bottom = new FormAttachment(100, 0);
         formData.left = new FormAttachment(0, 0);
         formData.right = new FormAttachment(100, 0);
         scenarioList.setLayoutData(formData);
+    }
+
+    private void hookSelectionButtons() {
+        selectAllButton.addSelectionListener(new SelectionAdapter() {
+            public void widgetSelected(SelectionEvent e) {
+                if (scenarioList.getItemCount() == 0) return;
+                scenarioList.selectAll();
+                validatePage(true);
+            }
+        });
+        deselectAllButton.addSelectionListener(new SelectionAdapter() {
+            public void widgetSelected(SelectionEvent e) {
+                scenarioList.deselectAll();
+                validatePage(true);
+            }
+        });
     }
     
     private void updateScenarioList() {
@@ -128,6 +179,8 @@ public class SelectScenarioPage extends WizardPage {
             scenarioList.add( ((Scenario)i.next()).getName());
         }
         
+        // Pre-select the scenario currently active in the viewer; the user can
+        // extend the selection with Ctrl/Shift-click, or use Select All above.
         scenarioList.setSelection(new int[]{viewer.getMSCDiagram().getSelectedScenario().getNumber()});
         
         validatePage(true);

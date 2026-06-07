@@ -64,8 +64,12 @@ public class UCMScenarioExportWizard extends Wizard implements IExportWizard {
 //        } else 
     	if (page == selectScenarioPage) {
             selectExportFile.setViewer(selectScenarioPage.getSelectedDiagram());
+            // Pass the (possibly multi-) selection so the export page can
+            // switch between single-file and per-scenario-files-in-a-folder
+            // modes and adjust its validation accordingly.
+            selectExportFile.setSelectedScenarioIndices(selectScenarioPage.getSelectedScenarioIndices());
         }
-        
+
         return super.getNextPage(page);
     }
 

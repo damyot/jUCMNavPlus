@@ -178,103 +178,79 @@ public class HTMLReport extends URNReport {
     		}
     	}
         
-    	int i=0;
-    	boolean isLast = false;		// determines whether the current diagram (if any diagrams are added) is the last
-    								// diagram to be added
-    	boolean complete = false;	// determines whether all files of the report have been exported
-		
+    	// Per-diagram export. The original code tied createIndexPages /
+    	// exportGlobalDefinitions / menu writeToFile to the loop's last iteration
+    	// AND that iteration's diagram passing the prefShow filter -- so when the
+    	// last-iterated diagram happened to be filtered out (HashMap iteration
+    	// order isn't controlled by the user), index.html and the global
+    	// definition pages silently went missing. Now those one-shot writes
+    	// happen unconditionally after the loop.
+    	String htmlPath = getPath(filename);
+    	File mainDirectory = new File(htmlPath + PAGES_LOCATION);
+    	if (!mainDirectory.exists()) {
+    		mainDirectory.mkdirs();
+    	}
+
     	for (Iterator iter = mapDiagrams.keySet().iterator(); iter.hasNext();) {
     		IURNDiagram diagram = (IURNDiagram) iter.next();
-    		
-			isLast = (i == mapDiagrams.size()-1 );
 			// get the high level IFigure to be saved
 			pane = (IFigure) mapDiagrams.get(diagram);
 			String diagramName = ExportWizard.getDiagramName(diagram);
 			// export the diagram only if the corresponding preference value is TRUE
 			if ( (diagramName.contains("-Map") && prefShowUCMDiagrams) || (diagramName.contains("-GRLGraph") && prefShowGRLDiagrams)  || (diagramName.contains("-FeatureDiag") && prefShowGRLDiagrams) ) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				
+
 				String imgPath = createImgPath(filename, diagramName);
 				// export the image file
 				(new ExportImageGIF()).export(pane, imgPath);
-			
-				// export the index pages
-				String htmlPath = getPath(filename);
-				
-				if (isLast) {
-					createIndexPages(urn, htmlPath);
-				}
-				
+
 				// prepare the HTML menu item
 				HTMLMenuItem htmlMenuItem = new HTMLMenuItem();
 				htmlMenuItem.reset();
-      
+
 				htmlMenuItem.setDiagramName(EscapeUtils.escapeHTML(diagramName));
-				
+
 				if (diagram instanceof GRLGraph) {
 					if (diagram instanceof FeatureDiagram)
 					{
 						htmlMenuItem.setType(HTMLMenuItem.TYPE_FM);
 						}
-					else {				
+					else {
 						htmlMenuItem.setType(HTMLMenuItem.TYPE_GRL);
-						} 
-					} 
+						}
+					}
 				else {
 					htmlMenuItem.setType(HTMLMenuItem.TYPE_UCM);
 				}
-				
+
 				htmlMenuItem.setLeafText(diagramName.substring(diagramName.lastIndexOf("-") + 1)); //$NON-NLS-1$
 				htmlMenuItem.setLink(diagramName + ".html"); //$NON-NLS-1$
 				htmlMenuItem.setBaseX(-pane.getBounds().x);
 				htmlMenuItem.setBaseY(-pane.getBounds().y);
 				htmlMenuItem.setDiagram(diagram);
-			
-				// export the HTML or this diagram
+
+				// export the HTML for this diagram
 				export(diagram, htmlPath);
 
 				// create the XML menu content
 				HTMLMenuParser htmlMenuParser = HTMLMenuParser.getParser(htmlPath);
 				htmlMenuParser.addMenu(htmlMenuItem);
-				
-				// write the content of menu to XML file
-				if (isLast) {
-					exportGlobalDefinitions(urn, htmlPath, HTMLReport.UCM_DEFINITIONS);
-					exportGlobalDefinitions(urn, htmlPath, HTMLReport.UCM_SCENARIOS);
-					exportGlobalDefinitions(urn, htmlPath, HTMLReport.GRL_DEFINITIONS);
-					exportGlobalDefinitions(urn, htmlPath, HTMLReport.FM_DEFINITIONS);
-					htmlMenuParser.writeToFile();
-					htmlMenuParser.resetDocument();
-					complete = true;
-				}
-		}
-		i++;
-	}
-    	// If no diagrams were added to the report, export the index pages and the report content.
-    	if (!complete) {
-    		String htmlPath = getPath(filename);
-    		File mainDirectory = new File(htmlPath + PAGES_LOCATION);
-    		if (!mainDirectory.exists()) {
-    			mainDirectory.mkdirs();
-    		}
-    		try {
-	    		File mainFile;
-	    		mainFile = new File("main.html"); //$NON-NLS-1$
-	    		// create file main.html if it does not exist yet
-	    		if(!mainFile.exists()) {
-	    			mainFile.createNewFile();
-	    		}
-	    		createIndexPages(urn, htmlPath);
-	    		HTMLMenuParser htmlMenuParser = HTMLMenuParser.getParser(htmlPath);
-	    		exportGlobalDefinitions(urn, htmlPath, HTMLReport.UCM_DEFINITIONS);
-				exportGlobalDefinitions(urn, htmlPath, HTMLReport.UCM_SCENARIOS);
-				exportGlobalDefinitions(urn, htmlPath, HTMLReport.GRL_DEFINITIONS);
-				exportGlobalDefinitions(urn, htmlPath, HTMLReport.FM_DEFINITIONS);
-				htmlMenuParser.writeToFile();
-				htmlMenuParser.resetDocument();
-    		}
-    		catch (Exception ex) {
-    			ex.printStackTrace();
-    		}
+			}
+    	}
+
+    	// Always write the top-level index, the per-section globals, and flush
+    	// the singleton menu parser. Independent of which diagrams (if any)
+    	// passed the prefShow filter above.
+    	try {
+    		createIndexPages(urn, htmlPath);
+    		exportGlobalDefinitions(urn, htmlPath, HTMLReport.UCM_DEFINITIONS);
+    		exportGlobalDefinitions(urn, htmlPath, HTMLReport.UCM_SCENARIOS);
+    		exportGlobalDefinitions(urn, htmlPath, HTMLReport.GRL_DEFINITIONS);
+    		exportGlobalDefinitions(urn, htmlPath, HTMLReport.FM_DEFINITIONS);
+    		HTMLMenuParser htmlMenuParser = HTMLMenuParser.getParser(htmlPath);
+    		htmlMenuParser.writeToFile();
+    		htmlMenuParser.resetDocument();
+    	} catch (Exception ex) {
+    		ex.printStackTrace();
     	}
 
 		if (prefShowEvals) {

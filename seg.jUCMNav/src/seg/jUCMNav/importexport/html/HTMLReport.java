@@ -357,6 +357,17 @@ public class HTMLReport extends URNReport {
 			srcFile = "htmltemplates/ucm16.gif"; //$NON-NLS-1$
 			desFile = htmlPath + PAGES_LOCATION + "ucm16.gif"; //$NON-NLS-1$
 			copy(srcFile, desFile);
+
+			// Stub icons -- shown in the sidebar to distinguish static stubs
+			// (Stub16.gif) from dynamic stubs (DynStub16.gif) inside the
+			// UCM-map -> Stub -> sub-map hierarchy.
+			srcFile = "htmltemplates/Stub16.gif"; //$NON-NLS-1$
+			desFile = htmlPath + PAGES_LOCATION + "Stub16.gif"; //$NON-NLS-1$
+			copy(srcFile, desFile);
+
+			srcFile = "htmltemplates/DynStub16.gif"; //$NON-NLS-1$
+			desFile = htmlPath + PAGES_LOCATION + "DynStub16.gif"; //$NON-NLS-1$
+			copy(srcFile, desFile);
 						
 			// Generate the grl16.gif (the GRL symbol) file
 			srcFile = "htmltemplates/grl16.gif"; //$NON-NLS-1$

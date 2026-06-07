@@ -356,9 +356,11 @@ public class HTMLMenuParser {
 			}
 
 			Element stubBranch = xmlDocument.createElement(BRANCH);
-			// "ucm-stub" + notRedirect makes the renderer drop the icon and
-			// the clickable link, leaving just an expand/collapse summary.
-			stubBranch.setAttribute(BRANCH_ID, "ucm-stub"); //$NON-NLS-1$
+			// BRANCH_ID = "ucm-stub-static" or "ucm-stub-dynamic" so the
+			// renderer picks Stub16.gif vs DynStub16.gif. notRedirect on
+			// BRANCH_LINK keeps the summary unlinked (a stub has no own
+			// page); the icon still renders.
+			stubBranch.setAttribute(BRANCH_ID, s.isDynamic() ? "ucm-stub-dynamic" : "ucm-stub-static"); //$NON-NLS-1$ //$NON-NLS-2$
 			stubBranch.setAttribute(BRANCH_LINK, "notRedirect"); //$NON-NLS-1$
 			stubBranch.setAttribute(BASE_X, "0"); //$NON-NLS-1$
 			stubBranch.setAttribute(BASE_Y, "0"); //$NON-NLS-1$
@@ -366,17 +368,62 @@ public class HTMLMenuParser {
 			sbt.setTextContent(stubName);
 			stubBranch.appendChild(sbt);
 
+			// Sort the bound sub-maps alphabetically so the menu is stable
+			// and discoverable, even when the model's binding list order is
+			// arbitrary. (Dynamic stubs commonly have many bindings.)
+			List<UCMmap> children = new ArrayList<UCMmap>();
 			for (Object b : s.getBindings()) {
 				if (b instanceof PluginBinding) {
 					UCMmap childMap = ((PluginBinding) b).getPlugin();
-					Element childNode = buildUcmMapNode(childMap, visited);
-					if (childNode != null) stubBranch.appendChild(childNode);
+					if (childMap != null) children.add(childMap);
 				}
+			}
+			children.sort(NAME_CMP);
+			for (UCMmap childMap : children) {
+				Element childNode = buildUcmMapNode(childMap, visited);
+				if (childNode != null) stubBranch.appendChild(childNode);
 			}
 			mapBranch.appendChild(stubBranch);
 		}
 		return mapBranch;
 	}
+
+	/**
+	 * Reorder direct LEAF/BRANCH children of a top-level section branch
+	 * alphabetically by their display text. Used for UCM (root maps), GRL
+	 * leaves, and FM leaves; DEF is left in its canonical order.
+	 */
+	private void sortSectionChildren(String branchId) {
+		Element section = findTopBranch(branchId);
+		if (section == null) return;
+		List<Element> sortable = new ArrayList<Element>();
+		NodeList kids = section.getChildNodes();
+		for (int i = 0; i < kids.getLength(); i++) {
+			Node k = kids.item(i);
+			if (k.getNodeType() != Node.ELEMENT_NODE) continue;
+			Element e = (Element) k;
+			String tag = e.getTagName();
+			if (BRANCH.equals(tag) || LEAF.equals(tag)) sortable.add(e);
+		}
+		sortable.sort((a, b) -> displayText(a).compareToIgnoreCase(displayText(b)));
+		for (Element e : sortable) section.removeChild(e);
+		for (Element e : sortable) section.appendChild(e);
+	}
+
+	private String displayText(Element e) {
+		String tag = e.getTagName();
+		return textOfChild(e, BRANCH.equals(tag) ? BRANCH_TEXT : LEAF_TEXT);
+	}
+
+	private static final java.util.Comparator<UCMmap> NAME_CMP = new java.util.Comparator<UCMmap>() {
+		public int compare(UCMmap a, UCMmap b) {
+			String an = ((URNmodelElement) a).getName();
+			String bn = ((URNmodelElement) b).getName();
+			if (an == null) an = ""; //$NON-NLS-1$
+			if (bn == null) bn = ""; //$NON-NLS-1$
+			return an.compareToIgnoreCase(bn);
+		}
+	};
 
 	/**
 	 * Emit a self-contained, modern index.html at the report root, containing
@@ -391,6 +438,12 @@ public class HTMLMenuParser {
 	public void writeToFile() {
 		rebuildUcmBranch();
 		organizeMenus();
+		// Alphabetize the three diagram sections so the menu is predictable
+		// regardless of HashMap iteration order from the export wizard.
+		// Definitions is left in canonical order.
+		sortSectionChildren(HTMLMenuItem.TYPE_UCM);
+		sortSectionChildren(HTMLMenuItem.TYPE_GRL);
+		sortSectionChildren(HTMLMenuItem.TYPE_FM);
 
 		StringBuilder sb = new StringBuilder(8192);
 		sb.append("<!DOCTYPE html>\n"); //$NON-NLS-1$
@@ -476,19 +529,27 @@ public class HTMLMenuParser {
 				sb.append(EscapeUtils.escapeHTML(text));
 				sb.append("</a></li>\n"); //$NON-NLS-1$
 			} else if (BRANCH.equals(tag)) {
-				// Branch with children. Two flavours:
-				//   - real UCMmap branch: has a BRANCH_LINK (-> its HTML page),
-				//     gets an icon and a clickable summary.
-				//   - intermediate UCM stub branch (BRANCH_ID="ucm-stub",
-				//     BRANCH_LINK="notRedirect"): pure expand/collapse,
-				//     no icon, no link -- the stub itself has no own page.
-				//     This keeps the visual difference between "a map" and
-				//     "a stub on a map" clear.
+				// Branch with children. Three flavours:
+				//   - real UCMmap branch: BRANCH_LINK is its HTML page,
+				//     gets ucm16.gif + clickable summary text.
+				//   - static stub: BRANCH_ID="ucm-stub-static",
+				//     BRANCH_LINK="notRedirect" -> Stub16.gif, no link.
+				//   - dynamic stub: BRANCH_ID="ucm-stub-dynamic",
+				//     BRANCH_LINK="notRedirect" -> DynStub16.gif, no link.
+				// A stub has no page of its own (expand-only), but it still
+				// shows an icon to distinguish static vs dynamic at a glance.
 				String text = textOfChild(e, BRANCH_TEXT);
 				String link = e.getAttribute(BRANCH_LINK);
+				String branchId = e.getAttribute(BRANCH_ID);
 				boolean hasLink = link != null && link.length() > 0 && !"notRedirect".equals(link); //$NON-NLS-1$
 				sb.append("<li><details><summary>"); //$NON-NLS-1$
-				if (hasLink) {
+				if ("ucm-stub-static".equals(branchId)) { //$NON-NLS-1$
+					sb.append("<img src=\"").append(pagesPrefix).append("Stub16.gif\" alt=\"\">"); //$NON-NLS-1$ //$NON-NLS-2$
+					sb.append(EscapeUtils.escapeHTML(text));
+				} else if ("ucm-stub-dynamic".equals(branchId)) { //$NON-NLS-1$
+					sb.append("<img src=\"").append(pagesPrefix).append("DynStub16.gif\" alt=\"\">"); //$NON-NLS-1$ //$NON-NLS-2$
+					sb.append(EscapeUtils.escapeHTML(text));
+				} else if (hasLink) {
 					appendIcon(sb, sectionId, link, pagesPrefix);
 					sb.append("<a target=\"content\" href=\""); //$NON-NLS-1$
 					sb.append(pagesPrefix).append(escAttr(link));

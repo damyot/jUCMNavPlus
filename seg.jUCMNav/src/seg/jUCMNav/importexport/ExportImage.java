@@ -53,7 +53,7 @@ public abstract class ExportImage implements IUseCaseMapExport {
     public void export(IFigure unzoomedPane, FileOutputStream fos) {
         // generate image
         ScalableFreeformLayeredPane pane = (ScalableFreeformLayeredPane) unzoomedPane;
-        pane.setScale(pane.getScale()+ 0.01);
+        pane.setScale(pane.getScale()+ 0.001);
         
         Image image = new Image(Display.getCurrent(), pane.getSize().width, pane.getSize().height);
         GC gc = new GC(image);
@@ -62,7 +62,7 @@ public abstract class ExportImage implements IUseCaseMapExport {
         // if the bounds are in the negative x/y, we don't see them without a translation
         graphics.translate(-pane.getBounds().x, -pane.getBounds().y);
         pane.paint(graphics);
-        pane.setScale(pane.getScale()- 0.01);
+        pane.setScale(pane.getScale()- 0.001);
 
         ImageLoader loader = new ImageLoader();
         loader.data = new ImageData[] { ReportUtils.cropImage(image.getImageData()) };

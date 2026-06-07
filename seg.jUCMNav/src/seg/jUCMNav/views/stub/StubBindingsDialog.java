@@ -378,7 +378,12 @@ public class StubBindingsDialog extends Dialog implements Adapter {
         btDelete = new ToolItem(toolBar, SWT.PUSH);
         btDelete.setEnabled(false);
         btDelete.setToolTipText(Messages.getString("StubBindingsDialog.deleteBinding")); //$NON-NLS-1$
-        image = WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE).createImage();
+        // Use the workbench's shared image, not getImageDescriptor().createImage()
+        // -- the latter allocates a fresh Image this dialog never disposed, which
+        // modern SWT reports as a leak ("SWT Resource was not properly disposed"
+        // out of StubBindingsDialog.createDialogArea). Matches the pattern
+        // already used for the REDO button a few lines down.
+        image = WorkbenchImages.getImage(ISharedImages.IMG_TOOL_DELETE);
         images.add(image);
         btDelete.setImage(image);
         btDelete.addSelectionListener(new SelectionAdapter() {
@@ -389,7 +394,9 @@ public class StubBindingsDialog extends Dialog implements Adapter {
 
         btUndo = new ToolItem(toolBar, SWT.PUSH);
         btUndo.setToolTipText(Messages.getString("StubBindingsDialog.undoPreviousAction")); //$NON-NLS-1$
-        image = WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_UNDO).createImage();
+        // Shared workbench image -- see comment on the DELETE button above for
+        // the leak rationale. The REDO button just below already does this.
+        image = WorkbenchImages.getImage(ISharedImages.IMG_TOOL_UNDO);
         images.add(image);
         btUndo.setImage(image);
         btUndo.addSelectionListener(new SelectionAdapter() {

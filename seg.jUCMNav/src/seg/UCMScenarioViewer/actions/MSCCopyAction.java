@@ -10,6 +10,7 @@ import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.IScalablePane;
 import org.eclipse.draw2d.SWTGraphics;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
@@ -28,6 +29,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 
 import seg.UCMScenarioViewer.UCMScenarioViewer;
+import seg.UCMScenarioViewer.utils.Helper;
 
 /**
  * Copy the currently displayed MSC scenario diagram to the system clipboard
@@ -90,15 +92,20 @@ public class MSCCopyAction extends Action {
         try {
             if (needsNudge) scalable.setScale(originalScale + 0.001);
 
-            image = new Image(Display.getCurrent(),
-                    pane.getSize().width, pane.getSize().height);
+            // Use the union extent of every descendant figure instead of
+            // pane.getSize(): the MSC layer's own getBounds() doesn't include
+            // children that paint outside (condition shapes, loop messages on
+            // a single lifeline, etc.) so the previous code truncated them.
+            Rectangle extent = Helper.computePaintExtent(pane);
+
+            image = new Image(Display.getCurrent(), extent.width, extent.height);
             gc = new GC(image);
             // Force GDI+ on Windows so antialiased fills render off-screen.
             gc.setAdvanced(true);
             gc.setAntialias(SWT.ON);
             gc.setTextAntialias(SWT.ON);
             graphics = new SWTGraphics(gc);
-            graphics.translate(-pane.getBounds().x, -pane.getBounds().y);
+            graphics.translate(-extent.x, -extent.y);
             pane.paint(graphics);
 
             ImageData data = image.getImageData();

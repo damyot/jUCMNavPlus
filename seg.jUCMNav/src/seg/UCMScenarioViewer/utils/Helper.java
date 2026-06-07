@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IEditorPart;
@@ -207,6 +209,45 @@ public class Helper {
         return editor instanceof UCMScenarioViewer ? (UCMScenarioViewer) editor : null;
     }
 
+    /**
+     * Tight padding added on each side of the computed paint extent. Buys us
+     * a few pixels for figures whose paint() draws slightly outside their
+     * reported bounds (typical for arrow heads, italic text descenders, etc.).
+     */
+    private static final int PAINT_EXTENT_PAD = 4;
 
+    /**
+     * Compute the bounding rectangle that covers <code>root</code> and every
+     * one of its descendant figures, then expand by {@link #PAINT_EXTENT_PAD}
+     * pixels on each side.
+     *
+     * <p>Why this exists: the MSC viewer's printable layer reports a
+     * {@code getBounds()} that reflects the layer's own laid-out box, not the
+     * union of its children's extents. Condition shapes, loop messages on a
+     * single lifeline (start/end on same lifeline), and other figures paint
+     * outside the layer's reported bounds; using the layer's getBounds()
+     * directly as the off-screen image size truncates them on all four sides.
+     *
+     * <p>Walking the figure tree and unioning every descendant's getBounds()
+     * gives a faithful capture extent. The PAINT_EXTENT_PAD then catches the
+     * remaining sub-pixel overflow (arrow heads etc.) that no figure bounds
+     * captures exactly.
+     */
+    public static Rectangle computePaintExtent(IFigure root) {
+        if (root == null) return new Rectangle();
+        Rectangle extent = root.getBounds().getCopy();
+        accumulateBounds(root, extent);
+        extent.expand(PAINT_EXTENT_PAD, PAINT_EXTENT_PAD);
+        return extent;
+    }
 
+    private static void accumulateBounds(IFigure figure, Rectangle extent) {
+        java.util.List children = figure.getChildren();
+        if (children == null) return;
+        for (int i = 0; i < children.size(); i++) {
+            IFigure child = (IFigure) children.get(i);
+            extent.union(child.getBounds());
+            accumulateBounds(child, extent);
+        }
+    }
 }

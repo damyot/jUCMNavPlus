@@ -131,6 +131,7 @@ public class SelectExportFilePage extends WizardPage implements SelectionListene
         final ZoomManager zm = root.getZoomManager();
         final double originalZoom = (zm != null) ? zm.getZoom() : 1.0;
         final double targetZoom = ZOOM_PRESETS[zoomComboIndex()];
+        final double adjustedZoom = targetZoom==100 ? 99.999 : targetZoom;
 
         // Default to {single-selection mode using the currently active scenario}
         // when the wizard wasn't told otherwise. Defensive: should always have
@@ -155,14 +156,12 @@ public class SelectExportFilePage extends WizardPage implements SelectionListene
         IRunnableWithProgress op = new IRunnableWithProgress() {
             public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
                 monitor.beginTask("Exporting MSC diagrams", indices.length + 2);
-                final boolean nudgeZoom = (zm != null) && Math.abs(targetZoom - originalZoom) > 1e-9;
-                try {
+            	try {
                     // Apply target zoom once on the UI thread.
-                    if (nudgeZoom) {
-                        runOnUi(new Runnable() {
-                            public void run() { zm.setZoom(targetZoom); }
-                        });
-                    }
+                    runOnUi(new Runnable() {
+                        public void run() { zm.setZoom(adjustedZoom); }
+                    });
+                    
                     monitor.worked(1);
 
                     for (int i = 0; i < indices.length; i++) {
@@ -202,13 +201,6 @@ public class SelectExportFilePage extends WizardPage implements SelectionListene
                         monitor.worked(1);
                     }
                 } finally {
-                    // Always restore zoom, even on cancel/error, even from the
-                    // worker thread.
-                    if (nudgeZoom) {
-                        runOnUi(new Runnable() {
-                            public void run() { zm.setZoom(originalZoom); }
-                        });
-                    }
                     monitor.worked(1);
                     monitor.done();
                 }

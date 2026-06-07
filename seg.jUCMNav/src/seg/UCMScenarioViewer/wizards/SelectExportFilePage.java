@@ -4,8 +4,12 @@
 package seg.UCMScenarioViewer.wizards;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.SWTGraphics;
@@ -113,7 +117,7 @@ public class SelectExportFilePage extends WizardPage implements SelectionListene
             return false;
         }
 
-        GraphicalViewer gv = (GraphicalViewer)viewer.getAdapter(GraphicalViewer.class);
+        final GraphicalViewer gv = (GraphicalViewer)viewer.getAdapter(GraphicalViewer.class);
         if (gv == null) {
             return false;
         }
@@ -123,69 +127,131 @@ public class SelectExportFilePage extends WizardPage implements SelectionListene
         // resolution (sharp text + edges), then restore in finally so the
         // editor returns to its prior zoom regardless of success. Same
         // pattern used by CopyAction's issue-#4 workaround.
-        ScalableFreeformRootEditPart root = (ScalableFreeformRootEditPart) gv.getRootEditPart();
-        ZoomManager zm = root.getZoomManager();
-        double originalZoom = (zm != null) ? zm.getZoom() : 1.0;
-        double targetZoom = ZOOM_PRESETS[zoomComboIndex()];
+        final ScalableFreeformRootEditPart root = (ScalableFreeformRootEditPart) gv.getRootEditPart();
+        final ZoomManager zm = root.getZoomManager();
+        final double originalZoom = (zm != null) ? zm.getZoom() : 1.0;
+        final double targetZoom = ZOOM_PRESETS[zoomComboIndex()];
 
         // Default to {single-selection mode using the currently active scenario}
         // when the wizard wasn't told otherwise. Defensive: should always have
         // at least one index after validation.
-        int[] indices = (selectedScenarioIndices.length > 0)
+        final int[] indices = (selectedScenarioIndices.length > 0)
                 ? selectedScenarioIndices
                 : new int[] { viewer.getMSCDiagram().getSelectedScenario().getNumber() };
-        boolean multi = indices.length > 1;
+        final boolean multi = indices.length > 1;
+        final String pathFieldText = fileField.getText();
+        final java.util.List scenarios = viewer.getMSCDiagram().getTreeChildren();
 
-        java.util.List scenarios = viewer.getMSCDiagram().getTreeChildren();
+        // Run the loop on a worker thread under the wizard's progress monitor.
+        // The Eclipse UI Monitoring service was correctly flagging the
+        // previous synchronous version: at higher zoom levels each scenario's
+        // PNG encode (Deflater.deflate) and off-screen figure paint
+        // (Gdip.Graphics_DrawLines) can pin the UI thread for seconds. With
+        // the worker thread + progress dialog, the user sees per-scenario
+        // progress and can cancel; the only UI-thread time is the brief
+        // syncExec window for the actual SWT capture itself (Image + GC +
+        // SWTGraphics + figure paint), with the PNG/BMP/JPEG encode + file
+        // write happening on the worker.
+        IRunnableWithProgress op = new IRunnableWithProgress() {
+            public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                monitor.beginTask("Exporting MSC diagrams", indices.length + 2);
+                final boolean nudgeZoom = (zm != null) && Math.abs(targetZoom - originalZoom) > 1e-9;
+                try {
+                    // Apply target zoom once on the UI thread.
+                    if (nudgeZoom) {
+                        runOnUi(new Runnable() {
+                            public void run() { zm.setZoom(targetZoom); }
+                        });
+                    }
+                    monitor.worked(1);
 
-        try {
-            if (zm != null && Math.abs(targetZoom - originalZoom) > 1e-9) {
-                zm.setZoom(targetZoom);
-            }
+                    for (int i = 0; i < indices.length; i++) {
+                        if (monitor.isCanceled()) throw new InterruptedException();
+                        final int scenarioIdx = indices[i];
+                        final Scenario scenario = (Scenario) scenarios.get(scenarioIdx);
+                        final String outPath = multi
+                                ? new File(pathFieldText, sanitize(scenario.getName()) + getFileExtension()).getPath()
+                                : pathFieldText;
 
-            String pathFieldText = fileField.getText();
-            for (int i = 0; i < indices.length; i++) {
-                int scenarioIdx = indices[i];
+                        monitor.subTask("Exporting " + scenario.getName());
 
-                // Switch to the scenario we want to capture. The MSC viewer
-                // rebuilds its figure tree on this call; drain pending UI
-                // events so the new figures actually paint before we walk
-                // the layer for the screenshot.
-                viewer.getMSCDiagram().setSelectedScenario(scenarioIdx);
-                pumpEvents();
+                        // Capture phase MUST be on the UI thread (SWT Image,
+                        // GC, draw2d figure.paint all touch widgets). Switch
+                        // scenario, drain pending events, paint the printable
+                        // layer onto an off-screen Image, return its
+                        // ImageData. Image is disposed inside the syncExec
+                        // so it never escapes the UI thread.
+                        final ImageData[] dataHolder = new ImageData[1];
+                        runOnUi(new Runnable() {
+                            public void run() {
+                                viewer.getMSCDiagram().setSelectedScenario(scenarioIdx);
+                                pumpEvents();
+                                dataHolder[0] = captureToImageData(gv);
+                            }
+                        });
 
-                Scenario scenario = (Scenario) scenarios.get(scenarioIdx);
-                String outPath = multi
-                        ? new File(pathFieldText, sanitize(scenario.getName()) + getFileExtension()).getPath()
-                        : pathFieldText;
-
-                if (!captureScenarioToFile(gv, outPath)) {
-                    return false;
+                        // Encode + write OFF the UI thread (this is the long
+                        // step that the UI Monitoring service was sampling).
+                        if (dataHolder[0] != null) {
+                            try {
+                                saveImageData(dataHolder[0], outPath);
+                            } catch (Exception writeEx) {
+                                throw new InvocationTargetException(writeEx);
+                            }
+                        }
+                        monitor.worked(1);
+                    }
+                } finally {
+                    // Always restore zoom, even on cancel/error, even from the
+                    // worker thread.
+                    if (nudgeZoom) {
+                        runOnUi(new Runnable() {
+                            public void run() { zm.setZoom(originalZoom); }
+                        });
+                    }
+                    monitor.worked(1);
+                    monitor.done();
                 }
             }
-        } catch (Exception e) {
+        };
+
+        try {
+            getContainer().run(true /* fork */, true /* cancelable */, op);
+            return true;
+        } catch (InterruptedException ie) {
+            return false; // user cancelled; no error dialog
+        } catch (InvocationTargetException ite) {
+            Throwable cause = ite.getTargetException();
             MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR | SWT.OK);
             messageBox.setText("Error");
-            messageBox.setMessage(e.getMessage() != null ? e.getMessage() : e.getClass().getName());
+            messageBox.setMessage(cause != null && cause.getMessage() != null
+                    ? cause.getMessage()
+                    : (cause != null ? cause.getClass().getName() : "Export failed"));
             messageBox.open();
             return false;
-        } finally {
-            if (zm != null && Math.abs(targetZoom - originalZoom) > 1e-9) {
-                zm.setZoom(originalZoom);
-            }
+        } catch (OperationCanceledException oce) {
+            return false;
         }
-
-        return true;
     }
 
-    /** Walk the printable-layers figure of the live viewer and save it as one image. */
-    private boolean captureScenarioToFile(GraphicalViewer gv, String outPath) {
+    /** Run a Runnable on the UI thread synchronously. Used from the worker. */
+    private static void runOnUi(Runnable r) {
+        Display d = Display.getDefault();
+        d.syncExec(r);
+    }
+
+    /**
+     * UI-thread-only: paint the live viewer's printable-layers figure onto a
+     * fresh off-screen Image, return its ImageData, and dispose the Image
+     * before returning. Caller (on any thread) can then encode the
+     * ImageData without touching SWT widgets.
+     */
+    private ImageData captureToImageData(GraphicalViewer gv) {
         Image img = null;
         GC gc = null;
         Graphics graphics = null;
         try {
             IFigure f = ((ScalableFreeformRootEditPart) gv.getRootEditPart()).getLayer(LayerConstants.PRINTABLE_LAYERS);
-
             img = new Image(null, f.getSize().width, f.getSize().height);
             gc = new GC(img);
             // See CopyAction.buildScreenshot -- without GDI+ mode, antialiased
@@ -197,21 +263,28 @@ public class SelectExportFilePage extends WizardPage implements SelectionListene
             graphics = new SWTGraphics(gc);
             graphics.translate(f.getBounds().getLocation());
             f.paint(graphics);
-
-            ImageLoader il = new ImageLoader();
-            il.data = new ImageData[]{img.getImageData()};
-            if (fileType == PNG_TYPE)
-                il.save(outPath, SWT.IMAGE_PNG);
-            else if (fileType == BMP_TYPE)
-                il.save(outPath, SWT.IMAGE_BMP_RLE);
-            else if (fileType == JPG_TYPE)
-                il.save(outPath, SWT.IMAGE_JPEG);
-            return true;
+            return img.getImageData();
         } finally {
             if (graphics != null) graphics.dispose();
             if (gc != null) gc.dispose();
             if (img != null && !img.isDisposed()) img.dispose();
         }
+    }
+
+    /**
+     * Worker-thread-safe: encode the ImageData to disk in the user's chosen
+     * format. ImageLoader.save operates on plain bytes (no SWT widgets), so
+     * the long Deflater.deflate / JPEG-encode stalls don't block the UI.
+     */
+    private void saveImageData(ImageData data, String outPath) {
+        ImageLoader il = new ImageLoader();
+        il.data = new ImageData[]{data};
+        if (fileType == PNG_TYPE)
+            il.save(outPath, SWT.IMAGE_PNG);
+        else if (fileType == BMP_TYPE)
+            il.save(outPath, SWT.IMAGE_BMP_RLE);
+        else if (fileType == JPG_TYPE)
+            il.save(outPath, SWT.IMAGE_JPEG);
     }
 
     /** Drain pending UI events so the viewer renders the new scenario before capture. */

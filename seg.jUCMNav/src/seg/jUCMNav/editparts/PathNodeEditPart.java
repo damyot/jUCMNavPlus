@@ -303,6 +303,19 @@ public class PathNodeEditPart extends ModelElementEditPart implements NodeEditPa
     public void notifyChanged(Notification notification) {
         if (getParent() == null)
             return;
+        // Two scenarios where notifyChanged fires on a detached/disposing editpart:
+        //  1. Editor close cascade: ModelElementEditPart.deactivate removes the EMF
+        //     adapter BEFORE super.deactivate(), so isActive() is still true; the
+        //     resulting REMOVE notification reaches us, refreshVisuals -> Label
+        //     paint runs against a disposed shared GC ("Graphic is disposed").
+        //  2. Undo of a structural command (e.g. SplitLinkCommand) fires a
+        //     notification on a PathNodeEditPart whose viewer chain is null,
+        //     and refreshTargetConnections -> createOrFindConnection NPEs on
+        //     getViewer().getEditPartForModel(...).
+        // Bail out when the viewer side is gone in either form.
+        org.eclipse.gef.EditPartViewer v = getViewer();
+        if (v == null || v.getControl() == null || v.getControl().isDisposed())
+            return;
         int featureId = notification.getFeatureID(UcmPackage.class);
         switch (featureId) {
         case MapPackage.PATH_NODE__PRED:

@@ -556,26 +556,10 @@ public class HTMLReport extends URNReport {
 			newtext = newtext.replaceAll("MODIFICATIONDATE", strDateModified);  //$NON-NLS-1$
 			newtext = newtext.replaceAll("Report Generation Date:",Messages.getString("HTMLReport.ReportGenDate"));	//$NON-NLS-1$ //$NON-NLS-2$
 			
-			// generate the current date using the standard Locale (English-US) and convert it to the default locale
-            String strCurrentDate;
-            DateFormat df = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, Locale.US);
-            strCurrentDate = df.format(new Date());
-            
-            // verify if current time corresponds to a PM time
-            indexOfPMString = -1;
-         	isPM = false;
-         	indexOfPMString = strCurrentDate.indexOf(" PM "); //$NON-NLS-1$
-         	if (indexOfPMString > -1) {
-         		isPM = true;
-         	}
-         	
-         	Date dateGenerated = (Date)originalDateFormat.parse(strCurrentDate);
-			String strDateGenerated = newFormat.format(dateGenerated);
-			// since not all locales recognize the 12-hour AM/PM system, make sure that all "AM" strings
-			// are replaced by "PM" if isPM is true
-			if (isPM) {
-				strDateGenerated = strDateGenerated.replaceAll(" AM ", " PM "); //$NON-NLS-1$ //$NON-NLS-2$
-			}
+			// Format the current date directly via newFormat. See ReportTitlePage.java for the
+			// JDK-21-default-LONG-format ParseException rationale -- urn.getCreated()/getModified()
+			// above still need their original parse round-trip for back-compat with old saved files.
+			String strDateGenerated = newFormat.format(new Date());
             newtext = newtext.replaceAll("REPORTGENDATE", strDateGenerated);  //$NON-NLS-1$
 			newtext = newtext.replaceAll("Model Version:", Messages.getString("HTMLReport.URNModelVersion"));	//$NON-NLS-1$ //$NON-NLS-2$
 			newtext = newtext.replaceAll("VERSION", urn.getSpecVersion());  //$NON-NLS-1$

@@ -33,24 +33,36 @@ public class ExportImageGIF extends ExportImage {
      * 
      * @see seg.jUCMNav.extensionpoints.IUseCaseMapExport#export(org.eclipse.draw2d.IFigure, java.io.FileOutputStream)
      */
-    public void export(IFigure pane, FileOutputStream fos) {
-        // generate image
-        Image image = new Image(Display.getCurrent(), pane.getSize().width, pane.getSize().height);
+    public void export(final IFigure pane, final FileOutputStream fos) {
+        // This entry point is called from BOTH the UI thread (PDF/RTF wizards) and the
+        // ModalContext worker thread (HTMLReport.export, which iterates diagrams from a job).
+        // All SWT resource allocation (Image/GC/SWTGraphics) must happen on the UI thread, so
+        // wrap in syncExec; harmless when already on the UI thread.
+        Display.getDefault().syncExec(new Runnable() {
+            public void run() {
+                Image image = null;
+                GC gc = null;
+                SWTGraphics graphics = null;
+                try {
+                    image = new Image(Display.getDefault(), pane.getSize().width, pane.getSize().height);
+                    gc = new GC(image);
+                    ExportImage.enableAdvancedRendering(gc);
+                    graphics = new SWTGraphics(gc);
+                    // if the bounds are in the negative x/y, we don't see them without a translation
+                    graphics.translate(-pane.getBounds().x, -pane.getBounds().y);
+                    pane.paint(graphics);
 
-        GC gc = new GC(image);
-        ExportImage.enableAdvancedRendering(gc);
-        SWTGraphics graphics = new SWTGraphics(gc);
-        // if the bounds are in the negative x/y, we don't see them without a
-        // translation
-        graphics.translate(-pane.getBounds().x, -pane.getBounds().y);
-        pane.paint(graphics);
-
-        ImageLoader loader = new ImageLoader();
-        loader.data = new ImageData[] { downSample(image) };
-        loader.save(fos, getType());
-
-        gc.dispose();
-        image.dispose();
+                    ImageLoader loader = new ImageLoader();
+                    loader.data = new ImageData[] { downSample(image) };
+                    loader.save(fos, getType());
+                } finally {
+                    // SWTGraphics lazily allocates an SWT Transform on scale(); dispose it too.
+                    if (graphics != null) graphics.dispose();
+                    if (gc != null) gc.dispose();
+                    if (image != null) image.dispose();
+                }
+            }
+        });
     }
 
     /**

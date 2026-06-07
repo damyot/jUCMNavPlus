@@ -156,28 +156,15 @@ public class ReportTitlePage extends Report {
             }
 
             // URN current date/time
-            // generate the current date using the standard Locale (English-US) and convert it to the default locale
-            String strCurrentDate;
-            DateFormat df = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, Locale.US);
-            strCurrentDate = df.format(new Date());
-            
+            // Format the current date directly via newFormat (the pattern from the i18n bundle).
+            // The previous DateFormat.LONG/LONG round-trip parsed via SimpleDateFormat threw
+            // ParseException on JDK 21 because the default LONG/LONG output changed: it now
+            // includes a comma between the year and time and a non-breaking space before
+            // "PM" ("June 6, 2026, 5:16:54 PM EDT" instead of the JDK 8 "June 6, 2026 5:16:54 PM EDT").
+            // urn.getCreated() / urn.getModified() further up still go through the original parse
+            // path since those strings are persisted by older jUCMNav versions and need round-tripping.
             SimpleDateFormat newFormat = new SimpleDateFormat(Messages.getString("ReportTitlePage.DateFormat")); //$NON-NLS-1$
-			// TODO Replace the hard-coded Locale value (to find the language in which dates were generated in the model)
-			SimpleDateFormat originalDateFormat = new SimpleDateFormat(Messages.getString("ReportTitlePage.DefaultDateFormat"), new Locale("en,US")); //$NON-NLS-1$ //$NON-NLS-2$
-			// verify if current time corresponds to a PM time
-			int indexOfPMString = -1;
-			boolean isPM = false;
-			indexOfPMString = strCurrentDate.indexOf(" PM "); //$NON-NLS-1$
-			if (indexOfPMString > -1) {
-				isPM = true;
-			}
-			Date dateGenerated = (Date)originalDateFormat.parse(strCurrentDate);
-			String strDateGenerated = newFormat.format(dateGenerated);
-			// since not all locales recognize the 12-hour AM/PM system, make sure that all "AM" strings
-			// are replaced by "PM" if isPM is true
-			if (isPM) {
-				strDateGenerated = strDateGenerated.replaceAll(" AM ", " PM "); //$NON-NLS-1$ //$NON-NLS-2$
-			}
+			String strDateGenerated = newFormat.format(new Date());
 			
             Chunk dateLabel = new Chunk(Messages.getString("ReportTitlePage.ReportGenerationDate"), specsFont); //$NON-NLS-1$
             Chunk dateValue = new Chunk(strDateGenerated);

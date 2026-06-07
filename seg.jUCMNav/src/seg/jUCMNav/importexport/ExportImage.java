@@ -15,6 +15,7 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
 import seg.jUCMNav.Messages;
@@ -80,14 +81,29 @@ public abstract class ExportImage implements IUseCaseMapExport {
 
         	if( exists ){
 
-        		String title = Messages.getString("ExportImage.GraphicsFileExists"); //$NON-NLS-1$
-        		String message = Messages.getString("ExportImage.TheFileQuote") + path + Messages.getString("ExportImage.QuoteAlreadyExists"); //$NON-NLS-1$ //$NON-NLS-2$
-        		String[] labels = { Messages.getString("ExportImage.OverwriteFile"), Messages.getString("ExportImage.CreateUniqueFilename") }; //$NON-NLS-1$ //$NON-NLS-2$
-        		
-        		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-        		MessageDialog md = new MessageDialog( shell, title,
-        		        shell.getDisplay().getSystemImage(SWT.ICON_QUESTION), message, MessageDialog.QUESTION, labels, 1 );
-        		int answer = md.open();
+        		final String title = Messages.getString("ExportImage.GraphicsFileExists"); //$NON-NLS-1$
+        		final String message = Messages.getString("ExportImage.TheFileQuote") + path + Messages.getString("ExportImage.QuoteAlreadyExists"); //$NON-NLS-1$ //$NON-NLS-2$
+        		final String[] labels = { Messages.getString("ExportImage.OverwriteFile"), Messages.getString("ExportImage.CreateUniqueFilename") }; //$NON-NLS-1$ //$NON-NLS-2$
+
+        		// Some callers (HTMLReport.export -> ExportImageGIF.export(IFigure, String)) reach
+        		// here from the ModalContext worker thread; MessageDialog construction and
+        		// shell.getDisplay() must happen on the UI thread. The HTML path normally skips
+        		// this branch because its imgPath contains 'pages/img/', but defensively wrap so
+        		// any future caller with a different path layout does not crash. (Note: the dialog
+        		// result is currently not used downstream -- the export proceeds regardless of
+        		// 'Overwrite' vs 'Create Unique Filename'. Wiring the result through is a separate
+        		// follow-up.)
+        		Display.getDefault().syncExec(new Runnable() {
+        			public void run() {
+        				IWorkbenchWindow win = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+        				Shell shell = win != null ? win.getShell() : null;
+        				if (shell == null) return;
+        				MessageDialog md = new MessageDialog(shell, title,
+        						shell.getDisplay().getSystemImage(SWT.ICON_QUESTION),
+        						message, MessageDialog.QUESTION, labels, 1);
+        				md.open();
+        			}
+        		});
         	}
         }
         

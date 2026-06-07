@@ -21,7 +21,6 @@ import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -234,7 +233,20 @@ public class MultiPageFileManager {
 		// null will be returned.
 		if (path == null)
 			return;
-		else if (((IFileEditorInput) getEditor().getEditorInput()).getFile().getFullPath().equals(path)) {
+
+		// Force a .jucm extension. Without this, a user who typed
+		// "model.txt" or "modeljucm" (missing the dot) ended up with the
+		// platform opening the saved file in the default text editor on
+		// reopen, which then ClassCast-failed against UCMNavMultiPageEditor
+		// from inside the try. Silently appending .jucm matches how most
+		// Eclipse editors handle file-format-bound Save As dialogs.
+		final String JUCM_EXT = "jucm"; //$NON-NLS-1$
+		String fileExt = path.getFileExtension();
+		if (fileExt == null || !JUCM_EXT.equalsIgnoreCase(fileExt)) {
+			path = path.addFileExtension(JUCM_EXT);
+		}
+
+		if (((IFileEditorInput) getEditor().getEditorInput()).getFile().getFullPath().equals(path)) {
 			doSave(new NullProgressMonitor());
 			return;
 		}
@@ -269,13 +281,16 @@ public class MultiPageFileManager {
 			// save the new file
 			modelManager.save(path);
 
-			// Resolve the editor descriptor BEFORE closing the editor so a
-			// failure here doesn't leave us with no editor open AND no useful
-			// site reference. Fall back to our own MainEditor id when the
-			// platform registry doesn't know about the new file's extension
-			// (e.g. user saved with an unrelated extension via Save As).
-			IEditorDescriptor desc = PlatformUI.getWorkbench().getEditorRegistry().getDefaultEditor(file.getName());
-			String editorId = (desc != null) ? desc.getId() : "seg.jUCMNav.MainEditor"; //$NON-NLS-1$
+			// We always reopen with our own multipage editor -- this is our own
+			// model in our own format. The original code looked up the default
+			// editor from the registry, which (a) wasn't necessary, (b) could
+			// pick a foreign editor that fails the (UCMNavMultiPageEditor)
+			// cast below, and (c) returned the default *text* editor when the
+			// user typed a non-.jucm filename in Save As (the .jucm-extension
+			// guard above already normalizes that case, but pinning the id
+			// here makes the reopen path robust against future registry
+			// changes too).
+			final String editorId = "seg.jUCMNav.MainEditor"; //$NON-NLS-1$
 
 			// we used to reinit everything without closing the editor but this
 			// caused bugs that appeared out of nowhere and made the whole

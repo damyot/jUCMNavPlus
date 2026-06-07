@@ -221,7 +221,28 @@ public class SelectExportFilePage extends WizardPage implements SelectionListene
         // Bounded loop: prevent runaway re-entrant event delivery from
         // dragging the export out indefinitely. 32 cycles is plenty for the
         // MSC viewer's layout/paint pipeline to settle.
-        for (int i = 0; i < 32 && d.readAndDispatch(); i++) { /* drain */ }
+        //
+        // Defensive catch on SWTException(ERROR_WIDGET_DISPOSED): readAndDispatch
+        // also runs the popup-menu queue (Display.runPopups), where a known
+        // Win32 SWT race can fire Menu.wmTimer on a Menu that has already been
+        // disposed (e.g. the user dismissed a context menu just before the
+        // wizard's Finish click). That's an upstream Eclipse bug -- not ours,
+        // and not specific to this code path -- but if it surfaces while we're
+        // draining the queue between scenario captures, we don't want one stray
+        // popup-timer exception to abort an entire multi-scenario export. Log
+        // it and keep going; the next loop iteration's events are still ours
+        // to drive.
+        for (int i = 0; i < 32; i++) {
+            try {
+                if (!d.readAndDispatch()) break;
+            } catch (org.eclipse.swt.SWTException ex) {
+                if (ex.code == SWT.ERROR_WIDGET_DISPOSED) {
+                    ex.printStackTrace();
+                } else {
+                    throw ex;
+                }
+            }
+        }
     }
 
     private static String sanitize(String name) {

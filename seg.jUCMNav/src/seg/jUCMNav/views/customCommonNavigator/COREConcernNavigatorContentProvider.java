@@ -9,6 +9,7 @@ import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.swt.widgets.Control;
 
 import ca.mcgill.sel.core.COREConcern;
  
@@ -170,7 +171,22 @@ public class COREConcernNavigatorContentProvider implements ITreeContentProvider
  
     @Override
     public void resourceChanged(IResourceChangeEvent event) {
-        _viewer.refresh();
+        // ResourcesPlugin fires POST_CHANGE notifications from the workspace
+        // notification thread, not the UI thread. _viewer.refresh() walks
+        // into Tree.setRedraw / StructuredViewer SWT widgets which require
+        // the UI thread; without this wrap, every workspace change (build
+        // touch, refactor, .core file edit) raised
+        // SWTException("Invalid thread access") and the navigator viewer
+        // never refreshed.
+        final Viewer v = _viewer;
+        if (v == null) return;
+        final Control ctrl = v.getControl();
+        if (ctrl == null || ctrl.isDisposed()) return;
+        ctrl.getDisplay().asyncExec(new Runnable() {
+            public void run() {
+                if (!ctrl.isDisposed()) v.refresh();
+            }
+        });
     }
  
 }

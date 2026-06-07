@@ -48,8 +48,18 @@ public class DeleteAction extends org.eclipse.gef.ui.actions.DeleteAction {
         // may legitimately contain non-EditParts (LogEntry, IFile, etc.) when
         // the user clicks in another view. Filter to EditPart instances
         // instead of an unchecked cast that lies about element types.
+        //
+        // Additionally drop ConnectionLabelEditParts (the GRL contribution-level
+        // labels). They have no delete command of their own; if even one is in
+        // the selection (which happens naturally when the user rubber-bands an
+        // area covering intentional elements AND the contribution links between
+        // them), createDeleteCommand returns null for the whole batch and the
+        // Delete menu greys out -- the user can't delete the elements they
+        // actually wanted. run() already strips them via
+        // getSelectedObjectsForDeletion(); apply the same filter here so the
+        // enablement matches what run() will actually do.
         List<EditPart> selected = new ArrayList<EditPart>();
-        for (Object obj : getSelectedObjects()) {
+        for (Object obj : getSelectedObjectsForDeletion()) {
             if (obj instanceof EditPart) {
                 selected.add((EditPart) obj);
             }
@@ -80,17 +90,23 @@ public class DeleteAction extends org.eclipse.gef.ui.actions.DeleteAction {
 			}
 			return cmd.canExecute();
 		}
-     
+
     }
-    
+
     public List getSelectedObjectsForDeletion() {
         List list = getSelectedObjects();
         Vector<Object> result = new Vector<Object>();
         for (Iterator iterator = list.iterator(); iterator.hasNext();) {
             Object o = (Object) iterator.next();
-           
+
+            // GRL contribution-level labels (ConnectionLabelEditPart) have no
+            // own delete command -- they're decorations on the parent
+            // contribution link. Silently drop them from any delete batch so
+            // a mixed selection (intentional elements + contribution labels)
+            // can still be deleted; the labels disappear automatically when
+            // their parent link is deleted, or stay attached to their link
+            // when only the elements are removed.
             if (!(o instanceof ConnectionLabelEditPart)) {
-            	System.out.println("The selected objects for delection is "+ o.toString());
                 result.add(o);
             }
         }

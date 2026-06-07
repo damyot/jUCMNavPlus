@@ -191,6 +191,13 @@ public class HTMLReport extends URNReport {
     		mainDirectory.mkdirs();
     	}
 
+    	// Per-diagram failures (e.g. SWT "Invalid thread access" during paint of a
+    	// specific figure) used to abort the whole loop and leave the report half
+    	// written with no tree.xml. Wrap each iteration so one bad diagram
+    	// degrades to "skipped + stack trace in .log" instead of dropping every
+    	// later diagram and the index page. The diagram name is logged BEFORE
+    	// the call site that crashes, so the .log identifies the offending one.
+    	java.util.List<String> failedDiagrams = new java.util.ArrayList<String>();
     	for (Iterator iter = mapDiagrams.keySet().iterator(); iter.hasNext();) {
     		IURNDiagram diagram = (IURNDiagram) iter.next();
 			// get the high level IFigure to be saved
@@ -199,42 +206,58 @@ public class HTMLReport extends URNReport {
 			// export the diagram only if the corresponding preference value is TRUE
 			if ( (diagramName.contains("-Map") && prefShowUCMDiagrams) || (diagramName.contains("-GRLGraph") && prefShowGRLDiagrams)  || (diagramName.contains("-FeatureDiag") && prefShowGRLDiagrams) ) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-				String imgPath = createImgPath(filename, diagramName);
-				// export the image file
-				(new ExportImageGIF()).export(pane, imgPath);
+				String currentStep = "(starting)"; //$NON-NLS-1$
+				try {
+					currentStep = "createImgPath"; //$NON-NLS-1$
+					String imgPath = createImgPath(filename, diagramName);
+					// export the image file
+					currentStep = "ExportImageGIF.export(pane, imgPath)"; //$NON-NLS-1$
+					(new ExportImageGIF()).export(pane, imgPath);
 
-				// prepare the HTML menu item
-				HTMLMenuItem htmlMenuItem = new HTMLMenuItem();
-				htmlMenuItem.reset();
+					// prepare the HTML menu item
+					HTMLMenuItem htmlMenuItem = new HTMLMenuItem();
+					htmlMenuItem.reset();
 
-				htmlMenuItem.setDiagramName(EscapeUtils.escapeHTML(diagramName));
+					htmlMenuItem.setDiagramName(EscapeUtils.escapeHTML(diagramName));
 
-				if (diagram instanceof GRLGraph) {
-					if (diagram instanceof FeatureDiagram)
-					{
-						htmlMenuItem.setType(HTMLMenuItem.TYPE_FM);
+					if (diagram instanceof GRLGraph) {
+						if (diagram instanceof FeatureDiagram)
+						{
+							htmlMenuItem.setType(HTMLMenuItem.TYPE_FM);
+							}
+						else {
+							htmlMenuItem.setType(HTMLMenuItem.TYPE_GRL);
+							}
 						}
 					else {
-						htmlMenuItem.setType(HTMLMenuItem.TYPE_GRL);
-						}
+						htmlMenuItem.setType(HTMLMenuItem.TYPE_UCM);
 					}
-				else {
-					htmlMenuItem.setType(HTMLMenuItem.TYPE_UCM);
+
+					htmlMenuItem.setLeafText(diagramName.substring(diagramName.lastIndexOf("-") + 1)); //$NON-NLS-1$
+					htmlMenuItem.setLink(diagramName + ".html"); //$NON-NLS-1$
+					htmlMenuItem.setBaseX(-pane.getBounds().x);
+					htmlMenuItem.setBaseY(-pane.getBounds().y);
+					htmlMenuItem.setDiagram(diagram);
+
+					// export the HTML for this diagram
+					currentStep = "export(diagram, htmlPath)"; //$NON-NLS-1$
+					export(diagram, htmlPath);
+
+					// create the XML menu content
+					currentStep = "HTMLMenuParser.addMenu"; //$NON-NLS-1$
+					HTMLMenuParser htmlMenuParser = HTMLMenuParser.getParser(htmlPath);
+					htmlMenuParser.addMenu(htmlMenuItem);
+				} catch (Throwable t) {
+					failedDiagrams.add(diagramName);
+					System.err.println("[HTMLReport] FAILED diagram '" + diagramName //$NON-NLS-1$
+							+ "' at step: " + currentStep); //$NON-NLS-1$
+					t.printStackTrace();
 				}
-
-				htmlMenuItem.setLeafText(diagramName.substring(diagramName.lastIndexOf("-") + 1)); //$NON-NLS-1$
-				htmlMenuItem.setLink(diagramName + ".html"); //$NON-NLS-1$
-				htmlMenuItem.setBaseX(-pane.getBounds().x);
-				htmlMenuItem.setBaseY(-pane.getBounds().y);
-				htmlMenuItem.setDiagram(diagram);
-
-				// export the HTML for this diagram
-				export(diagram, htmlPath);
-
-				// create the XML menu content
-				HTMLMenuParser htmlMenuParser = HTMLMenuParser.getParser(htmlPath);
-				htmlMenuParser.addMenu(htmlMenuItem);
 			}
+    	}
+    	if (!failedDiagrams.isEmpty()) {
+    		System.err.println("[HTMLReport] " + failedDiagrams.size() //$NON-NLS-1$
+    				+ " diagram(s) skipped due to errors: " + failedDiagrams); //$NON-NLS-1$
     	}
 
     	// Always write the top-level index, the per-section globals, and flush

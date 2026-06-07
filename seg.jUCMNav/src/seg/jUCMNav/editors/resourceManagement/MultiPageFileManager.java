@@ -20,9 +20,11 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.eclipse.ui.part.FileEditorInput;
@@ -210,8 +212,20 @@ public class MultiPageFileManager {
 	 * @see org.eclipse.ui.ISaveablePart#doSaveAs()
 	 */
 	public void doSaveAs() {
+		// Capture the editor's shell up front, BEFORE any code path that may
+		// close it. The original implementation called getEditor().getSite()
+		// .getShell() inside the catch -- but the try closes the editor on the
+		// way to reopening it with the new file, so if anything between the
+		// close and reopen threw (e.g. getDefaultEditor returning null -> NPE),
+		// the catch's getSite() raised IllegalStateException("getShell() was
+		// called after part disposal") and the real exception was silently
+		// lost. Keep the original shell handle around as a fallback dialog
+		// host, and remember the active workbench window as a second fallback.
+		final Shell initialShell = getEditor().getSite().getShell();
+		final IWorkbenchWindow activeWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+
 		// get the new path
-		SaveAsDialog dialog = new SaveAsDialog(getEditor().getSite().getShell());
+		SaveAsDialog dialog = new SaveAsDialog(initialShell);
 		dialog.setOriginalFile(((IFileEditorInput) getEditor().getEditorInput()).getFile());
 		dialog.open();
 		IPath path = dialog.getResult();
@@ -255,21 +269,41 @@ public class MultiPageFileManager {
 			// save the new file
 			modelManager.save(path);
 
+			// Resolve the editor descriptor BEFORE closing the editor so a
+			// failure here doesn't leave us with no editor open AND no useful
+			// site reference. Fall back to our own MainEditor id when the
+			// platform registry doesn't know about the new file's extension
+			// (e.g. user saved with an unrelated extension via Save As).
+			IEditorDescriptor desc = PlatformUI.getWorkbench().getEditorRegistry().getDefaultEditor(file.getName());
+			String editorId = (desc != null) ? desc.getId() : "seg.jUCMNav.MainEditor"; //$NON-NLS-1$
+
 			// we used to reinit everything without closing the editor but this
 			// caused bugs that appeared out of nowhere and made the whole
 			// codebase weaker.
 			// therefore, we're closing the editor and reopening it.
 			getEditor().closeEditor(false);
-			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-			IEditorDescriptor desc = PlatformUI.getWorkbench().getEditorRegistry().getDefaultEditor(file.getName());
-			editor = (UCMNavMultiPageEditor) page.openEditor(new FileEditorInput(file), desc.getId());
+			IWorkbenchPage page = (activeWindow != null) ? activeWindow.getActivePage() : null;
+			if (page == null) {
+				throw new IllegalStateException("No active workbench page to reopen the saved editor in."); //$NON-NLS-1$
+			}
+			editor = (UCMNavMultiPageEditor) page.openEditor(new FileEditorInput(file), editorId);
 
 		} catch (Exception e) {
-			ErrorDialog.openError(getEditor().getSite().getShell(),
+			// Always log the real cause first; the dialog below is best-effort
+			// and may itself fail if the workbench is mid-teardown.
+			e.printStackTrace();
 
-					Messages.getString("MultiPageFileManager.errorDuringSave"), //$NON-NLS-1$
-					Messages.getString("MultiPageFileManager.ucmCouldNotBeSaved"), new Status(IStatus.ERROR, //$NON-NLS-1$
-							"seg.jUCMNav", IStatus.ERROR, "", e)); //$NON-NLS-1$ //$NON-NLS-2$
+			Shell host = (initialShell != null && !initialShell.isDisposed()) ? initialShell : null;
+			if (host == null && activeWindow != null && activeWindow.getShell() != null && !activeWindow.getShell().isDisposed()) {
+				host = activeWindow.getShell();
+			}
+			if (host != null) {
+				ErrorDialog.openError(host,
+						Messages.getString("MultiPageFileManager.errorDuringSave"), //$NON-NLS-1$
+						Messages.getString("MultiPageFileManager.ucmCouldNotBeSaved"), //$NON-NLS-1$
+						new Status(IStatus.ERROR, "seg.jUCMNav", IStatus.ERROR, //$NON-NLS-1$
+								e.getMessage() != null ? e.getMessage() : e.getClass().getName(), e));
+			}
 		}
 
 	}

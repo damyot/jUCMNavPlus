@@ -7,6 +7,8 @@ import java.io.IOException;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.SWTGraphics;
+import org.eclipse.draw2d.ScalableFreeformLayeredPane;
+import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
@@ -48,8 +50,11 @@ public abstract class ExportImage implements IUseCaseMapExport {
      *
      * @see seg.jUCMNav.extensionpoints.IUseCaseMapExport#export(org.eclipse.draw2d.IFigure, java.io.FileOutputStream)
      */
-    public void export(IFigure pane, FileOutputStream fos) {
+    public void export(IFigure unzoomedPane, FileOutputStream fos) {
         // generate image
+        ScalableFreeformLayeredPane pane = (ScalableFreeformLayeredPane) unzoomedPane;
+        pane.setScale(pane.getScale()+ 0.01);
+        
         Image image = new Image(Display.getCurrent(), pane.getSize().width, pane.getSize().height);
         GC gc = new GC(image);
         enableAdvancedRendering(gc);
@@ -57,6 +62,7 @@ public abstract class ExportImage implements IUseCaseMapExport {
         // if the bounds are in the negative x/y, we don't see them without a translation
         graphics.translate(-pane.getBounds().x, -pane.getBounds().y);
         pane.paint(graphics);
+        pane.setScale(pane.getScale()- 0.01);
 
         ImageLoader loader = new ImageLoader();
         loader.data = new ImageData[] { ReportUtils.cropImage(image.getImageData()) };

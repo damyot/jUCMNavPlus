@@ -5,8 +5,11 @@ package seg.UCMScenarioViewer.commands;
 
 import org.eclipse.gef.commands.Command;
 import org.eclipse.swt.graphics.FontData;
+import org.eclipse.ui.PlatformUI;
 
 import seg.UCMScenarioViewer.UCMScenarioViewer;
+import seg.UCMScenarioViewer.model.ScenarioGroup;
+import seg.UCMScenarioViewer.utils.Helper;
 
 /**
  * Implementation of 'font switching' command.
@@ -38,11 +41,32 @@ public class ChangeFontCommand extends Command {
 	}
     
     public void redo() {
-    	UCMScenarioViewer.setApplicationFont(newFont);
+        UCMScenarioViewer.setApplicationFont(newFont);
+        refreshAllFigures();
     }
-    
+
     public void undo() {
-    	UCMScenarioViewer.setApplicationFont(oldFont);
+        UCMScenarioViewer.setApplicationFont(oldFont);
+        refreshAllFigures();
     }
-    
+
+    /**
+     * After swapping the applicationFont, propagate Properties.ID_REFRESH
+     * through the model tree so every {@link AbstractModelElementEditPart}
+     * re-calls fig.setFont(getModelElement().getFont()) and picks up the
+     * new Font handle. setApplicationFont deliberately does NOT dispose
+     * the previous Font (figures still reference it -- disposing crashes
+     * the next paint), so any figure that doesn't get refreshed continues
+     * to paint correctly with the now-leaked-but-valid old handle. The
+     * refresh below is what makes the visual change take effect on the
+     * already-laid-out figure tree without forcing the editor closed and
+     * reopened.
+     */
+    private void refreshAllFigures() {
+        UCMScenarioViewer viewer = Helper.getUCMScenarioViewer(PlatformUI.getWorkbench());
+        if (viewer == null) return;
+        ScenarioGroup group = viewer.getMSCDiagram();
+        if (group == null) return;
+        group.refreshAll();
+    }
 }

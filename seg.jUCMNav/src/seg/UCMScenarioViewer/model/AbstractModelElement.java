@@ -396,6 +396,19 @@ public abstract class AbstractModelElement implements Serializable, IPropertySou
 		while (i.hasNext())
 			((AbstractModelElement)i.next()).fireRefreshEvent();
 	}
+
+	/**
+	 * Public entry point to {@link #fireRefreshEvent} so commands outside the
+	 * model package can ask the viewer to re-read figure properties
+	 * (font, location, size, etc.) for this element and all its view-children.
+	 * Used by {@link seg.UCMScenarioViewer.commands.ChangeFontCommand} after a
+	 * Set Font click: setApplicationFont swaps the static Font field, then
+	 * refreshAll() makes every editpart's refreshVisuals re-call
+	 * fig.setFont(getModelElement().getFont()) and pick up the new handle.
+	 */
+	public void refreshAll() {
+		fireRefreshEvent();
+	}
 	
 	/**
 	 * Obtains the font for this element based on font style, size and type 

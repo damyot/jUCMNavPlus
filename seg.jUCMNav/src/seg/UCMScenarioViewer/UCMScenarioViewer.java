@@ -125,15 +125,11 @@ public class UCMScenarioViewer extends GraphicalEditor {
     }
     public static void setApplicationFont(FontData newFont)
     {
-        // Validate every FontData field before constructing SWT Fonts. The
-        // FontDialog can return values that make `new Font(...)` build an
-        // invalid handle on modern SWT -- specifically height == 0 (Windows
-        // platform fonts), unusual style bits (some platforms set extras
-        // beyond NORMAL/BOLD/ITALIC), or an empty family name. Any of those
-        // produces a Font that crashes the very next GC.setFont() with
-        // ERROR_INVALID_ARGUMENT, which then surfaces during a paint of
-        // LifeLineFigure / DiagramFigureBorder / etc. Earlier fix
-        // (a332d434) hardened the default getter; this hardens the setter.
+        // FontData validation (see a978f16b): the FontDialog can return
+        // values that make `new Font(...)` build an invalid handle on
+        // modern SWT -- height == 0 (some platform fonts), style bits
+        // beyond NORMAL|BOLD|ITALIC, or an empty family name -- any of
+        // which then crashes the next GC.setFont() during paint.
         FontData defaults = baseFontData();
         String name = (newFont != null && newFont.getName() != null && !newFont.getName().isEmpty())
                 ? newFont.getName()
@@ -141,17 +137,22 @@ public class UCMScenarioViewer extends GraphicalEditor {
         int height = (newFont != null) ? newFont.getHeight() : 0;
         if (height <= 0 || height > 144) height = defaults.getHeight();
         int style = (newFont != null) ? newFont.getStyle() : SWT.NORMAL;
-        // Mask to the three style bits SWT Font actually understands; any
-        // other bits leak through to native font construction and may be
-        // rejected on Win32.
         style &= (SWT.NORMAL | SWT.BOLD | SWT.ITALIC);
 
-        if (applicationFont != null && !applicationFont.isDisposed())
-            applicationFont.dispose();
+        // CRITICAL: do NOT dispose the previous applicationFont here. Every
+        // Label and Figure in the live viewer holds a direct reference to
+        // it -- AbstractModelElement.getLabel / getStandardLabel /
+        // getMaxLabel all do `label.setFont(getFont())` which captures the
+        // current font handle into the Label. Disposing here would
+        // invalidate every such reference and make the next
+        // GC.setFont(disposedFont) during paint throw
+        // ERROR_INVALID_ARGUMENT, surfacing as
+        // "Argument not valid" out of LifeLineFigure / DiagramFigureBorder
+        // etc. Reassigning the static field leaks the previous Font (one
+        // native handle per Set Font click), which is bounded by user
+        // intent and acceptable -- the Display tears them down at
+        // workbench shutdown anyway.
         applicationFont = new Font(null, name, height, style);
-
-        if (largerApplicationFont != null && !largerApplicationFont.isDisposed())
-            largerApplicationFont.dispose();
         largerApplicationFont = new Font(null, name, height + 2, style);
     }
     

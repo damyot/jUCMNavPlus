@@ -96,15 +96,28 @@ public class UCMScenarioViewer extends GraphicalEditor {
     protected static Font applicationFont;
     protected static Font largerApplicationFont;
     
+    private static FontData baseFontData() {
+        // Use the platform system font as the default family so MSC labels render
+        // with a real (and modern-SWT-valid) font. The original code passed an
+        // empty family name and SWT.CANCEL as the style; both were tolerated in
+        // older SWT but produce an invalid Font on modern SWT (GC.setFont throws
+        // ERROR_INVALID_ARGUMENT during paint).
+        Display d = Display.getCurrent();
+        if (d == null) d = Display.getDefault();
+        FontData fd = d.getSystemFont().getFontData()[0];
+        return new FontData(fd.getName(), fd.getHeight(), SWT.NORMAL);
+    }
     public static Font getApplicationFont() {
-        if (applicationFont == null) {
-            applicationFont = new Font(null, "", 10, org.eclipse.swt.SWT.CANCEL);
+        if (applicationFont == null || applicationFont.isDisposed()) {
+            FontData fd = baseFontData();
+            applicationFont = new Font(null, fd.getName(), 10, SWT.NORMAL);
         }
         return applicationFont;
     }
     public static Font getLargerApplicationFont() {
-        if (largerApplicationFont == null) {
-            largerApplicationFont = new Font(null, "", 12, org.eclipse.swt.SWT.CANCEL);
+        if (largerApplicationFont == null || largerApplicationFont.isDisposed()) {
+            FontData fd = baseFontData();
+            largerApplicationFont = new Font(null, fd.getName(), 12, SWT.NORMAL);
         }
         return largerApplicationFont;
     }
